@@ -100,7 +100,7 @@ public partial class MainGame : Page
         {
             var pkt = NetworkClient.Receive();
             Trace.Assert(pkt is ConnectionResponse);
-            if ((pkt as ConnectionResponse).Settings.GameType == GameType.Pk1v1) _game = new Pk1v1Game();
+            if ((pkt as ConnectionResponse).Settings.GameType == GameType.Pk1V1) _game = new Pk1v1Game();
             if ((pkt as ConnectionResponse).Settings.GameType == GameType.RoleGame) _game = new RoleGame();
             
             if (pkt is ConnectionResponse)

@@ -1,0 +1,151 @@
+﻿syntax = "proto3";
+
+package LobbyCore;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/wrappers.proto";
+
+option csharp_namespace = "Sanguosha.Lobby.Core";
+
+service Lobby {
+  rpc Login (LoginRequest) returns (LoginReply);
+  rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty);
+  rpc GetRooms (google.protobuf.BoolValue) returns (RoomsReply);
+  rpc CreateRoom (CreateRoomRequest) returns (Room);
+  rpc EnterRoom (EnterRoomRequest) returns (EnterRoomReply);
+  rpc ExitRoom (google.protobuf.Empty) returns (RoomOperationResultReplay);
+  rpc ChangeSeat (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
+  rpc StartGame(google.protobuf.Empty) returns (RoomOperationResultReplay);
+  rpc Ready(google.protobuf.Empty) returns (RoomOperationResultReplay);
+  rpc CancelReady(google.protobuf.Empty) returns (RoomOperationResultReplay);
+  rpc Kick (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
+  rpc OpenSeat (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
+  rpc CloseSeat (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
+  rpc Chat (google.protobuf.StringValue) returns (RoomOperationResultReplay);
+  rpc Spectate (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
+  rpc CreateAccount (CreateAccountRequest) returns (LoginStatusReply);
+  rpc SubmitBugReport (stream google.protobuf.BytesValue) returns (google.protobuf.Empty);
+}
+
+message LoginRequest
+{
+	int32 version = 1;
+	string username = 2;
+	int32 hash = 3;
+}
+
+message LoginReply
+{
+	LoginStatus status = 1;
+	Account retAccount =  2;
+	string reconnection_string = 3;
+	// TokenString type change from guid to string
+	string token_string = 4;
+}
+
+message RoomsReply
+{
+	repeated Room Rooms = 1;
+}
+
+message CreateRoomRequest
+{
+	RoomSettings settings = 1;
+	string password = 2;
+}
+
+message EnterRoomRequest
+{
+	int32 room_id = 1;
+	bool spectate = 2;
+	string password = 3;
+}
+
+message EnterRoomReply
+{
+	RoomOperationResult room_operation_result = 1;
+	Room room = 2;
+}
+
+message RoomOperationResultReplay
+{
+	RoomOperationResult room_operation_result = 1;
+}
+
+message CreateAccountRequest
+{
+	string user_name = 1;
+	string p = 2;
+}
+
+message LoginStatusReply
+{
+	LoginStatus login_status = 1;
+}
+
+message Account
+{
+	string user_name = 1;
+	int32 credits = 2;
+	int32 wins =3;
+	int32 losses = 4;
+	int32 quits = 5;
+	int32 total_games = 6;
+	string displayd_name = 7;
+	int32 experience = 8;
+	int32 level = 9;
+}
+
+
+enum LoginStatus
+{
+    Success = 0;
+    OutdatedVersion = 1;
+    InvalidUsernameAndPassword = 2;
+    UnknownFailure = 3;
+}
+
+message Room
+{
+
+}
+
+enum EnabledPackages // Change this to long if more package types are added!
+{
+    None = 0;
+    Wind = 1;
+    Fire = 4;
+    Woods = 8;
+    Hills = 16;
+    Gods = 32;
+    SP = 64;
+    OverKnightFame = 128;
+    Others = 256;
+}
+
+enum GameType
+{
+    RoleGame = 0;
+    Pk1v1 = 1;
+}
+
+message RoomSettings
+{
+	int32 time_out_seconds = 1;
+	int32 number_of_defectors = 2;
+	int32 num_hero_picks = 3;
+	bool is_dual_hero_mode = 4;
+	EnabledPackages enabled_packages = 5;
+    GameType game_type = 6;
+}
+
+enum RoomOperationResult
+{
+    RoomOperationResultSuccess = 0;
+    InvalidToken = -1;
+    Full = -2;
+    Password = -3;
+    Locked = -4;
+    Invalid = -5;
+    NotAutheticated = -6;
+}

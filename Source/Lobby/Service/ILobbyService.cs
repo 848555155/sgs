@@ -1,20 +1,8 @@
 ﻿using ProtoBuf;
-using System;
-using System.Collections.Generic;
-using System.IO;
 using System.Reflection;
-using System.Runtime.Serialization;
 using System.ServiceModel;
 
 namespace Sanguosha.Lobby.Core;
-
-public enum LoginStatus
-{
-    Success = 0,
-    OutdatedVersion = 1,
-    InvalidUsernameAndPassword,
-    UnknownFailure
-}
 
 [Serializable]
 [ProtoContract]
@@ -24,50 +12,6 @@ public struct LoginToken
     public Guid TokenString { get; set; }
 }
 
-[DataContract(Name = "RoomOperationResult")]
-public enum RoomOperationResult
-{
-    [EnumMember]
-    Success = 0,
-    [EnumMember]
-    InvalidToken = -1,
-    [EnumMember]
-    Full = -2,
-    [EnumMember]
-    Password = -3,
-    [EnumMember]
-    Locked = -4,
-    [EnumMember]
-    Invalid = -5,
-    [EnumMember]
-    NotAutheticated = -6,
-}
-
-[Flags]
-[ProtoContract]
-public enum EnabledPackages : int // Change this to long if more package types are added!
-{
-    None = 0,
-    Wind = 1,
-    Fire = 1 << 2,
-    Woods = 1 << 3,
-    Hills = 1 << 4,
-    Gods = 1 << 5,
-    SP = 1 << 6,
-    OverKnightFame = 1 << 7,
-    Others = 1 << 8
-}
-
-[Serializable]
-public struct RoomSettings
-{
-    public int TimeOutSeconds { get; set; }
-    public int NumberOfDefectors { get; set; }
-    public bool IsDualHeroMode { get; set; }
-    public int NumHeroPicks { get; set; }
-    public EnabledPackages EnabledPackages { get; set; }
-    public GameType GameType { get; set; }
-}
 
 [ServiceKnownType("GetKnownTypes", typeof(Helper))]
 [ServiceContract(Namespace = "", CallbackContract = typeof(IGameClient), SessionMode = SessionMode.Required)]
@@ -147,13 +91,11 @@ internal static class Helper
 {
     public static IEnumerable<Type> GetKnownTypes(ICustomAttributeProvider provider)
     {
-        List<Type> knownTypes =
-            [
+        return [
                 // Add any types to include here.
                 typeof(Room),
                 typeof(Seat),
                 typeof(Account),
             ];
-        return knownTypes;
     }
 }

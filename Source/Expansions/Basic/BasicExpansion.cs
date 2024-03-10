@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Cards;
 using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Expansions.Basic.Skills;

@@ -275,14 +275,14 @@ public partial class LobbyView : Page
         settings.TimeOutSeconds = options2[cbTimeOutSeconds.SelectedIndex];
         settings.EnabledPackages = EnabledPackages.None;
         if (cbGameType.SelectedIndex == 0) settings.GameType = GameType.RoleGame;
-        else if (cbGameType.SelectedIndex == 1) settings.GameType = GameType.Pk1v1;
+        else if (cbGameType.SelectedIndex == 1) settings.GameType = GameType.Pk1V1;
         else return;
         if (cbWind.IsChecked == true) settings.EnabledPackages |= EnabledPackages.Wind;
         if (cbFire.IsChecked == true) settings.EnabledPackages |= EnabledPackages.Fire;
         if (cbWoods.IsChecked == true) settings.EnabledPackages |= EnabledPackages.Woods;
         if (cbHills.IsChecked == true) settings.EnabledPackages |= EnabledPackages.Hills;
         if (cbGods.IsChecked == true) settings.EnabledPackages |= EnabledPackages.Gods;
-        if (cbSP.IsChecked == true) settings.EnabledPackages |= EnabledPackages.SP;
+        if (cbSP.IsChecked == true) settings.EnabledPackages |= EnabledPackages.Sp;
         if (cbOverKnightFame.IsChecked == true) settings.EnabledPackages |= EnabledPackages.OverKnightFame;
 
         LobbyModel.CreateRoom(settings);

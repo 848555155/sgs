@@ -1,5 +1,4 @@
 ﻿using Sanguosha.Core.Games;
-using System;
 using System.Diagnostics;
 using System.IO;
 using Sanguosha.Core.Network;
@@ -7,7 +6,6 @@ using Sanguosha.Core.Players;
 using Sanguosha.Core.UI;
 using Sanguosha.Lobby.Core;
 using System.Net;
-using System.Threading;
 
 namespace Sanguosha.Lobby.Server;
 
@@ -34,7 +32,7 @@ public class GameService
         Trace.WriteLine("Log starting");
         Trace.Listeners.Add(new ConsoleTraceListener());
 #endif
-        Game game = setting.GameType == GameType.Pk1v1 ? new Pk1v1Game() : new RoleGame();
+        Game game = setting.GameType == GameType.Pk1V1 ? new Pk1v1Game() : new RoleGame();
         game.Settings = setting;
         Sanguosha.Core.Network.Server server;
         server = new Sanguosha.Core.Network.Server(game, totalNumberOfPlayers, IP);

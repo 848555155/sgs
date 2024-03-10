@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.Serialization;
+﻿using System.Runtime.Serialization;
 
 namespace Sanguosha.Lobby.Core;
 
@@ -20,102 +18,31 @@ public enum RoomState
     Gaming
 }
 
-public class Room
+public partial class Room
 {
     public object RoomLock;
 
-    public Room()
-    {
-        seats = new List<Seat>();
-    }
+    public int Id { get; set; }
 
-   
-    private int id;
+    public string Name { get; set; }
 
-    public int Id
-    {
-        get { return id; }
-        set { id = value; }
-    }
+    public RoomType Type { get; set; }
 
-    private string name;
+    public RoomState State { get; set; }
 
-    public string Name
-    {
-        get { return name; }
-        set { name = value; }
-    }
+    public bool SpectatorDisabled { get; set; }
 
-    private RoomType type;
+    public bool ChatDisabled { get; set; }
 
-    public RoomType Type
-    {
-        get { return type; }
-        set { type = value; }
-    }
-    
-    private RoomState state;
+    public int OwnerId { get; set; }
 
-    public RoomState State
-    {
-        get { return state; }
-        set { state = value; }
-    }
-    private bool spectatorDisabled;
+    public List<Seat> Seats { get; set; } = [];
 
-    public bool SpectatorDisabled
-    {
-        get { return spectatorDisabled; }
-        set { spectatorDisabled = value; }
-    }
-    private bool chatDisabled;
+    public string IpAddress { get; set; }
 
-    public bool ChatDisabled
-    {
-        get { return chatDisabled; }
-        set { chatDisabled = value; }
-    }
+    public int IpPort { get; set; }
 
-    private int ownerId;
-
-    public int OwnerId
-    {
-        get { return ownerId; }
-        set { ownerId = value; }
-    }
-
-    private List<Seat> seats;
-
-    public List<Seat> Seats
-    {
-        get { return seats; }
-        set { seats = value; }
-    }
-
-    private string ipAddress;
-
-    public string IpAddress
-    {
-        get { return ipAddress; }
-        set { ipAddress = value; }
-    }
-
-
-    private int ipPort;
-
-    public int IpPort
-    {
-        get { return ipPort; }
-        set { ipPort = value; }
-    }
-
-    public bool IsEmpty
-    {
-        get
-        {
-            return !Seats.Any(state => state.State != SeatState.Empty && state.State != SeatState.Closed);
-        }
-    }
+    public bool IsEmpty => !Seats.Any(state => state.State != SeatState.Empty && state.State != SeatState.Closed);
 
     public RoomSettings Settings { get; set; }
 }

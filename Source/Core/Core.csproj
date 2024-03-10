@@ -28,6 +28,8 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.4.8" />
+    <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
+    <PackageReference Include="protobuf-net.Grpc" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Skills\Skill.cs" />

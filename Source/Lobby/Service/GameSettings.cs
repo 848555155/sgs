@@ -1,6 +1,4 @@
 ﻿using ProtoBuf;
-using System;
-using System.Collections.Generic;
 
 namespace Sanguosha.Lobby.Core;
 
@@ -28,9 +26,4 @@ public class GameSettings
     public bool IsGodEnabled { get; set; }
     [ProtoMember(10)]
     public GameType GameType { get; set; }
-}
-public enum GameType
-{
-    RoleGame,
-    Pk1v1,
 }

@@ -1,15 +1,13 @@
-﻿using System.Data.Entity;
-using Sanguosha.Lobby.Core;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace Sanguosha.Lobby.Server;
 
-internal class AccountContext : DbContext
+public class AccountContext(DbContextOptions<AccountContext> options) : DbContext(options)
 {
-    public AccountContext()
-        : base(@"data source=(LocalDB)\v11.0; 
-                 initial catalog=users;
-                 integrated security=true")
-    {
-    }
-    public DbSet<Account> Accounts { get; set; }
+    // todo move to appsettings.json
+    //@"data source=(LocalDB)\v11.0; 
+    //     initial catalog=users;
+    //     integrated security=true"
+
+    public DbSet<Core.Account> Accounts { get; set; }
 }

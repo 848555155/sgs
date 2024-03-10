@@ -12,13 +12,13 @@ using Microsoft.Win32;
 using System.ComponentModel;
 using Sanguosha.UI.Controls;
 using Sanguosha.Lobby.Core;
-using System.ServiceModel;
 using Sanguosha.Lobby.Server;
 using System.Net.NetworkInformation;
 using System.Net;
-using System.Net.Security;
 using Sanguosha.Core.Utils;
 using System.Diagnostics;
+using Grpc.Net.Client;
+using ProtoBuf.Grpc.Client;
 
 namespace Sanguosha.UI.Main;
 
@@ -192,7 +192,7 @@ public partial class Login : Page, IDisposable
         }
     }
 
-    public static System.Threading.Mutex appMutex = null;
+    public static Mutex appMutex = null;
 
     private void _startClient()
     {
@@ -243,6 +243,9 @@ public partial class Login : Page, IDisposable
 
                 _LogOut();
                 var lobbyModel = LobbyViewModel.Instance;
+                var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
+                server = channel.CreateGrpcService<ILobbyService>();
+                
                 // todo change to GRPC
                 //var binding = new NetTcpBinding();
                 //binding.Security.Mode = SecurityMode.None;
@@ -362,7 +365,7 @@ public partial class Login : Page, IDisposable
         busyIndicator.IsBusy = true;
         ILobbyService server = null;
         string hostName = tab0HostName.Text;
-        if (!hostName.Contains(":"))
+        if (!hostName.Contains(':'))
         {
             hostName = hostName + ":" + DefaultLobbyPort;
         }
@@ -469,6 +472,7 @@ public partial class Login : Page, IDisposable
                 // todo move to new project
                 //host.AddServiceEndpoint(typeof(ILobbyService), binding, string.Format("net.tcp://{0}:{1}/GameService", serverIp, portNumber));
                 //host.Open();
+                
                 ea.Result = true;
             }
             catch (Exception)

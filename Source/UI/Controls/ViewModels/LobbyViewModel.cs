@@ -4,7 +4,6 @@ using System.Linq;
 using System.Collections.ObjectModel;
 using Sanguosha.Lobby.Core;
 using System.Windows.Input;
-using System.ServiceModel;
 using System.Windows;
 using System.Threading;
 using System.Diagnostics;

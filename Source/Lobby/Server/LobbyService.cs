@@ -1,27 +1,33 @@
-﻿using System.ServiceModel;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using Microsoft.EntityFrameworkCore;
+using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
-using System.Net;
 using System.Diagnostics;
 using System.IO;
-using Sanguosha.Core.Utils;
-using Microsoft.EntityFrameworkCore;
+using System.Net;
+using System.Runtime.CompilerServices;
+using System.ServiceModel;
+using static Sanguosha.Lobby.Core.Lobby;
 
 namespace Sanguosha.Lobby.Server;
 
-//[ServiceBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, InstanceContextMode = InstanceContextMode.PerSession)]
-public class LobbyServiceImpl : ILobbyService
+public class LobbyService: LobbyBase
 {
-    private static readonly Dictionary<string, ClientAccount> loggedInAccounts = new Dictionary<string, ClientAccount>();
-    private static readonly Dictionary<int, ServerRoom> rooms = new Dictionary<int, ServerRoom>();
+    private static readonly Dictionary<string, ClientAccount> loggedInAccounts = [];
+
+    private static readonly Dictionary<int, ServerRoom> rooms = [];
     private static int newRoomId = 1;
 
     public static IPAddress HostingIp { get; set; }
+
     public static IPAddress PublicIp { get; set; }
+
     public static bool CheatEnabled { get; set; }
 
     private AccountContext accountContext;
 
-    public ClientAccount currentAccount;
+    private ClientAccount currentAccount;
 
     public static bool EnableDatabase()
     {
@@ -31,14 +37,16 @@ public class LobbyServiceImpl : ILobbyService
         //    accountContext = new AccountContext();
         //    accountContext.Database.ExecuteSqlRaw("SET TRANSACTION ISOLATION LEVEL READ UNCOMMITTED;");
         //}
-        //else return false;
+        //else 
+        //    return false;
         return true;
     }
 
     private readonly Thread CleanerThread;
 
-    public LobbyServiceImpl()
+    public LobbyService(AccountContext ac)
     {
+        accountContext = ac;
         currentAccount = null;
         CleanerThread = new Thread(DeadRoomCleanup) { IsBackground = true };
         CleanerThread.Start();
@@ -50,7 +58,7 @@ public class LobbyServiceImpl : ILobbyService
         lock (accountContext)
         {
             var result = from a in accountContext.Accounts where a.UserName.Equals(username) select a;
-            if (result.Count() == 0) return null;
+            if (!result.Any()) return null;
             if (!result.First().Password.Equals(hash)) return null;
             return result.First();
         }
@@ -146,7 +154,7 @@ public class LobbyServiceImpl : ILobbyService
                 {
                     Account = authenticatedAccount,
                     CallbackChannel = connection,
-                    LobbyService = this
+                    LobbyService = (LobbyServiceImpl)this
                 };
                 loggedInAccounts.Add(username, acc);
                 currentAccount = acc;
@@ -160,16 +168,16 @@ public class LobbyServiceImpl : ILobbyService
         }
         Trace.TraceInformation("{0} logged in", username);
         EventHandler faultHandler = (o, s) =>
-                    {
-                        try
-                        {
-                            if (currentAccount.CurrentRoom.Room.State == RoomState.Gaming) return;
-                            _Logout(currentAccount);
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    };
+        {
+            try
+            {
+                if (currentAccount.CurrentRoom.Room.State == RoomState.Gaming) return;
+                _Logout(currentAccount);
+            }
+            catch (Exception)
+            {
+            }
+        };
 
         OperationContext.Current.Channel.Faulted += faultHandler;
         OperationContext.Current.Channel.Closed += faultHandler;
@@ -788,18 +796,21 @@ public class LobbyServiceImpl : ILobbyService
         return RoomOperationResult.Success;
     }
 
-    public RoomOperationResult Chat(string message)
+    public override async Task<RoomOperationResultReplay> Chat(StringValue request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (message.Length > Misc.MaxChatLength) return RoomOperationResult.Invalid;
+        var message = request.Value;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (message.Length > Misc.MaxChatLength) 
+            return Result(RoomOperationResult.Invalid);
 
         // @todo: No global chat
         if (currentAccount.CurrentRoom == null && currentAccount.CurrentSpectatingRoom == null)
         {
-            return RoomOperationResult.Invalid;
+            return Result(RoomOperationResult.Invalid);
         }
 
-        Thread thread = new Thread(() =>
+        var task = new Task(() =>
         {
             var room = currentAccount.CurrentRoom;
             if (room == null && currentAccount.CurrentSpectatingRoom != null)
@@ -843,10 +854,11 @@ public class LobbyServiceImpl : ILobbyService
                     }
                 }
             }
-        }) { IsBackground = true };
-        thread.Start();
+        });
+        task.Start();
         currentAccount.LastAction = DateTime.Now;
-        return RoomOperationResult.Success;
+        await Task.CompletedTask;
+        return Result(RoomOperationResult.Success);
     }
 
     private static void _Unspectate(ClientAccount account)
@@ -864,13 +876,17 @@ public class LobbyServiceImpl : ILobbyService
         }
     }
 
-    public RoomOperationResult Spectate(int roomId)
+    public override async Task<RoomOperationResultReplay> Spectate(Int32Value request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom != null) { return RoomOperationResult.Invalid; }
-        if (!rooms.ContainsKey(roomId)) return RoomOperationResult.Invalid;
-        var room = rooms[roomId];
-        if (room.Room.State != RoomState.Gaming) return RoomOperationResult.Invalid;
+        var roomId = request.Value;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom != null)
+            return Result(RoomOperationResult.Invalid);
+        if (!rooms.TryGetValue(roomId, out var room)) 
+            return Result(RoomOperationResult.Invalid);
+        if (room.Room.State != RoomState.Gaming) 
+            return Result(RoomOperationResult.Invalid);
         _Unspectate(currentAccount);
         lock (room.Spectators)
         {
@@ -882,50 +898,39 @@ public class LobbyServiceImpl : ILobbyService
         currentAccount.CurrentSpectatingRoom = room;
         var channel = currentAccount.CallbackChannel;
         channel.NotifyGameStart(room.Room.IpAddress + ":" + room.Room.IpPort, new LoginToken() { TokenString = new Guid() });
-        return RoomOperationResult.Success;
+        await Task.CompletedTask;
+        return Result(RoomOperationResult.Success);
     }
 
+    // todo change to task, should remove this method
     public static void WipeDatabase()
     {
-        // todo change logic
-        //AccountContext ctx;
-        //ctx = new AccountContext();
-        //ctx.Database.EnsureDeleted();
+        //accountContext.Database.EnsureDeleted();
     }
 
-
-    public LoginStatus CreateAccount(string userName, string p)
+    public override async Task<LoginStatusReply> CreateAccount(CreateAccountRequest request, ServerCallContext context)
     {
-        if (accountContext == null)
+        var userName = request.UserName;
+        var p = request.P;
+        var result = accountContext.Accounts
+               .Where(account => account.UserName.Equals(userName));
+        if (await result.AnyAsync())
         {
-            return LoginStatus.Success;
+            return Result(LoginStatus.InvalidUsernameAndPassword);
         }
-
-        lock (accountContext)
-        {
-            var result = from a in accountContext.Accounts where a.UserName.Equals(userName) select a;
-            if (result.Count() != 0)
-            {
-                return LoginStatus.InvalidUsernameAndPassword;
-            }
-            accountContext.Accounts.Add(new Account() { UserName = userName, Password = p });
-            accountContext.SaveChanges();
-            return LoginStatus.Success;
-        }
+        await accountContext.Accounts.AddAsync(new Account() { UserName = userName, Password = p });
+        await accountContext.SaveChangesAsync();
+        return Result(LoginStatus.Success);
     }
 
-    public void SubmitBugReport(System.IO.Stream s)
+    public override async Task<Empty> SubmitBugReport(IAsyncStreamReader<BytesValue> requestStream, ServerCallContext context)
     {
-        if (s == null) return;
         try
         {
-            Stream file = FileRotator.CreateFile("./Reports", "crashdmp", ".rpt", 1000);
-
-            if (s != null)
+            var file = FileRotator.CreateFile("./Reports", "crashdmp", ".rpt", 1000);
+            await foreach (var bytes in requestStream.ReadAllAsync())
             {
-                s.CopyTo(file);
-                s.Flush();
-                s.Close();
+                await file.WriteAsync(bytes.Value.ToByteArray());
             }
             file.Flush();
             file.Close();
@@ -933,10 +938,8 @@ public class LobbyServiceImpl : ILobbyService
         catch (Exception)
         {
         }
+        return new Empty();
     }
-
-    public static explicit operator LobbyServiceImpl(LobbyService v)
-    {
-        throw new NotImplementedException();
-    }
+    private LoginStatusReply Result(LoginStatus loginStatus) => new() { LoginStatus = loginStatus };
+    private RoomOperationResultReplay Result(RoomOperationResult roomOperationResult) => new() { RoomOperationResult = roomOperationResult };
 }

@@ -2,9 +2,9 @@
 
 public class Misc
 {
-    public static int ProtocolVersion = 23;
-    public static int MaxChatLength = 160;
-    public static int MaxBugReportSize = 2097152;
-    public static int MaxBugMessgeSize = 1000;
-    public static int MagicAnimal = 0x7eadbeef;
+    public static readonly int ProtocolVersion = 23;
+    public static readonly int MaxChatLength = 160;
+    public static readonly int MaxBugReportSize = 2097152;
+    public static readonly int MaxBugMessgeSize = 1000;
+    public static readonly int MagicAnimal = 0x7eadbeef;
 }

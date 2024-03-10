@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;

@@ -80,7 +80,7 @@ public class RoomViewModel : ViewModelBase
                     return "SingleHeroSingleDefectorRoleGame";
                 }
             }
-            else if (Settings.GameType == GameType.Pk1v1)
+            else if (Settings.GameType == GameType.Pk1V1)
             {
                 if (Settings.IsDualHeroMode) return "DualHero1v1";
                 else return "SingleHero1v1";                    
