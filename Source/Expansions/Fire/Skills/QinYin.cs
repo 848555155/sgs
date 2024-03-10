@@ -1,84 +1,77 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
 using Sanguosha.Core.UI;
 using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
 
-namespace Sanguosha.Expansions.Fire.Skills
+namespace Sanguosha.Expansions.Fire.Skills;
+
+/// <summary>
+/// 琴音-弃牌阶段，当你弃置了两张或更多的手牌时，你可令所有角色各回复1点体力或各失去1点体力。
+/// </summary>
+public class QinYin : TriggerSkill
 {
-    /// <summary>
-    /// 琴音-弃牌阶段，当你弃置了两张或更多的手牌时，你可令所有角色各回复1点体力或各失去1点体力。
-    /// </summary>
-    public class QinYin : TriggerSkill
+    public static PlayerAttribute QinYinUsable = PlayerAttribute.Register("QinYinUsable", true);
+    public static PlayerAttribute QinYinUsed = PlayerAttribute.Register("QinYinUsed", true);
+
+    protected override int GenerateSpecialEffectHintIndex(Player source, List<Player> targets)
     {
-        public static PlayerAttribute QinYinUsable = PlayerAttribute.Register("QinYinUsable", true);
-        public static PlayerAttribute QinYinUsed = PlayerAttribute.Register("QinYinUsed", true);
+        return qinYinEffect;
+    }
 
-        protected override int GenerateSpecialEffectHintIndex(Player source, List<Player> targets)
+    private int qinYinEffect;
+
+    public void Run(Player owner, GameEvent gameEvent, GameEventArgs eventArgs)
+    {
+        if (eventArgs.Cards != null)
         {
-            return qinYinEffect;
+            owner[QinYinUsable] += eventArgs.Cards.Count;
         }
-
-        private int qinYinEffect;
-
-        public void Run(Player owner, GameEvent gameEvent, GameEventArgs eventArgs)
+        if (owner[QinYinUsable] >= 2)
         {
-            if (eventArgs.Cards != null)
+            List<OptionPrompt> QinYinQuestion = new List<OptionPrompt>();
+            QinYinQuestion.Add(Prompt.NoChoice);
+            QinYinQuestion.Add(new OptionPrompt("QinYinHuiFu"));
+            QinYinQuestion.Add(new OptionPrompt("QinYinShiQu"));
+            int answer;
+            var toProcess = Game.CurrentGame.AlivePlayers;
+            if (Game.CurrentGame.UiProxies[owner].AskForMultipleChoice(new MultipleChoicePrompt("QinYin"), QinYinQuestion, out answer))
             {
-                owner[QinYinUsable] += eventArgs.Cards.Count;
-            }
-            if (owner[QinYinUsable] >= 2)
-            {
-                List<OptionPrompt> QinYinQuestion = new List<OptionPrompt>();
-                QinYinQuestion.Add(Prompt.NoChoice);
-                QinYinQuestion.Add(new OptionPrompt("QinYinHuiFu"));
-                QinYinQuestion.Add(new OptionPrompt("QinYinShiQu"));
-                int answer;
-                var toProcess = Game.CurrentGame.AlivePlayers;
-                if (Game.CurrentGame.UiProxies[owner].AskForMultipleChoice(new MultipleChoicePrompt("QinYin"), QinYinQuestion, out answer))
+                if (answer == 0) return;
+                owner[QinYinUsed] = 1;
+                qinYinEffect = answer - 1;
+                NotifySkillUse(new List<Player>());
+                if (answer == 1)
                 {
-                    if (answer == 0) return;
-                    owner[QinYinUsed] = 1;
-                    qinYinEffect = answer - 1;
-                    NotifySkillUse(new List<Player>());
-                    if (answer == 1)
+                    foreach (var p in toProcess)
                     {
-                        foreach (var p in toProcess)
-                        {
-                            Game.CurrentGame.RecoverHealth(owner, p, 1);
-                        }
+                        Game.CurrentGame.RecoverHealth(owner, p, 1);
                     }
-                    else if (answer == 2)
+                }
+                else if (answer == 2)
+                {
+                    foreach (var p in toProcess)
                     {
-                        foreach (var p in toProcess)
-                        {
-                            Game.CurrentGame.LoseHealth(p, 1);
-                        }
+                        Game.CurrentGame.LoseHealth(p, 1);
                     }
                 }
             }
         }
-        
+    }
+    
 
-        public QinYin()
-        {
-            var trigger = new AutoNotifyPassiveSkillTrigger(
-                this,
-                (p, e, a) => { return Game.CurrentGame.CurrentPhase == TurnPhase.Discard && Game.CurrentGame.CurrentPlayer == p && p[QinYinUsed] == 0;},
-                Run,
-                TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+    public QinYin()
+    {
+        var trigger = new AutoNotifyPassiveSkillTrigger(
+            this,
+            (p, e, a) => { return Game.CurrentGame.CurrentPhase == TurnPhase.Discard && Game.CurrentGame.CurrentPlayer == p && p[QinYinUsed] == 0;},
+            Run,
+            TriggerCondition.OwnerIsSource
+        ) { AskForConfirmation = false, IsAutoNotify = false };
 
-            Triggers.Add(GameEvent.CardsEnteredDiscardDeck, trigger);
-            IsAutoInvoked = null;
-        }
+        Triggers.Add(GameEvent.CardsEnteredDiscardDeck, trigger);
+        IsAutoInvoked = null;
     }
 }

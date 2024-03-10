@@ -1,107 +1,44 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{E2597958-3624-4481-A64F-D97F78144BB4}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sanguosha.Expansions.OverKnightFame11</RootNamespace>
-    <AssemblyName>OverKnightFame11</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\Core\Core.csproj" />
+    <ProjectReference Include="..\Basic\Basic.csproj" />
+    <ProjectReference Include="..\Battle\Battle.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OverKnightFame11Expansion.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Skills\BuYi.cs" />
-    <Compile Include="Skills\HuiLei.cs" />
-    <Compile Include="Skills\EnYuan.cs" />
-    <Compile Include="Skills\GanLu.cs" />
-    <Compile Include="Skills\JinJiu.cs" />
-    <Compile Include="Skills\JiuShi.cs" />
-    <Compile Include="Skills\JueQing.cs" />
-    <Compile Include="Skills\JuJian.cs" />
-    <Compile Include="Skills\LuoYing.cs" />
-    <Compile Include="Skills\MingCe.cs" />
-    <Compile Include="Skills\PoJun.cs" />
-    <Compile Include="Skills\QuanJi.cs" />
-    <Compile Include="Skills\ShangShi.cs" />
-    <Compile Include="Skills\WuYan.cs" />
-    <Compile Include="Skills\XianZhen.cs" />
-    <Compile Include="Skills\XinZhan.cs" />
-    <Compile Include="Skills\XuanFeng.cs" />
-    <Compile Include="Skills\XuanHuo.cs" />
-    <Compile Include="Skills\YiZhong.cs" />
-    <Compile Include="Skills\ZhiChi.cs" />
-    <Compile Include="Skills\ZiLi.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
-      <Project>{31B92003-B490-4EAF-8F8E-F9B020F9B03B}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Basic\Basic.csproj">
-      <Project>{5E948FAB-938B-4E4C-BDA1-1740339273EA}</Project>
-      <Name>Basic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Battle\Battle.csproj">
-      <Project>{850AB9CB-90A0-4625-87FA-1F7CE04A5404}</Project>
-      <Name>Battle</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="OverKnightFame11.Skills.xaml">
+    <None Update="OverKnightFame11.Skills.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="OverKnightFame11.Game.xaml">
+    <None Update="OverKnightFame11.Game.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>
+    <!--<PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
+copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>-->
+    <AssemblyTitle>OverKnightFame11</AssemblyTitle>
+    <Product>OverKnightFame11</Product>
+    <Copyright>Copyright ©  2012</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -1,65 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Heroes;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.UI;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Triggers;
 
-namespace Sanguosha.Core.Heroes
+namespace Sanguosha.Core.Heroes;
+
+public class HeroCardHandler(Hero h) : CardHandler, ICloneable
 {
-    public class HeroCardHandler : CardHandler, ICloneable
+    public override object Clone()
     {
-        public override object Clone()
-        {
-            Hero h = (Hero)hero.Clone();
-            HeroCardHandler handler = new HeroCardHandler(h);
-            return handler;
-        }
-
-        protected override void Process(Players.Player source, Players.Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
-        {
-            if (targets == null || targets.Count == 0)
-            {
-                return VerifierResult.Success;
-            }
-            else
-            {
-                return VerifierResult.Fail;
-            }
-        }
-
-        private Hero hero;
-
-        public Hero Hero
-        {
-            get { return hero; }
-            set { hero = value; }
-        }
-        public HeroCardHandler(Hero h)
-        {
-            hero = h;
-        }
-
-        public override CardCategory Category
-        {
-            get { return CardCategory.Hero; }
-        }
-
-        public override string Name
-        {
-            get
-            {
-                return Hero.Name;
-            }
-        }
+        Hero h = (Hero)Hero.Clone();
+        var handler = new HeroCardHandler(h);
+        return handler;
     }
+
+    protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
+    {
+        throw new NotImplementedException();
+    }
+
+    public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
+    {
+        return targets == null || targets.Count == 0 ? VerifierResult.Success : VerifierResult.Fail;
+    }
+
+    public Hero Hero { get; set; } = h;
+
+    public override CardCategory Category => CardCategory.Hero;
+
+    public override string Name => Hero.Name;
 }

@@ -1,61 +1,57 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Data;
 using Sanguosha.Core.UI;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+public class MultiChoiceButtonStyleConverter : IValueConverter
 {
-    public class MultiChoiceButtonStyleConverter : IValueConverter
+    static MultiChoiceButtonStyleConverter()
     {
-        static MultiChoiceButtonStyleConverter()
-        {
-            dict = new ResourceDictionary();
-            dict.Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml");
-        }
+        dict = new ResourceDictionary();
+        dict.Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml");
+    }
 
-        static ResourceDictionary dict;
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    private static readonly ResourceDictionary dict;
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        OptionPrompt choiceKey = value as OptionPrompt;
+        if (choiceKey == null) return null;
+        if (Prompt.SuitChoices.Contains(choiceKey) || Prompt.AllegianceChoices.Contains(choiceKey))
         {
-            OptionPrompt choiceKey = value as OptionPrompt;
-            if (choiceKey == null) return null;
-            if (Prompt.SuitChoices.Contains(choiceKey) || Prompt.AllegianceChoices.Contains(choiceKey))
-            {
-                return dict["MultiChoiceCustomButtonStyle"] as Style;
-            }
-            else
-            {
-                return dict["MultiChoiceButtonStyle"] as Style;
-            }
+            return dict["MultiChoiceCustomButtonStyle"] as Style;
         }
-
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        else
         {
-            throw new NotImplementedException();
+            return dict["MultiChoiceButtonStyle"] as Style;
         }
     }
 
-    public class MultiChoiceKeyConverter : IValueConverter
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        static MultiChoiceKeyConverter()
-        {
-            dict = new ResourceDictionary();
-            dict.Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml");
-        }
+        throw new NotImplementedException();
+    }
+}
 
-        static ResourceDictionary dict;
-        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            OptionPrompt choiceKey = value as OptionPrompt;
-            if (choiceKey == null) return null;
-            return LogFormatter.Translate(choiceKey);
-        }
+public class MultiChoiceKeyConverter : IValueConverter
+{
+    static MultiChoiceKeyConverter()
+    {
+        dict = new ResourceDictionary();
+        dict.Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml");
+    }
 
-        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+    private static readonly ResourceDictionary dict;
+    public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        OptionPrompt choiceKey = value as OptionPrompt;
+        if (choiceKey == null) return null;
+        return LogFormatter.Translate(choiceKey);
+    }
+
+    public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+    {
+        throw new NotImplementedException();
     }
 }

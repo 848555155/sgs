@@ -1,138 +1,43 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{C207EC66-730A-4FEC-B83D-E8F40B7CC620}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sanguosha.Expansions.SP</RootNamespace>
-    <AssemblyName>SP</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\..\bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\Core\Core.csproj" />
+    <ProjectReference Include="..\Assassin\Assassin.csproj" />
+    <ProjectReference Include="..\Basic\Basic.csproj" />
+    <ProjectReference Include="..\Battle\Battle.csproj" />
+    <ProjectReference Include="..\Fire\Fire.csproj" />
+    <ProjectReference Include="..\Hills\Hills.csproj" />
+    <ProjectReference Include="..\Wind\Wind.csproj" />
+    <ProjectReference Include="..\Woods\Woods.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Skills\AoCai.cs" />
-    <Compile Include="Skills\BaoBian.cs" />
-    <Compile Include="Skills\BiFa.cs" />
-    <Compile Include="Skills\DanJi.cs" />
-    <Compile Include="Skills\DanLao.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Skills\DuWu.cs" />
-    <Compile Include="Skills\HuXiao.cs" />
-    <Compile Include="Skills\JiLei.cs" />
-    <Compile Include="Skills\LuoYan.cs" />
-    <Compile Include="Skills\ShenJi.cs" />
-    <Compile Include="Skills\ShenWei.cs" />
-    <Compile Include="Skills\SkillPriority.cs" />
-    <Compile Include="Skills\SongCi.cs" />
-    <Compile Include="Skills\WeiDi.cs" />
-    <Compile Include="Skills\WuJi.cs" />
-    <Compile Include="Skills\XingWu.cs" />
-    <Compile Include="Skills\XiuLuo.cs" />
-    <Compile Include="Skills\XueJi.cs" />
-    <Compile Include="Skills\YiCong.cs" />
-    <Compile Include="Skills\YongSi.cs" />
-    <Compile Include="Skills\YuanHu.cs" />
-    <Compile Include="SpExpansion.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
-      <Project>{31B92003-B490-4EAF-8F8E-F9B020F9B03B}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Assassin\Assassin.csproj">
-      <Project>{fbe66afe-ca51-45ff-9546-e16c17527baa}</Project>
-      <Name>Assassin</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Basic\Basic.csproj">
-      <Project>{5E948FAB-938B-4E4C-BDA1-1740339273EA}</Project>
-      <Name>Basic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Battle\Battle.csproj">
-      <Project>{850AB9CB-90A0-4625-87FA-1F7CE04A5404}</Project>
-      <Name>Battle</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fire\Fire.csproj">
-      <Project>{e1d27fb1-40b8-4768-a045-dd9772564ddd}</Project>
-      <Name>Fire</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hills\Hills.csproj">
-      <Project>{893e3214-c48d-493c-b09d-7a31756b72b9}</Project>
-      <Name>Hills</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Wind\Wind.csproj">
-      <Project>{7ef64814-44f4-40ea-91c4-feb67f279f3f}</Project>
-      <Name>Wind</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Woods\Woods.csproj">
-      <Project>{6eb21e93-773a-4894-aa51-3128ccf649b7}</Project>
-      <Name>Woods</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SP.Game.xaml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SP.Skills.xaml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="SP.Cards.xaml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>
+    <!--<PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
+copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>-->
+    <AssemblyTitle>SP</AssemblyTitle>
+    <Product>SP</Product>
+    <Copyright>Copyright ©  2012</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

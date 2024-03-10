@@ -1,116 +1,112 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
 using System.IO;
 
-namespace Sanguosha.Core.UI
+namespace Sanguosha.Core.UI;
+
+#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
+public class TestUiProxy : IPlayerProxy
+#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
-    public class TestUiProxy : IPlayerProxy
+    public void Freeze()
     {
-        public void Freeze()
+    }
+
+    private Player hostPlayer;
+
+    public Player HostPlayer
+    {
+        get { return hostPlayer; }
+        set { hostPlayer = value; }
+    }
+
+    private StreamReader logFile;
+    private string line;
+
+    protected bool LoadTestScript(string fn)
+    {
+        try
         {
-        }
-
-        private Player hostPlayer;
-
-        public Player HostPlayer
-        {
-            get { return hostPlayer; }
-            set { hostPlayer = value; }
-        }
-
-        StreamReader logFile;
-        string line;
-
-        protected bool LoadTestScript(string fn)
-        {
-            try
+            logFile = new StreamReader(fn);
+            if (!NextEntry())
             {
-                logFile = new StreamReader(fn);
-                if (!NextEntry())
+                return false;
+            }
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    protected bool NextEntry()
+    {
+        try
+        {
+            line = logFile.ReadLine();
+        }
+        catch (Exception)
+        {
+            line = null;
+            return false;
+        }
+        if (line == null)
+        {
+            return false;
+        }
+        return true;
+    }
+
+    public bool AskForCardUsage(Prompt prompt, ICardUsageVerifier verifier, out ISkill skill, out List<Card> cards, out List<Player> players)
+    {
+        line = "U JiJiang 1: 2 3";
+        Match m = Regex.Match(line, @"U\s(?<skill>[A-Za-z]*)(?<cards>(\s\d+)*):(?<players>(\s\d+)*)");
+        skill = null;
+        cards = null;
+        players = null;
+        if (m.Success)
+        {
+            if (m.Groups["skill"].Success)
+            {
+                foreach (ISkill s in hostPlayer.Skills)
                 {
-                    return false;
-                }
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        protected bool NextEntry()
-        {
-            try
-            {
-                line = logFile.ReadLine();
-            }
-            catch (Exception)
-            {
-                line = null;
-                return false;
-            }
-            if (line == null)
-            {
-                return false;
-            }
-            return true;
-        }
-
-        public bool AskForCardUsage(Prompt prompt, ICardUsageVerifier verifier, out ISkill skill, out List<Card> cards, out List<Player> players)
-        {
-            line = "U JiJiang 1: 2 3";
-            Match m = Regex.Match(line, @"U\s(?<skill>[A-Za-z]*)(?<cards>(\s\d+)*):(?<players>(\s\d+)*)");
-            skill = null;
-            cards = null;
-            players = null;
-            if (m.Success)
-            {
-                if (m.Groups["skill"].Success)
-                {
-                    foreach (ISkill s in hostPlayer.Skills)
+                    if (s is CardTransformSkill)
                     {
-                        if (s is CardTransformSkill)
-                        {
-                            
-                        }
-                        if (s is ActiveSkill)
-                        {
-                        }
+                        
+                    }
+                    if (s is ActiveSkill)
+                    {
                     }
                 }
-                return true;
             }
-            else
-            {
-                return false;
-            }
+            return true;
         }
-
-        public bool AskForMultipleChoice(Prompt prompt, List<OptionPrompt> questions, out int answer)
+        else
         {
-            throw new NotImplementedException();
+            return false;
         }
-        public int TimeOutSeconds { get; set; }
+    }
+
+    public bool AskForMultipleChoice(Prompt prompt, List<OptionPrompt> questions, out int answer)
+    {
+        throw new NotImplementedException();
+    }
+    public int TimeOutSeconds { get; set; }
 
 
-        public bool AskForCardChoice(Prompt prompt, List<DeckPlace> sourceDecks, List<string> resultDeckNames, List<int> resultDeckMaximums, ICardChoiceVerifier verifier, out List<List<Card>> answer, AdditionalCardChoiceOptions helper = null, CardChoiceRearrangeCallback callback = null)
-        {
-            throw new NotImplementedException();
-        }
+    public bool AskForCardChoice(Prompt prompt, List<DeckPlace> sourceDecks, List<string> resultDeckNames, List<int> resultDeckMaximums, ICardChoiceVerifier verifier, out List<List<Card>> answer, AdditionalCardChoiceOptions helper = null, CardChoiceRearrangeCallback callback = null)
+    {
+        throw new NotImplementedException();
+    }
 
 
-        public bool IsPlayable
-        {
-            get;
-            set;
-        }
+    public bool IsPlayable
+    {
+        get;
+        set;
     }
 }

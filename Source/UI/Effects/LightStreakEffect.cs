@@ -1,32 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Media.Effects;
+﻿using System.Windows.Media.Effects;
 using System.Windows;
 using System.Windows.Media;
 
 
-namespace Sanguosha.UI.Effects
-{
-    /// <summary>An effect that intensifies bright areas.</summary>
+namespace Sanguosha.UI.Effects;
+
+/// <summary>An effect that intensifies bright areas.</summary>
 	public class LightStreakEffect : ShaderEffect {
-		public static readonly DependencyProperty InputProperty = ShaderEffect.RegisterPixelShaderSamplerProperty("Input", typeof(LightStreakEffect), 0);
+		public static readonly DependencyProperty InputProperty = RegisterPixelShaderSamplerProperty("Input", typeof(LightStreakEffect), 0);
 		public static readonly DependencyProperty BrightThresholdProperty = DependencyProperty.Register("BrightThreshold", typeof(double), typeof(LightStreakEffect), new UIPropertyMetadata(((double)(0.5D)), PixelShaderConstantCallback(0)));
 		public static readonly DependencyProperty ScaleProperty = DependencyProperty.Register("Scale", typeof(double), typeof(LightStreakEffect), new UIPropertyMetadata(((double)(0.5D)), PixelShaderConstantCallback(1)));
 		public static readonly DependencyProperty AttenuationProperty = DependencyProperty.Register("Attenuation", typeof(double), typeof(LightStreakEffect), new UIPropertyMetadata(((double)(0.25D)), PixelShaderConstantCallback(2)));
 		public static readonly DependencyProperty DirectionProperty = DependencyProperty.Register("Direction", typeof(Vector), typeof(LightStreakEffect), new UIPropertyMetadata(new Vector(0.5D, 1D), PixelShaderConstantCallback(3)));
 		public static readonly DependencyProperty InputSizeProperty = DependencyProperty.Register("InputSize", typeof(Size), typeof(LightStreakEffect), new UIPropertyMetadata(new Size(800D, 600D), PixelShaderConstantCallback(4)));
-		
-        static PixelShader pixelShader;
+    private static readonly PixelShader pixelShader;
 
-        static LightStreakEffect()
-        {
-            pixelShader = new PixelShader();
-            pixelShader.UriSource = Global.MakePackUri("ShaderSource/LightStreak.ps"); 
-        }
+    static LightStreakEffect()
+    {
+        pixelShader = new PixelShader();
+        pixelShader.UriSource = Global.MakePackUri("ShaderSource/LightStreak.ps"); 
+    }
 
-        public LightStreakEffect() {		
+    public LightStreakEffect() {		
 			this.PixelShader = pixelShader;
 
 			this.UpdateShaderValue(InputProperty);
@@ -90,6 +85,4 @@ namespace Sanguosha.UI.Effects
 			}
 		}
 	}
-}
 
- 

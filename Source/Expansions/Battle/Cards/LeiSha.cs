@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Core.Games;
 
-namespace Sanguosha.Expansions.Battle.Cards
+namespace Sanguosha.Expansions.Battle.Cards;
+
+
+public class LeiSha : Sha
 {
-    
-    public class LeiSha : Sha
+    public override DamageElement ShaDamageElement
     {
-        public override DamageElement ShaDamageElement
+        get
         {
-            get
-            {
-                return DamageElement.Lightning;
-            }
+            return DamageElement.Lightning;
         }
     }
 }

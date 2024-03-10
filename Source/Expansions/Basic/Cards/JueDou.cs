@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 using Sanguosha.Core.UI;
@@ -9,99 +6,97 @@ using Sanguosha.Core.Skills;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Cards;
 
-namespace Sanguosha.Expansions.Basic.Cards
+namespace Sanguosha.Expansions.Basic.Cards;
+
+
+public class JueDou : CardHandler
 {
-    
-    public class JueDou : CardHandler
+    protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
-        protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
+        Player current = dest;
+        bool firstTime = true;
+        while (true)
         {
-            Player current = dest;
-            bool firstTime = true;
-            while (true)
+            List<Player> sourceList = new List<Player>();
+            if (current == dest)
             {
-                List<Player> sourceList = new List<Player>();
-                if (current == dest)
-                {
-                    sourceList.Add(source);
-                }
-                else
-                {
-                    sourceList.Add(dest);
-                }
-                IPlayerProxy ui = Game.CurrentGame.UiProxies[current];
-                SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return c.Type is Sha; }, false, new Sha());
-                ISkill skill;
-                List<Player> p;
-                List<Card> cards;
-                CardUsagePrompt prompt;
-                if (current.IsDead) return;
-                if (firstTime)
-                {
-                    prompt = new CardUsagePrompt("JueDou", source);;
-                }
-                else
-                {
-                    prompt = new CardUsagePrompt("JueDou2", current == dest ? source : dest);
-                    firstTime = false;
-                }
-                int numberOfShaRequired = current == dest ? readonlyCard[CardAttribute.TargetRequireTwoResponses[dest]] + 1 : readonlyCard[CardAttribute.SourceRequireTwoResponses] + 1;
-                bool cannotProvideSha = false;
-                while (numberOfShaRequired > 0)
-                {
-                    Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = current, Verifier = v1 });
-                    if (!ui.AskForCardUsage(prompt, v1, out skill, out cards, out p))
-                    {
-                        Trace.TraceInformation("Player {0} Invalid answer", current);
-                        cannotProvideSha = true;
-                        break;
-                    }
-                    if (!Game.CurrentGame.HandleCardPlay(current, skill, cards, sourceList))
-                    {
-                        continue;
-                    }
-                    numberOfShaRequired--;
-                }
-                if (cannotProvideSha) break;
-                Trace.TraceInformation("Player {0} SHA, ", current.Id);
-                if (current == dest)
-                {
-                    current = source;
-                }
-                else
-                {
-                    current = dest;
-                }
+                sourceList.Add(source);
             }
-            Player won = current == dest ? source : dest;
-            Game.CurrentGame.DoDamage(won, current, 1, DamageElement.None, card, readonlyCard);
+            else
+            {
+                sourceList.Add(dest);
+            }
+            IPlayerProxy ui = Game.CurrentGame.UiProxies[current];
+            SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return c.Type is Sha; }, false, new Sha());
+            ISkill skill;
+            List<Player> p;
+            List<Card> cards;
+            CardUsagePrompt prompt;
+            if (current.IsDead) return;
+            if (firstTime)
+            {
+                prompt = new CardUsagePrompt("JueDou", source);;
+            }
+            else
+            {
+                prompt = new CardUsagePrompt("JueDou2", current == dest ? source : dest);
+                firstTime = false;
+            }
+            int numberOfShaRequired = current == dest ? readonlyCard[CardAttribute.TargetRequireTwoResponses[dest]] + 1 : readonlyCard[CardAttribute.SourceRequireTwoResponses] + 1;
+            bool cannotProvideSha = false;
+            while (numberOfShaRequired > 0)
+            {
+                Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = current, Verifier = v1 });
+                if (!ui.AskForCardUsage(prompt, v1, out skill, out cards, out p))
+                {
+                    Trace.TraceInformation("Player {0} Invalid answer", current);
+                    cannotProvideSha = true;
+                    break;
+                }
+                if (!Game.CurrentGame.HandleCardPlay(current, skill, cards, sourceList))
+                {
+                    continue;
+                }
+                numberOfShaRequired--;
+            }
+            if (cannotProvideSha) break;
+            Trace.TraceInformation("Player {0} SHA, ", current.Id);
+            if (current == dest)
+            {
+                current = source;
+            }
+            else
+            {
+                current = dest;
+            }
         }
-
-        public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
-        {
-            if (targets == null || targets.Count == 0)
-            {
-                return VerifierResult.Partial;
-            }
-            if (!isLooseVerify && targets.Count > 1)
-            {
-                return VerifierResult.Fail;
-            }
-            if (targets[0] == source)
-            {
-                return VerifierResult.Fail;
-            }
-            return VerifierResult.Success;
-        }
-
-        public override CardCategory Category
-        {
-            get { return CardCategory.ImmediateTool; }
-        }
-
-        public static readonly GameEvent JueDouModifier = new GameEvent("JueDouModifier");
+        Player won = current == dest ? source : dest;
+        Game.CurrentGame.DoDamage(won, current, 1, DamageElement.None, card, readonlyCard);
     }
+
+    public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
+    {
+        if (targets == null || targets.Count == 0)
+        {
+            return VerifierResult.Partial;
+        }
+        if (!isLooseVerify && targets.Count > 1)
+        {
+            return VerifierResult.Fail;
+        }
+        if (targets[0] == source)
+        {
+            return VerifierResult.Fail;
+        }
+        return VerifierResult.Success;
+    }
+
+    public override CardCategory Category
+    {
+        get { return CardCategory.ImmediateTool; }
+    }
+
+    public static readonly GameEvent JueDouModifier = new GameEvent("JueDouModifier");
 }

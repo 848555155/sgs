@@ -1,22 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using Sanguosha.Core.Cards;
-using Sanguosha.Core.Heroes;
 
-namespace Sanguosha.UI.Controls
-{
+namespace Sanguosha.UI.Controls;
 
-    public delegate void SkillNameSelectedHandler(string skillName);
+
+public delegate void SkillNameSelectedHandler(string skillName);
 
 	/// <summary>
 	/// Interaction logic for HeroSetView.xaml
@@ -27,43 +16,42 @@ namespace Sanguosha.UI.Controls
 		{
 			this.InitializeComponent();
 		}
-        
+    
 		private void gridHeroSet_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
 		{
 			// TODO: Add event handler implementation here.
-            var model = gridHeroSet.SelectedItem as HeroViewModel;
+        var model = gridHeroSet.SelectedItem as HeroViewModel;
 			if (model != null)
 			{
-                heroCardView.DataContext = new CardViewModel()
+            heroCardView.DataContext = new CardViewModel()
+            {
+                Card = new Card()
                 {
-                    Card = new Card()
-                    {
-                        Id = model.Id                        
-                    }
-                };
-                heroCardView.Visibility = Visibility.Visible;
+                    Id = model.Id                        
+                }
+            };
+            heroCardView.Visibility = Visibility.Visible;
 				gridHeroInfo.Visibility = Visibility.Visible;
 			}
 			else
 			{
-                heroCardView.Visibility = Visibility.Collapsed;
+            heroCardView.Visibility = Visibility.Collapsed;
 				gridHeroInfo.Visibility = Visibility.Collapsed;
 			}
 		}
 
-        public event SkillNameSelectedHandler OnSkillNameSelected;
+    public event SkillNameSelectedHandler OnSkillNameSelected;
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+    private void Button_Click(object sender, RoutedEventArgs e)
+    {
+        SkillNameSelectedHandler handle = OnSkillNameSelected;
+        if (handle != null)
         {
-            SkillNameSelectedHandler handle = OnSkillNameSelected;
-            if (handle != null)
+            string skillName = (sender as Button).DataContext as string;
+            if (skillName != null && skillName != string.Empty)
             {
-                string skillName = (sender as Button).DataContext as string;
-                if (skillName != null && skillName != string.Empty)
-                {
-                    handle(skillName);
-                }
+                handle(skillName);
             }
         }
+    }
 	}
-}

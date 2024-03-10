@@ -1,23 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace Sanguosha.Core.Heroes;
 
-namespace Sanguosha.Core.Heroes
+public class UnknownHeroCardHandler : HeroCardHandler
 {
-    public class UnknownHeroCardHandler : HeroCardHandler
+    public UnknownHeroCardHandler() : base(null)
     {
-        public UnknownHeroCardHandler() : base(null)
-        {
-        }
-        public override string Name
-        {
-            get
-            {
-                return _cardTypeString;
-            }
-        }
-
-        private static string _cardTypeString = "UnknownHero";
     }
+    public override string Name => _cardTypeString;
+
+    private static readonly string _cardTypeString = "UnknownHero";
 }

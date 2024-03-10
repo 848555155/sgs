@@ -1,77 +1,72 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Cards;
 using Sanguosha.Core.UI;
 using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Battle.Cards;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Games;
 
-namespace Sanguosha.Expansions.Woods.Skills
+namespace Sanguosha.Expansions.Woods.Skills;
+
+/// <summary>
+/// 放逐-每当你受到一次伤害后，可令一名其他角色摸X张牌(X为你已损失的体力值)，然后该角色将其武将牌翻面。
+/// </summary>
+public class FangZhu : TriggerSkill
 {
-    /// <summary>
-    /// 放逐-每当你受到一次伤害后，可令一名其他角色摸X张牌(X为你已损失的体力值)，然后该角色将其武将牌翻面。
-    /// </summary>
-    public class FangZhu : TriggerSkill
+    public class FangZhuVerifier : ICardUsageVerifier
     {
-        public class FangZhuVerifier : ICardUsageVerifier
+        public UiHelper Helper { get { return new UiHelper(); } }
+        public VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
         {
-            public UiHelper Helper { get { return new UiHelper(); } }
-            public VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
+            if (skill != null || (cards != null && cards.Count != 0))
             {
-                if (skill != null || (cards != null && cards.Count != 0))
+                return VerifierResult.Fail;
+            }
+            if (players == null || players.Count == 0)
+            {
+                return VerifierResult.Partial;
+            }
+            foreach (Player p in players)
+            {
+                if (p == source)
                 {
                     return VerifierResult.Fail;
                 }
-                if (players == null || players.Count == 0)
-                {
-                    return VerifierResult.Partial;
-                }
-                foreach (Player p in players)
-                {
-                    if (p == source)
-                    {
-                        return VerifierResult.Fail;
-                    }
-                }
-                if (players.Count > 1)
-                {
-                    return VerifierResult.Fail;
-                }
-                return VerifierResult.Success;
             }
-
-            public IList<CardHandler> AcceptableCardTypes
+            if (players.Count > 1)
             {
-                get { return null; }
+                return VerifierResult.Fail;
             }
-
-            public VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
-            {
-                return FastVerify(source, skill, cards, players);
-            }
+            return VerifierResult.Success;
         }
 
-        protected void OnAfterDamageInflicted(Player owner, GameEvent gameEvent, GameEventArgs eventArgs, List<Card> cards, List<Player> players)
+        public IList<CardHandler> AcceptableCardTypes
         {
-            players[0].IsImprisoned = !players[0].IsImprisoned;
-            Game.CurrentGame.DrawCards(players[0], Owner.LostHealth);
+            get { return null; }
         }
 
-        public FangZhu()
+        public VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
         {
-            var trigger = new AutoNotifyUsagePassiveSkillTrigger(
-                this,
-                OnAfterDamageInflicted,
-                TriggerCondition.OwnerIsTarget,
-                new FangZhuVerifier()
-            );
-            Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
-            IsAutoInvoked = null;
+            return FastVerify(source, skill, cards, players);
         }
+    }
+
+    protected void OnAfterDamageInflicted(Player owner, GameEvent gameEvent, GameEventArgs eventArgs, List<Card> cards, List<Player> players)
+    {
+        players[0].IsImprisoned = !players[0].IsImprisoned;
+        Game.CurrentGame.DrawCards(players[0], Owner.LostHealth);
+    }
+
+    public FangZhu()
+    {
+        var trigger = new AutoNotifyUsagePassiveSkillTrigger(
+            this,
+            OnAfterDamageInflicted,
+            TriggerCondition.OwnerIsTarget,
+            new FangZhuVerifier()
+        );
+        Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
+        IsAutoInvoked = null;
     }
 }

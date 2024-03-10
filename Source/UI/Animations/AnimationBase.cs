@@ -1,66 +1,58 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
-namespace Sanguosha.UI.Animations
+namespace Sanguosha.UI.Animations;
+
+public class AnimationBase : UserControl, IAnimation
 {
-    public class AnimationBase : UserControl, IAnimation
+    protected Storyboard mainAnimation;
+
+    public AnimationBase()
     {
-        protected Storyboard mainAnimation;
+        IsHitTestVisible = false;
+        HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
+        VerticalAlignment = System.Windows.VerticalAlignment.Center;
+    }
 
-        public AnimationBase()
+    public void Start()
+    {
+        if (mainAnimation == null)
         {
-            IsHitTestVisible = false;
-            HorizontalAlignment = System.Windows.HorizontalAlignment.Center;
-            VerticalAlignment = System.Windows.VerticalAlignment.Center;
+            if (!Resources.Contains("mainAnimation"))
+            {
+                Trace.TraceError("Animation not found");
+                return;
+            }
+            mainAnimation = Resources["mainAnimation"] as Storyboard;
+            if (mainAnimation == null) return;
         }
+        mainAnimation.Completed += mainAnimation_Completed;
+        StartMainAnimation();
+    }
 
-        public void Start()
+    public event EventHandler Completed;
+
+    private void mainAnimation_Completed(object sender, EventArgs e)
+    {
+        if (VisualParent is Panel panel && panel.Children.Contains(this))
         {
-            if (mainAnimation == null)
-            {
-                if (!Resources.Contains("mainAnimation"))
-                {
-                    Trace.TraceError("Animation not found");
-                    return;
-                }
-                mainAnimation = Resources["mainAnimation"] as Storyboard;
-                if (mainAnimation == null) return;
-            }
-            mainAnimation.Completed += mainAnimation_Completed;
-            StartMainAnimation();
+            panel.Children.Remove(this);
         }
-
-        public event EventHandler Completed;
-
-        void mainAnimation_Completed(object sender, EventArgs e)
+        else
         {
-            Panel panel = this.VisualParent as Panel;
-            if (panel != null && panel.Children.Contains(this))
-            {
-                panel.Children.Remove(this);
-            }
-            else
-            {
-                Trace.TraceError("Cannot find animation's parent canvas. Failed to remove animation");
-            }
-            var handler = Completed;
-            if (handler != null)
-            {
-                handler(this, new EventArgs());
-            }
+            Trace.TraceError("Cannot find animation's parent canvas. Failed to remove animation");
         }
-
-        protected virtual void StartMainAnimation()
+        var handler = Completed;
+        if (handler != null)
         {
-            if (mainAnimation != null)
-            {
-                mainAnimation.Begin();
-            }
+            handler(this, new EventArgs());
         }
+    }
+
+    protected virtual void StartMainAnimation()
+    {
+        mainAnimation?.Begin();
     }
 }

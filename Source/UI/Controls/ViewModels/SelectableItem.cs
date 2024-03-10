@@ -1,220 +1,216 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+public class SelectableItem : ViewModelBase
 {
-    public class SelectableItem : ViewModelBase
+
+    #region Constructors
+    public SelectableItem()
+    {            
+    }
+    #endregion
+
+    #region UI Related Properties
+
+    private bool isSelected;
+
+    public bool IsSelected
     {
-
-        #region Constructors
-        public SelectableItem()
-        {            
-        }
-        #endregion
-
-        #region UI Related Properties
-
-        private bool isSelected;
-
-        public bool IsSelected
+        get { return isSelected; }
+        set
         {
-            get { return isSelected; }
-            set
+            if (isSelected == value || !IsSelectionMode || !IsEnabled)
             {
-                if (isSelected == value || !IsSelectionMode || !IsEnabled)
-                {
-                    return;
-                }
-                bool oldValue = isSelected;
-                isSelected = value;
-                _EnsureSelectionInvariant();
-                if (oldValue != isSelected)
-                {
-                    OnPropertyChanged("IsSelected");
-                    if (isSelected && SelectedTimes == 0)
-                    {
-                        SelectedTimes = 1;
-                    }
-                    else if (!isSelected)
-                    {
-                        SelectedTimes = 0;
-                    }
-                    EventHandler handle = OnSelectedChanged;
-                    if (handle != null)
-                    {
-                        handle(this, new EventArgs());
-                    }
-                }
+                return;
             }
-        }
-        
-        private void _EnsureSelectionInvariant()
-        {
-            var handler = OnSelectedChanged;
-            if (!IsSelectionMode)
+            bool oldValue = isSelected;
+            isSelected = value;
+            _EnsureSelectionInvariant();
+            if (oldValue != isSelected)
             {
-                if (isEnabled)
+                OnPropertyChanged("IsSelected");
+                if (isSelected && SelectedTimes == 0)
                 {
-                    isEnabled = false;
-                    OnPropertyChanged("IsEnabled");
+                    SelectedTimes = 1;
                 }
-                if (isSelected)
+                else if (!isSelected)
                 {
-                    isSelected = false;
                     SelectedTimes = 0;
-                    OnPropertyChanged("IsSelected");
-                    if (handler != null)
-                    {
-                        handler(this, new EventArgs());
-                    }
                 }
-                if (isFaded)
+                EventHandler handle = OnSelectedChanged;
+                if (handle != null)
                 {
-                    isFaded = false;
-                    OnPropertyChanged("IsFaded");
-                }
-            }
-            else if (!IsEnabled)
-            {
-                if (isSelected)
-                {
-                    isSelected = false;
-                    SelectedTimes = 0;
-                    OnPropertyChanged("IsSelected");
-                    if (handler != null)
-                    {
-                        handler(this, new EventArgs());
-                    }
-                }
-                if (!isFaded)
-                {
-                    isFaded = true;
-                    OnPropertyChanged("IsFaded");
-                }
-            }
-            else
-            {
-                if (isFaded)
-                {
-                    isFaded = false;
-                    OnPropertyChanged("IsFaded");
+                    handle(this, new EventArgs());
                 }
             }
         }
-
-        private bool isSelectionMode;
-
-        public bool IsSelectionMode
+    }
+    
+    private void _EnsureSelectionInvariant()
+    {
+        var handler = OnSelectedChanged;
+        if (!IsSelectionMode)
         {
-            get { return isSelectionMode; }
-            set
+            if (isEnabled)
             {
-                if (isSelectionMode == value) return;
-                isSelectionMode = value;
-                if (value == true)
-                {
-                    IsEnabled = true;
-                }
-                else
-                {
-                    _EnsureSelectionInvariant();
-                }
-                OnPropertyChanged("IsSelectionMode");
+                isEnabled = false;
+                OnPropertyChanged("IsEnabled");
             }
-        }
-
-        private bool isEnabled;
-
-        public bool IsEnabled
-        {
-            get { return isEnabled; }
-            set
+            if (isSelected)
             {
-                if (isEnabled == value) return;
-                bool oldValue = IsEnabled;
-                isEnabled = value;
-                _EnsureSelectionInvariant();
-                if (oldValue != IsEnabled)
+                isSelected = false;
+                SelectedTimes = 0;
+                OnPropertyChanged("IsSelected");
+                if (handler != null)
                 {
-                    OnPropertyChanged("IsEnabled");
+                    handler(this, new EventArgs());
                 }
             }
-        }
-
-        private bool isFaded;
-
-        public bool IsFaded
-        {
-            get { return isFaded; }
-            set
+            if (isFaded)
             {
-                if (isFaded == value) return;
-                isFaded = value;
+                isFaded = false;
                 OnPropertyChanged("IsFaded");
             }
         }
-
-        private bool _isSelectionRepeatable;
-        public bool IsSelectionRepeatable 
+        else if (!IsEnabled)
         {
-            get
+            if (isSelected)
             {
-                return _isSelectionRepeatable;
+                isSelected = false;
+                SelectedTimes = 0;
+                OnPropertyChanged("IsSelected");
+                if (handler != null)
+                {
+                    handler(this, new EventArgs());
+                }
             }
-            set
+            if (!isFaded)
             {
-                if (_isSelectionRepeatable == value) return;
-                _isSelectionRepeatable = value;
-                OnPropertyChanged("IsSelectionRepeatable");
+                isFaded = true;
+                OnPropertyChanged("IsFaded");
             }
         }
-
-        private int _selectedTimes;
-        public int SelectedTimes 
+        else
         {
-            get
+            if (isFaded)
             {
-                return _selectedTimes;
-            }
-            set
-            {
-                if (_selectedTimes == value) return;
-                _selectedTimes = value;
-                OnPropertyChanged("SelectedTimes");
+                isFaded = false;
+                OnPropertyChanged("IsFaded");
             }
         }
+    }
 
-        public bool CanBeSelectedMore { get; set; }
+    private bool isSelectionMode;
 
-        public event EventHandler OnSelectedChanged;
-
-        #endregion
-
-        public void SelectOnce()
+    public bool IsSelectionMode
+    {
+        get { return isSelectionMode; }
+        set
         {
-            if (IsSelectionRepeatable && IsSelected)
+            if (isSelectionMode == value) return;
+            isSelectionMode = value;
+            if (value == true)
             {
-                if (!CanBeSelectedMore)
-                {
-                    SelectedTimes = 0;
-                    IsSelected = false;
-                }
-                else
-                {
-                    SelectedTimes++;
-                    EventHandler handle = OnSelectedChanged;
-                    if (handle != null)
-                    {
-                        handle(this, new EventArgs());
-                    }
-                }
+                IsEnabled = true;
             }
             else
             {
-                IsSelected = !IsSelected;
+                _EnsureSelectionInvariant();
             }
+            OnPropertyChanged("IsSelectionMode");
+        }
+    }
+
+    private bool isEnabled;
+
+    public bool IsEnabled
+    {
+        get { return isEnabled; }
+        set
+        {
+            if (isEnabled == value) return;
+            bool oldValue = IsEnabled;
+            isEnabled = value;
+            _EnsureSelectionInvariant();
+            if (oldValue != IsEnabled)
+            {
+                OnPropertyChanged("IsEnabled");
+            }
+        }
+    }
+
+    private bool isFaded;
+
+    public bool IsFaded
+    {
+        get { return isFaded; }
+        set
+        {
+            if (isFaded == value) return;
+            isFaded = value;
+            OnPropertyChanged("IsFaded");
+        }
+    }
+
+    private bool _isSelectionRepeatable;
+    public bool IsSelectionRepeatable 
+    {
+        get
+        {
+            return _isSelectionRepeatable;
+        }
+        set
+        {
+            if (_isSelectionRepeatable == value) return;
+            _isSelectionRepeatable = value;
+            OnPropertyChanged("IsSelectionRepeatable");
+        }
+    }
+
+    private int _selectedTimes;
+    public int SelectedTimes 
+    {
+        get
+        {
+            return _selectedTimes;
+        }
+        set
+        {
+            if (_selectedTimes == value) return;
+            _selectedTimes = value;
+            OnPropertyChanged("SelectedTimes");
+        }
+    }
+
+    public bool CanBeSelectedMore { get; set; }
+
+    public event EventHandler OnSelectedChanged;
+
+    #endregion
+
+    public void SelectOnce()
+    {
+        if (IsSelectionRepeatable && IsSelected)
+        {
+            if (!CanBeSelectedMore)
+            {
+                SelectedTimes = 0;
+                IsSelected = false;
+            }
+            else
+            {
+                SelectedTimes++;
+                EventHandler handle = OnSelectedChanged;
+                if (handle != null)
+                {
+                    handle(this, new EventArgs());
+                }
+            }
+        }
+        else
+        {
+            IsSelected = !IsSelected;
         }
     }
 }

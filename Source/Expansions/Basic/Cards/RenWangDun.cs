@@ -1,43 +1,32 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Cards;
-using System.Diagnostics;
-using Sanguosha.Expansions.Basic.Cards;
 
-namespace Sanguosha.Expansions.Basic.Cards
+namespace Sanguosha.Expansions.Basic.Cards;
+
+
+public class RenWangDun : Armor
 {
     
-    public class RenWangDun : Armor
+    public class RenWangDunSkill : ArmorTriggerSkill
     {
-        
-        public class RenWangDunSkill : ArmorTriggerSkill
+        public RenWangDunSkill()
         {
-            public RenWangDunSkill()
-            {
-                var trigger = new AutoNotifyPassiveSkillTrigger(
-                    this,
-                    (p, e, a) => { return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Black && ArmorIsValid(Owner, a.Source, a.ReadonlyCard); },
-                    (p, e, a) => { throw new TriggerResultException(TriggerResult.End);},
-                    TriggerCondition.OwnerIsTarget
-                );
-                Triggers.Add(GameEvent.CardUsageTargetValidating, trigger);
-                IsEnforced = true;
-            }
+            var trigger = new AutoNotifyPassiveSkillTrigger(
+                this,
+                (p, e, a) => { return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Black && ArmorIsValid(Owner, a.Source, a.ReadonlyCard); },
+                (p, e, a) => { throw new TriggerResultException(TriggerResult.End);},
+                TriggerCondition.OwnerIsTarget
+            );
+            Triggers.Add(GameEvent.CardUsageTargetValidating, trigger);
+            IsEnforced = true;
         }
-
-        public RenWangDun()
-        {
-            EquipmentSkill = new RenWangDunSkill() { ParentEquipment = this };
-        }
-
     }
+
+    public RenWangDun()
+    {
+        EquipmentSkill = new RenWangDunSkill() { ParentEquipment = this };
+    }
+
 }

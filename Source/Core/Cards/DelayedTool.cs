@@ -1,60 +1,46 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Diagnostics;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using System.Diagnostics;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
 
-namespace Sanguosha.Core.Cards
+namespace Sanguosha.Core.Cards;
+
+
+public abstract class DelayedTool : CardHandler
 {
-    
-    public abstract class DelayedTool : CardHandler
+    public override CardCategory Category => CardCategory.DelayedTool;
+
+    protected void AttachTo(Player source, Player target, ICard c)
     {
-        public override CardCategory Category
+        var m = new CardsMovement();
+        if (c is CompositeCard compositeCard)
         {
-            get { return CardCategory.DelayedTool; }
+            m.Cards = new List<Card>(compositeCard.Subcards);
         }
-
-        protected void AttachTo(Player source, Player target, ICard c)
+        else
         {
-            CardsMovement m = new CardsMovement();
-            if (c is CompositeCard)
-            {
-                m.Cards = new List<Card>(((CompositeCard)c).Subcards);
-            }
-            else
-            {
-                m.Cards = new List<Card>();
-                Card card = (Card)c;
-                Trace.Assert(card != null);
-                m.Cards.Add(card);
-            }
-            m.To = new DeckPlace(target, DeckType.DelayedTools);
-            List<Card> cards = new List<Card>(m.Cards);
-            Game.CurrentGame.MoveCards(m);
-            Game.CurrentGame.PlayerLostCard(source, cards);
+            m.Cards = [];
+            var card = (Card)c;
+            Trace.Assert(card != null);
+            m.Cards.Add(card);
         }
-
-        public virtual bool DelayedToolConflicting(Player p)
-        {
-            foreach (Card c in Game.CurrentGame.Decks[p, DeckType.DelayedTools])
-            {
-                if (this.GetType().IsAssignableFrom(c.Type.GetType()))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
-
-        public abstract void Activate(Player p, Card c);
-
+        m.To = new DeckPlace(target, DeckType.DelayedTools);
+        var cards = new List<Card>(m.Cards);
+        Game.CurrentGame.MoveCards(m);
+        Game.CurrentGame.PlayerLostCard(source, cards);
     }
+
+    public virtual bool DelayedToolConflicting(Player p)
+    {
+        foreach (var c in Game.CurrentGame.Decks[p, DeckType.DelayedTools])
+        {
+            if (GetType().IsAssignableFrom(c.Type.GetType()))
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public abstract void Activate(Player p, Card c);
+
 }

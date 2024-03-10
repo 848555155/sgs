@@ -1,96 +1,91 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 using Sanguosha.Core.Utils;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+public class ReplayControllerViewModel : ViewModelBase
 {
-    public class ReplayControllerViewModel : ViewModelBase
+    public ReplayControllerViewModel()
     {
-        public ReplayControllerViewModel()
+        SlowDownCommand = new SimpleRelayCommand((o) =>
         {
-            SlowDownCommand = new SimpleRelayCommand((o) =>
-            {
-                double speed = Controller.Speed;
-                if (speed <= 0.5d) return;
-                if (speed == 1.0d) speed = 0.5d;
-                else speed -= 1.0d;
-                Controller.Speed = speed;
-                OnPropertyChanged("SpeedString");
-            }) { CanExecuteStatus = true };
-            SpeedUpCommand = new SimpleRelayCommand((o) =>
-            {
-                double speed = Controller.Speed;
-                if (speed >= 8.0) return;
-                if (speed == 0.5d) speed = 1.0d;
-                else speed += 1.0d;
-                Controller.Speed = speed;
-                OnPropertyChanged("SpeedString");
-            }) { CanExecuteStatus = true };
-        }
+            double speed = Controller.Speed;
+            if (speed <= 0.5d) return;
+            if (speed == 1.0d) speed = 0.5d;
+            else speed -= 1.0d;
+            Controller.Speed = speed;
+            OnPropertyChanged("SpeedString");
+        }) { CanExecuteStatus = true };
+        SpeedUpCommand = new SimpleRelayCommand((o) =>
+        {
+            double speed = Controller.Speed;
+            if (speed >= 8.0) return;
+            if (speed == 0.5d) speed = 1.0d;
+            else speed += 1.0d;
+            Controller.Speed = speed;
+            OnPropertyChanged("SpeedString");
+        }) { CanExecuteStatus = true };
+    }
 
-        public ReplayControllerViewModel(ReplayController controller) : this()
-        {
-            Controller = controller;            
-        }
+    public ReplayControllerViewModel(ReplayController controller) : this()
+    {
+        Controller = controller;            
+    }
 
-        public ReplayController Controller
+    public ReplayController Controller
+    {
+        get;
+        set;
+    }
+            
+    public bool IsPaused 
+    {
+        get
         {
-            get;
-            set;
+            return Controller.IsPaused;
         }
-                
-        public bool IsPaused 
+        set
         {
-            get
+            if (Controller.IsPaused == value) return;
+            else
             {
-                return Controller.IsPaused;
-            }
-            set
-            {
-                if (Controller.IsPaused == value) return;
+
+                if (value)
+                {
+                    Controller.Pause();
+                }
                 else
                 {
-
-                    if (value)
-                    {
-                        Controller.Pause();
-                    }
-                    else
-                    {
-                        Controller.Resume();
-                    }
+                    Controller.Resume();
                 }
-                OnPropertyChanged("IsPaused");
             }
+            OnPropertyChanged("IsPaused");
         }
+    }
 
-        public string SpeedString
+    public string SpeedString
+    {
+        get
         {
-            get
-            {
-                return Controller.Speed.ToString("F1");    
-            }
+            return Controller.Speed.ToString("F1");    
         }
+    }
 
-        public ICommand SpeedUpCommand { get; set; }
+    public ICommand SpeedUpCommand { get; set; }
 
-        public ICommand SlowDownCommand { get; set; }
+    public ICommand SlowDownCommand { get; set; }
 
-        public bool EvenDelays 
+    public bool EvenDelays 
+    {
+        get
         {
-            get
-            {
-                return Controller.EvenDelays;
-            }
-            set
-            {
-                if (Controller.EvenDelays == value) return;
-                Controller.EvenDelays = value;
-                OnPropertyChanged("EvenDelays");
-            }
+            return Controller.EvenDelays;
+        }
+        set
+        {
+            if (Controller.EvenDelays == value) return;
+            Controller.EvenDelays = value;
+            OnPropertyChanged("EvenDelays");
         }
     }
 }

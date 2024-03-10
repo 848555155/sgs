@@ -1,216 +1,21 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{7D1B2955-5722-437A-B054-68FBD5F52422}</ProjectGuid>
-    <OutputType>library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <OutputType>Library</OutputType>
     <RootNamespace>Sanguosha.UI.Animations</RootNamespace>
-    <AssemblyName>Animations</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <TargetFrameworkProfile>
-    </TargetFrameworkProfile>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <WarningLevel>4</WarningLevel>
-    <Utf8Output>true</Utf8Output>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <Deterministic>true</Deterministic>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\..\Bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\..\Bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Xaml">
-      <RequiredTargetFramework>4.0</RequiredTargetFramework>
-    </Reference>
-    <Reference Include="WindowsBase" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="AnimationBase.cs" />
-    <Compile Include="BaGuaAnimation.xaml.cs">
-      <DependentUpon>BaGuaAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BurnAnimation.xaml.cs">
-      <DependentUpon>BurnAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CiXiongAnimation.xaml.cs">
-      <DependentUpon>CiXiongAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="BaiYinAnimation.xaml.cs">
-      <DependentUpon>BaiYinAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GameStartAnimation.xaml.cs">
-      <DependentUpon>GameStartAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="HuoShaAnimation.xaml.cs">
-      <DependentUpon>HuoShaAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="HuoShaBaseAnimation.xaml.cs">
-      <DependentUpon>HuoShaBaseAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="HuoShaFireAnimation.xaml.cs">
-      <DependentUpon>HuoShaFireAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="JiuAnimation.xaml.cs">
-      <DependentUpon>JiuAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LeiShaAnimation.xaml.cs">
-      <DependentUpon>LeiShaAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LeiShaThunderAnimation.xaml.cs">
-      <DependentUpon>LeiShaThunderAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TaoAnimation.xaml.cs">
-      <DependentUpon>TaoAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TengJiaBaseAnimation.xaml.cs">
-      <DependentUpon>TengJiaBaseAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TengJiaShield.xaml.cs">
-      <DependentUpon>TengJiaShield.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WinDecorationAnimation.xaml.cs">
-      <DependentUpon>WinDecorationAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WinAnimation.xaml.cs">
-      <DependentUpon>WinAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LoseAnimation.xaml.cs">
-      <DependentUpon>LoseAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RevealRoleAnimation.xaml.cs">
-      <DependentUpon>RevealRoleAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PinDianLoseAnimation.xaml.cs">
-      <DependentUpon>PinDianLoseAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="PinDianWinAnimation.xaml.cs">
-      <DependentUpon>PinDianWinAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="CrossAnimation.xaml.cs">
-      <DependentUpon>CrossAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TickAnimation.xaml.cs">
-      <DependentUpon>TickAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QiLinAnimation.xaml.cs">
-      <DependentUpon>QiLinAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QingGangAnimation.xaml.cs">
-      <DependentUpon>QingGangAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ZhuQueAnimation.xaml.cs">
-      <DependentUpon>ZhuQueAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TengJiaAnimation2.xaml.cs">
-      <DependentUpon>TengJiaAnimation2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TengJiaAnimation.xaml.cs">
-      <DependentUpon>TengJiaAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="RenWangAnimation.xaml.cs">
-      <DependentUpon>RenWangAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="QingLongAnimation.xaml.cs">
-      <DependentUpon>QingLongAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="HanBingAnimation.xaml.cs">
-      <DependentUpon>HanBingAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="LianNuAnimation.xaml.cs">
-      <DependentUpon>LianNuAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GuDingAnimation.xaml.cs">
-      <DependentUpon>GuDingAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="GuanShiAnimation.xaml.cs">
-      <DependentUpon>GuanShiAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FangTianAnimation.xaml.cs">
-      <DependentUpon>FangTianAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TieSuoAnimation.xaml.cs">
-      <DependentUpon>TieSuoAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="TieSuoAnimation2.xaml.cs">
-      <DependentUpon>TieSuoAnimation2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ZhangBaAnimation.xaml.cs">
-      <DependentUpon>ZhangBaAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="MarkChangedAnimation.xaml.cs">
-      <DependentUpon>MarkChangedAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="DamageAnimation.xaml.cs">
-      <DependentUpon>DamageAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="FiredImage.cs" />
-    <Compile Include="FireGenerator.cs" />
-    <Compile Include="FrameBasedAnimation.cs" />
-    <Compile Include="IAnimation.cs" />
-    <Compile Include="LoseHealthAnimation.xaml.cs">
-      <DependentUpon>LoseHealthAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
-    <Compile Include="Properties\Settings.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Settings.settings</DependentUpon>
-      <DesignTimeSharedInput>True</DesignTimeSharedInput>
-    </Compile>
-    <Compile Include="ShaAnimation.xaml.cs">
-      <DependentUpon>ShaAnimation.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ShaAnimation2.xaml.cs">
-      <DependentUpon>ShaAnimation2.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="ShanAnimation.xaml.cs">
-      <DependentUpon>ShanAnimation.xaml</DependentUpon>
-    </Compile>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-    </EmbeddedResource>
-    <None Include="Properties\Settings.settings">
-      <Generator>SettingsSingleFileGenerator</Generator>
-      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
-    </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
   <ItemGroup>
@@ -242,188 +47,6 @@
     <Resource Include="TaoAnimation\text.png" />
     <Resource Include="TaoAnimation\smallBg.png" />
     <Resource Include="TaoAnimation\largeBg.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Page Include="BaGuaAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="BaseCardAnimations.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BurnAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CiXiongAnimation.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="BaiYinAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GameStartAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="HuoShaAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="HuoShaBaseAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="HuoShaFireAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="JiuAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LeiShaAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LeiShaThunderAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TaoAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TengJiaBaseAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TengJiaShield.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WinDecorationAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="WinAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LoseAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RevealRoleAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="PinDianLoseAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="PinDianWinAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="CrossAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TickAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="EquipmentAnimations.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="QiLinAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="QingGangAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ZhuQueAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TengJiaAnimation2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TengJiaAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="RenWangAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="QingLongAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="HanBingAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LianNuAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GuDingAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="GuanShiAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="FangTianAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TieSuoAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="TieSuoAnimation2.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ZhangBaAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="MarkChangedAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="DamageAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="LoseHealthAnimation.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="ShaAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ShaAnimation2.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="ShanAnimation.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Resource Include="DamageAnimation\0.png" />
@@ -572,10 +195,7 @@
     <Resource Include="ZhuQueAnimation\6.png" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Effects\Effects.csproj">
-      <Project>{2CFB7F48-6D2E-4F60-9B9C-6C41F9518817}</Project>
-      <Name>Effects</Name>
-    </ProjectReference>
+    <ProjectReference Include="..\Effects\Effects.csproj" />
   </ItemGroup>
   <ItemGroup>
     <Resource Include="CrossAnimation\0.png" />
@@ -650,12 +270,8 @@
     <Resource Include="TengJiaAnimation\burn3.png" />
     <Resource Include="TengJiaAnimation\burn4.png" />
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
 </Project>

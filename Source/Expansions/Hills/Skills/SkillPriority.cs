@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace Sanguosha.Expansions.Hills.Skills;
 
-namespace Sanguosha.Expansions.Hills.Skills
+internal class SkillPriority
 {
-    class SkillPriority
-    {
-    }
 }

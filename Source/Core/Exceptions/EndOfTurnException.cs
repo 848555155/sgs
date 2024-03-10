@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace Sanguosha.Core.Exceptions;
 
-namespace Sanguosha.Core.Exceptions
+public class EndOfTurnException : SgsException
 {
-    public class EndOfTurnException : SgsException
-    {
-    }
 }

@@ -1,29 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace Sanguosha.UI.Controls;
 
-namespace Sanguosha.UI.Controls
+public class CardSlotViewModel : CardViewModel
 {
-    public class CardSlotViewModel : CardViewModel
+    private string hint;
+    public string Hint
     {
-        private string hint;
-        public string Hint
+        get
         {
-            get
-            {
-                return hint;
-            }
-            set
-            {
-                if (hint == value) return;
-                hint = value;
-                OnPropertyChanged("Hint");
-            }
+            return hint;
         }
+        set
+        {
+            if (hint == value) return;
+            hint = value;
+            OnPropertyChanged("Hint");
+        }
+    }
 
-        public override void Update()
-        {
-        }
+    public override void Update()
+    {
     }
 }

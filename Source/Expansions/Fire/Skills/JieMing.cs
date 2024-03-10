@@ -1,79 +1,74 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Cards;
 using Sanguosha.Core.UI;
 using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
 
-namespace Sanguosha.Expansions.Fire.Skills
+namespace Sanguosha.Expansions.Fire.Skills;
+
+/// <summary>
+/// 节命-弃牌阶段，每当你受到一点伤害后，可令一名角色将手牌补至等同于其体力上限的张数（最多补至五张）。
+/// </summary>
+public class JieMing : TriggerSkill
 {
-    /// <summary>
-    /// 节命-弃牌阶段，每当你受到一点伤害后，可令一名角色将手牌补至等同于其体力上限的张数（最多补至五张）。
-    /// </summary>
-    public class JieMing : TriggerSkill
+    private class JieMingVerifier : CardsAndTargetsVerifier
     {
-        class JieMingVerifier : CardsAndTargetsVerifier
+        public JieMingVerifier()
         {
-            public JieMingVerifier()
-            {
-                MaxPlayers = 1;
-                MinPlayers = 1;
-                MaxCards = 0;
-                MinCards = 0;
-            }
-
-            protected override bool VerifyPlayer(Player source, Player player)
-            {
-                return true;
-            }
-
-            protected override bool VerifyCard(Player source, Card card)
-            {
-                return true;
-            }
+            MaxPlayers = 1;
+            MinPlayers = 1;
+            MaxCards = 0;
+            MinCards = 0;
         }
 
-        void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
+        protected override bool VerifyPlayer(Player source, Player player)
         {
-            ISkill skill;
-            List<Card> cards;
-            List<Player> players;
-            var args = eventArgs as DamageEventArgs;
-            int damage = args.Magnitude;
-            var game = Game.CurrentGame;
-            while (damage-- > 0)
+            return true;
+        }
+
+        protected override bool VerifyCard(Player source, Card card)
+        {
+            return true;
+        }
+    }
+
+    private void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
+    {
+        ISkill skill;
+        List<Card> cards;
+        List<Player> players;
+        var args = eventArgs as DamageEventArgs;
+        int damage = args.Magnitude;
+        var game = Game.CurrentGame;
+        while (damage-- > 0)
+        {
+            if (game.UiProxies[Owner].AskForCardUsage(new CardUsagePrompt("JieMing", this),
+                                                      new JieMingVerifier(),
+                                                      out skill, out cards,
+                                                      out players))
             {
-                if (game.UiProxies[Owner].AskForCardUsage(new CardUsagePrompt("JieMing", this),
-                                                          new JieMingVerifier(),
-                                                          out skill, out cards,
-                                                          out players))
-                {
-                    NotifySkillUse(players);
-                    int numCardsToDraw = Math.Min(5, players[0].MaxHealth) - 
-                                         game.Decks[players[0], DeckType.Hand].Count;
-                    if (numCardsToDraw <= 0) continue;
-                    game.DrawCards(players[0], numCardsToDraw);
-                }
+                NotifySkillUse(players);
+                int numCardsToDraw = Math.Min(5, players[0].MaxHealth) - 
+                                     game.Decks[players[0], DeckType.Hand].Count;
+                if (numCardsToDraw <= 0) continue;
+                game.DrawCards(players[0], numCardsToDraw);
             }
         }
+    }
 
 
-        public JieMing()
-        {
-            var trigger = new AutoNotifyPassiveSkillTrigger(
-                this,
-                Run,
-                TriggerCondition.OwnerIsTarget
-            ) { AskForConfirmation = false, IsAutoNotify = false };
-            Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
-            IsAutoInvoked = null;
-        }
+    public JieMing()
+    {
+        var trigger = new AutoNotifyPassiveSkillTrigger(
+            this,
+            Run,
+            TriggerCondition.OwnerIsTarget
+        ) { AskForConfirmation = false, IsAutoNotify = false };
+        Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
+        IsAutoInvoked = null;
     }
 }

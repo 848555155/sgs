@@ -1,126 +1,55 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{2A06D0F2-EB21-44BB-ABF7-435C79040C86}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sanguosha.Expansions.Pk1v1</RootNamespace>
-    <AssemblyName>Pk1v1</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\..\Bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\..\Bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\..\Core\Core.csproj" />
+    <ProjectReference Include="..\Basic\Basic.csproj" />
+    <ProjectReference Include="..\Battle\Battle.csproj" />
+    <ProjectReference Include="..\Fire\Fire.csproj" />
+    <ProjectReference Include="..\Hills\Hills.csproj" />
+    <ProjectReference Include="..\Wind\Wind.csproj" />
+    <ProjectReference Include="..\Woods\Woods.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Cards\GuoHeChaiQiao2.cs" />
-    <Compile Include="Pk1v1Expansion.cs" />
-    <Compile Include="Cards\ShuiYanQiJun.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Skills\CangJi.cs" />
-    <Compile Include="Skills\HuWei.cs" />
-    <Compile Include="Skills\QiXi.cs" />
-    <Compile Include="Skills\XieChan.cs" />
-    <Compile Include="Skills\ManYi.cs" />
-    <Compile Include="Skills\MouZhu.cs" />
-    <Compile Include="Skills\PianYi.cs" />
-    <Compile Include="Skills\QingGuo2.cs" />
-    <Compile Include="Skills\SuZi.cs" />
-    <Compile Include="Skills\TuXi2.cs" />
-    <Compile Include="Skills\XiaoJi.cs" />
-    <Compile Include="Skills\XiaoXi.cs" />
-    <Compile Include="Skills\YanHuo.cs" />
-    <Compile Include="Skills\YinLi.cs" />
-    <Compile Include="Skills\ZhiHeng2.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
-      <Project>{31B92003-B490-4EAF-8F8E-F9B020F9B03B}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Basic\Basic.csproj">
-      <Project>{5E948FAB-938B-4E4C-BDA1-1740339273EA}</Project>
-      <Name>Basic</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Battle\Battle.csproj">
-      <Project>{850AB9CB-90A0-4625-87FA-1F7CE04A5404}</Project>
-      <Name>Battle</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Fire\Fire.csproj">
-      <Project>{e1d27fb1-40b8-4768-a045-dd9772564ddd}</Project>
-      <Name>Fire</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Hills\Hills.csproj">
-      <Project>{893e3214-c48d-493c-b09d-7a31756b72b9}</Project>
-      <Name>Hills</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Wind\Wind.csproj">
-      <Project>{7ef64814-44f4-40ea-91c4-feb67f279f3f}</Project>
-      <Name>Wind</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Woods\Woods.csproj">
-      <Project>{6eb21e93-773a-4894-aa51-3128ccf649b7}</Project>
-      <Name>Woods</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Pk1v1.Skills.xaml">
+    <None Update="Pk1v1.Skills.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Pk1v1.Game.xaml">
+    <None Update="Pk1v1.Game.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Pk1v1.Cards.xaml">
+    <None Update="Pk1v1.Cards.xaml">
       <SubType>Designer</SubType>
     </None>
   </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
+  </ItemGroup>
   <PropertyGroup>
-    <PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>
+    <!--<PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
+copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>-->
+    <AssemblyTitle>OverKnightFame12</AssemblyTitle>
+    <Product>OverKnightFame12</Product>
+    <Copyright>Copyright ©  2012</Copyright>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

@@ -1,167 +1,31 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5E948FAB-938B-4E4C-BDA1-1740339273EA}</ProjectGuid>
+    <TargetFramework>net8.0-windows</TargetFramework>
     <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>Sanguosha.Expansions.Basic</RootNamespace>
-    <AssemblyName>Basic</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <TargetFrameworkProfile />
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <UseWindowsForms>true</UseWindowsForms>
+    <UseWPF>true</UseWPF>
+    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
     <OutputPath>..\..\..\Bin\Debug\</OutputPath>
     <DefineConstants>TRACE;DEBUG;SB_FAQ</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
     <OutputPath>..\..\..\Bin\Release\</OutputPath>
     <DefineConstants>
     </DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Deployment" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="UIAutomationTypes" />
-    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\..\Core\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BasicExpansion.cs" />
-    <Compile Include="Cards\Aoe.cs" />
-    <Compile Include="Cards\BaGuaZhen.cs" />
-    <Compile Include="Cards\CardWrapper.cs" />
-    <Compile Include="Cards\CiXiongShuangGuJian.cs" />
-    <Compile Include="Cards\DummyShaVerifier.cs" />
-    <Compile Include="Cards\FangTianHuaJi.cs" />
-    <Compile Include="Cards\GuanShiFu.cs" />
-    <Compile Include="Cards\GuoHeChaiQiao.cs" />
-    <Compile Include="Cards\HanBingJian.cs" />
-    <Compile Include="Cards\JieDaoShaRen.cs" />
-    <Compile Include="Cards\LifeSaver.cs" />
-    <Compile Include="Cards\JueDou.cs" />
-    <Compile Include="Cards\LeBuSiShu.cs" />
-    <Compile Include="Cards\NanManRuQin.cs" />
-    <Compile Include="Cards\QiLinGong.cs" />
-    <Compile Include="Cards\QingGangJian.cs" />
-    <Compile Include="Cards\QingLongYanYueDao.cs" />
-    <Compile Include="Cards\RegularSha.cs" />
-    <Compile Include="Cards\RenWangDun.cs" />
-    <Compile Include="Cards\Sha.cs" />
-    <Compile Include="Cards\Shan.cs" />
-    <Compile Include="Cards\ShanDian.cs" />
-    <Compile Include="Cards\ShunChai.cs" />
-    <Compile Include="Cards\ShunShouQianYang.cs" />
-    <Compile Include="Cards\Tao.cs" />
-    <Compile Include="Cards\TaoYuanJieYi.cs" />
-    <Compile Include="Cards\WanJianQiFa.cs" />
-    <Compile Include="Cards\WuGuFengDeng.cs" />
-    <Compile Include="Cards\WuXieKeJi.cs" />
-    <Compile Include="Cards\WuZhongShengYou.cs" />
-    <Compile Include="Cards\ZhangBaSheMao.cs" />
-    <Compile Include="Cards\ZhuGeLianNu.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Skills\BiYue.cs" />
-    <Compile Include="Skills\FanJian.cs" />
-    <Compile Include="Skills\FanKui.cs" />
-    <Compile Include="Skills\GangLie.cs" />
-    <Compile Include="Skills\GuanXing.cs" />
-    <Compile Include="Skills\GuiCai.cs" />
-    <Compile Include="Skills\GuoSe.cs" />
-    <Compile Include="Skills\HuJia.cs" />
-    <Compile Include="Skills\JianXiong.cs" />
-    <Compile Include="Skills\JieYin.cs" />
-    <Compile Include="Skills\JiJiang.cs" />
-    <Compile Include="Skills\JiJiu.cs" />
-    <Compile Include="Skills\JiuYuan.cs" />
-    <Compile Include="Skills\JiZhi.cs" />
-    <Compile Include="Skills\KeJi.cs" />
-    <Compile Include="Skills\KongCheng.cs" />
-    <Compile Include="Skills\KuRou.cs" />
-    <Compile Include="Skills\LianYing.cs" />
-    <Compile Include="Skills\LiJian.cs" />
-    <Compile Include="Skills\LiuLi.cs" />
-    <Compile Include="Skills\LongDan.cs" />
-    <Compile Include="Skills\LuoShen.cs" />
-    <Compile Include="Skills\LuoYi.cs" />
-    <Compile Include="Skills\MaShu.cs" />
-    <Compile Include="Skills\PaoXiao.cs" />
-    <Compile Include="Skills\QianXun.cs" />
-    <Compile Include="Skills\QiCai.cs" />
-    <Compile Include="Skills\QingGuo.cs" />
-    <Compile Include="Skills\QingNang.cs" />
-    <Compile Include="Skills\QiXi.cs" />
-    <Compile Include="Skills\RenDe.cs" />
-    <Compile Include="Skills\SkillPriority.cs" />
-    <Compile Include="Skills\TianDu.cs" />
-    <Compile Include="Skills\TieJi.cs" />
-    <Compile Include="Skills\TongJi.cs" />
-    <Compile Include="Skills\TuXi.cs" />
-    <Compile Include="Skills\WangZun.cs" />
-    <Compile Include="Skills\WuSheng.cs" />
-    <Compile Include="Skills\WuShuang.cs" />
-    <Compile Include="Skills\XiaoJi.cs" />
-    <Compile Include="Skills\YaoWu.cs" />
-    <Compile Include="Skills\YiJi.cs" />
-    <Compile Include="Skills\YingZi.cs" />
-    <Compile Include="Skills\ZhiHeng.cs" />
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\Core\Core.csproj">
-      <Project>{31b92003-b490-4eaf-8f8e-f9b020f9b03b}</Project>
-      <Name>Core</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Basic.Cards.xaml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Basic.Skills.xaml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Basic.Game.xaml">
-      <SubType>Designer</SubType>
-    </None>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <PropertyGroup>
+  <!--<PropertyGroup>
     <PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
 copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>
-  </PropertyGroup>
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+  </PropertyGroup>-->
 </Project>

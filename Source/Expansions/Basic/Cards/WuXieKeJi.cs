@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Diagnostics;
 
 using Sanguosha.Core.UI;
@@ -12,123 +10,122 @@ using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Cards;
 
-namespace Sanguosha.Expansions.Basic.Cards
+namespace Sanguosha.Expansions.Basic.Cards;
+
+
+public class WuXieKeJi : CardHandler
 {
-    
-    public class WuXieKeJi : CardHandler
+    public static readonly CardAttribute CannotBeCountered = CardAttribute.Register("CannotBeCountered");
+
+    protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
-        public static readonly CardAttribute CannotBeCountered = CardAttribute.Register("CannotBeCountered");
-
-        protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
-        {
-            return VerifierResult.Fail;
-        }
-
-        public override CardCategory Category
-        {
-            get { return CardCategory.ImmediateTool; }
-        }
+        throw new NotImplementedException();
     }
 
-    
-    public class WuXieKeJiTrigger : Trigger
+    public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
     {
-        public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
+        return VerifierResult.Fail;
+    }
+
+    public override CardCategory Category
+    {
+        get { return CardCategory.ImmediateTool; }
+    }
+}
+
+
+public class WuXieKeJiTrigger : Trigger
+{
+    public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
+    {
+        ReadOnlyCard card = eventArgs.ReadonlyCard;
+        SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return c.Type is WuXieKeJi; }, true, new WuXieKeJi());
+        v1.Helper.ExtraTimeOutSeconds = -9;
+        List<Card> cards;
+        List<Player> players;
+        ISkill skill;
+        Player responder;
+        bool WuXieSuccess = false;
+        Trace.Assert(eventArgs.Targets.Count == 1);
+        Player promptPlayer = eventArgs.Targets[0];
+        ICard promptCard = eventArgs.ReadonlyCard;
+        if (card != null && CardCategoryManager.IsCardCategory(card.Type.Category, CardCategory.Tool) &&
+            card[WuXieKeJi.CannotBeCountered] == 0 && card[WuXieKeJi.CannotBeCountered[promptPlayer]] == 0)
         {
-            ReadOnlyCard card = eventArgs.ReadonlyCard;
-            SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return c.Type is WuXieKeJi; }, true, new WuXieKeJi());
-            v1.Helper.ExtraTimeOutSeconds = -9;
-            List<Card> cards;
-            List<Player> players;
-            ISkill skill;
-            Player responder;
-            bool WuXieSuccess = false;
-            Trace.Assert(eventArgs.Targets.Count == 1);
-            Player promptPlayer = eventArgs.Targets[0];
-            ICard promptCard = eventArgs.ReadonlyCard;
-            if (card != null && CardCategoryManager.IsCardCategory(card.Type.Category, CardCategory.Tool) &&
-                card[WuXieKeJi.CannotBeCountered] == 0 && card[WuXieKeJi.CannotBeCountered[promptPlayer]] == 0)
+            bool askWuXie = false;
+            foreach (var p in Game.CurrentGame.AlivePlayers)
             {
-                bool askWuXie = false;
-                foreach (var p in Game.CurrentGame.AlivePlayers)
+                foreach (var c in Game.CurrentGame.Decks[p, DeckType.Hand])
                 {
-                    foreach (var c in Game.CurrentGame.Decks[p, DeckType.Hand])
+                    if (c.Type is WuXieKeJi)
                     {
-                        if (c.Type is WuXieKeJi)
+                        askWuXie = true;
+                        break;
+                    }
+                }
+                foreach (var sk in p.ActionableSkills)
+                {
+                    CardTransformSkill cts = sk as CardTransformSkill;
+                    if (cts != null)
+                    {
+                        if (cts.PossibleResults == null)
                         {
                             askWuXie = true;
                             break;
                         }
-                    }
-                    foreach (var sk in p.ActionableSkills)
-                    {
-                        CardTransformSkill cts = sk as CardTransformSkill;
-                        if (cts != null)
+                        foreach (var pr in cts.PossibleResults)
                         {
-                            if (cts.PossibleResults == null)
+                            if (pr is WuXieKeJi)
                             {
                                 askWuXie = true;
                                 break;
                             }
-                            foreach (var pr in cts.PossibleResults)
-                            {
-                                if (pr is WuXieKeJi)
-                                {
-                                    askWuXie = true;
-                                    break;
-                                }
-                            }
                         }
                     }
-                    if (askWuXie) break;
                 }
-                Game.CurrentGame.SyncConfirmationStatus(ref askWuXie);
-                if (!askWuXie) return;
-                foreach (var p in Game.CurrentGame.AlivePlayers)
-                {
-                    Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = p, Verifier = v1 });
-                }
-                while (true)
-                {
-                    Prompt prompt = new CardUsagePrompt("WuXieKeJi", promptPlayer, promptCard);
-                    if (Game.CurrentGame.GlobalProxy.AskForCardUsage(
-                        prompt, v1, out skill, out cards, out players, out responder))
-                    {
-                        try
-                        {
-                            GameEventArgs args = new GameEventArgs();
-                            args.Source = responder;
-                            args.Targets = players;
-                            args.Skill = skill;
-                            args.Cards = cards;
-                            Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
-                        }
-                        catch (TriggerResultException e)
-                        {
-                            Trace.Assert(e.Status == TriggerResult.Retry);
-                            continue;
-                        }
-                        promptPlayer = responder;
-                        promptCard = new CompositeCard();
-                        promptCard.Type = new WuXieKeJi();
-                        (promptCard as CompositeCard).Subcards = null;
-                        WuXieSuccess = !WuXieSuccess;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
+                if (askWuXie) break;
             }
-            if (WuXieSuccess)
+            Game.CurrentGame.SyncConfirmationStatus(ref askWuXie);
+            if (!askWuXie) return;
+            foreach (var p in Game.CurrentGame.AlivePlayers)
             {
-                throw new TriggerResultException(TriggerResult.End);
+                Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = p, Verifier = v1 });
             }
+            while (true)
+            {
+                Prompt prompt = new CardUsagePrompt("WuXieKeJi", promptPlayer, promptCard);
+                if (Game.CurrentGame.GlobalProxy.AskForCardUsage(
+                    prompt, v1, out skill, out cards, out players, out responder))
+                {
+                    try
+                    {
+                        GameEventArgs args = new GameEventArgs();
+                        args.Source = responder;
+                        args.Targets = players;
+                        args.Skill = skill;
+                        args.Cards = cards;
+                        Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
+                    }
+                    catch (TriggerResultException e)
+                    {
+                        Trace.Assert(e.Status == TriggerResult.Retry);
+                        continue;
+                    }
+                    promptPlayer = responder;
+                    promptCard = new CompositeCard();
+                    promptCard.Type = new WuXieKeJi();
+                    (promptCard as CompositeCard).Subcards = null;
+                    WuXieSuccess = !WuXieSuccess;
+                }
+                else
+                {
+                    break;
+                }
+            }
+        }
+        if (WuXieSuccess)
+        {
+            throw new TriggerResultException(TriggerResult.End);
         }
     }
 }

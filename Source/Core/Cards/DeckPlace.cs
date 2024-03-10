@@ -1,72 +1,45 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Sanguosha.Core.Players;
 
-using Sanguosha.Core.Players;
+namespace Sanguosha.Core.Cards;
 
-namespace Sanguosha.Core.Cards
+public class DeckPlace(Player player, DeckType deckType)
 {
-    public class DeckPlace
+    public Player Player { get; set; } = player;
+
+    public DeckType DeckType { get; set; } = deckType;
+
+    public override string ToString() => $"Player {Player.Id}, {DeckType}";
+
+    public override bool Equals(object obj)
     {
-        public DeckPlace(Player player, DeckType deckType)
+        var dp = obj as DeckPlace;
+        if (dp == null)
+            return false;
+        return Player == dp.Player && DeckType == dp.DeckType;
+    }
+
+    public override int GetHashCode()
+    {
+        return ((Player == null) ? 0 : Player.GetHashCode()) + ((DeckType == null) ? 0 : DeckType.GetHashCode());
+    }
+
+    public static bool operator ==(DeckPlace a, DeckPlace b)
+    {
+        if (ReferenceEquals(a, b))
         {
-            this.player = player;
-            this.deckType = deckType;
+            return true;
         }
 
-        private Player player;
-
-        public Player Player
+        if ((a is null) || (b is null))
         {
-            get { return player; }
-            set { player = value; }
+            return false;
         }
 
-        private DeckType deckType;
+        return a.Equals(b);
+    }
 
-        public DeckType DeckType
-        {
-            get { return deckType; }
-            set { deckType = value; }
-        }
-
-        public override string ToString()
-        {
-            return "Player " + player.Id + ", " + deckType.ToString();
-        }
-
-        public override bool Equals(object obj)
-        {
-            DeckPlace dp = obj as DeckPlace;
-            if (dp == null)
-                return false;
-            return player == dp.player && deckType == dp.deckType;
-        }
-
-        public override int GetHashCode()
-        {
-            return ((player == null) ? 0 : player.GetHashCode()) + ((deckType == null) ? 0 : deckType.GetHashCode());
-        }
-
-        public static bool operator ==(DeckPlace a, DeckPlace b)
-        {
-            if (System.Object.ReferenceEquals(a, b))
-            {
-                return true;
-            }
-
-            if (((object)a == null) || ((object)b == null))
-            {
-                return false;
-            }
-
-            return a.Equals(b);
-        }
-
-        public static bool operator !=(DeckPlace a, DeckPlace b)
-        {
-            return !(a == b);
-        }
+    public static bool operator !=(DeckPlace a, DeckPlace b)
+    {
+        return !(a == b);
     }
 }

@@ -3,7 +3,7 @@
   <Profiles />
   <Settings>
     <Setting Name="LastUserName" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">username</Value>
     </Setting>
     <Setting Name="EnableHardwareAcceleration" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

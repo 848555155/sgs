@@ -1,213 +1,207 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.ComponentModel;
 
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using System.Collections.ObjectModel;
-using System.Windows.Input;
 using System.Diagnostics;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+public enum GameTableLayout
 {
-    public enum GameTableLayout
+    Regular,
+    Pk3v3,
+    Pk1v3
+}
+
+public class GameViewModel : ViewModelBase
+{
+    private Game _game;
+
+    public GameViewModel()
     {
-        Regular,
-        Pk3v3,
-        Pk1v3
+        PlayerModels = new ObservableCollection<PlayerViewModel>();
+        AvailableRoles = new ObservableCollection<RoleIconViewModel>();
     }
 
-    public class GameViewModel : ViewModelBase
+    public ObservableCollection<PlayerViewModel> PlayerModels
     {
-        private Game _game;
+        get;
+        private set;
+    }
 
-        public GameViewModel()
-        {
-            PlayerModels = new ObservableCollection<PlayerViewModel>();
-            AvailableRoles = new ObservableCollection<RoleIconViewModel>();
-        }
+    public ObservableCollection<RoleIconViewModel> AvailableRoles
+    {
+        get;
+        private set;
+    }
 
-        public ObservableCollection<PlayerViewModel> PlayerModels
+    public Game Game
+    {
+        get { return _game; }
+        set 
         {
-            get;
-            private set;
-        }
-
-        public ObservableCollection<RoleIconViewModel> AvailableRoles
-        {
-            get;
-            private set;
-        }
-
-        public Game Game
-        {
-            get { return _game; }
-            set 
+            if (_game == value) return;
+            _game = value;
+            if (_game == null) return;
+            PlayerModels.Clear();
+            int i = 0;
+            foreach (var player in _game.Players)
             {
-                if (_game == value) return;
-                _game = value;
-                if (_game == null) return;
-                PlayerModels.Clear();
-                int i = 0;
-                foreach (var player in _game.Players)
+                Trace.Assert(_game.Settings.Accounts.Count == _game.Players.Count);
+                PlayerModels.Add(new PlayerViewModel(player, this) 
                 {
-                    Trace.Assert(_game.Settings.Accounts.Count == _game.Players.Count);
-                    PlayerModels.Add(new PlayerViewModel(player, this) 
+                    Account = _game.Settings.Accounts[i] 
+                });
+                i++;
+            }
+            if (_game.ReplayController != null)
+            {
+                ReplayController = new ReplayControllerViewModel(_game.ReplayController);                    
+            }
+        }
+    }        
+    
+    public PlayerViewModel MainPlayerModel
+    {
+        get
+        {
+            if (PlayerModels.Count == 0) return null;
+            return PlayerModels[0];
+        }
+    }
+
+    private void _RearrangeSeats()
+    {
+        Trace.Assert(_game.Players.Count == PlayerModels.Count);
+        int playerCount = _game.Players.Count;
+        for (int i = 0; i < playerCount; i++)
+        {
+            int gameSeat = (i + MainPlayerSeatNumber) % playerCount;
+            Player gamePlayer = _game.Players[gameSeat];
+            bool found = false;
+            for (int j = i; j < playerCount; j++)
+            {                    
+                PlayerViewModel playerModel = PlayerModels[j];
+                if (gamePlayer == playerModel.Player)
+                {
+                    if (j != i)
                     {
-                        Account = _game.Settings.Accounts[i] 
-                    });
-                    i++;
-                }
-                if (_game.ReplayController != null)
-                {
-                    ReplayController = new ReplayControllerViewModel(_game.ReplayController);                    
-                }
+                        PlayerModels.Move(j, i);
+                    }
+                    found = true;
+                    break;
+                }                    
             }
-        }        
-        
-        public PlayerViewModel MainPlayerModel
+            Trace.Assert(found);
+        }
+    }
+
+    private int _mainPlayerSeatNumber;
+
+    public int MainPlayerSeatNumber
+    {
+        get { return _mainPlayerSeatNumber; }
+        set 
         {
-            get
+            if (_mainPlayerSeatNumber == value) return;
+            _mainPlayerSeatNumber = value;
+            _RearrangeSeats();                
+            OnPropertyChanged("MainPlayerSeatNumber");
+            OnPropertyChanged("MainPlayerModel");
+        }
+    }
+
+    private WuGuChoiceViewModel _wuGuModel;
+
+    public WuGuChoiceViewModel WuGuModel
+    {
+        get
+        {
+            return _wuGuModel;
+        }
+        set
+        {
+            if (_wuGuModel == value) return;
+            _wuGuModel = value;
+            OnPropertyChanged("WuGuModel");
+        }
+    }
+
+    private TwoSidesCardChoiceViewModel _twoSidesCardChoiceModel;
+
+    public TwoSidesCardChoiceViewModel TwoSidesCardChoiceModel
+    {
+        get { return _twoSidesCardChoiceModel; }
+        set 
+        {
+            if (_twoSidesCardChoiceModel == value) return;
+            _twoSidesCardChoiceModel = value;
+            OnPropertyChanged("TwoSidesCardChoiceModel");
+        }
+    }
+
+    public PlayerViewModel CurrentActivePlayer
+    {
+        get;
+        set;
+    }
+
+    public GameTableLayout TableLayout
+    {
+        get 
+        {
+            if (_game is RoleGame)
             {
-                if (PlayerModels.Count == 0) return null;
-                return PlayerModels[0];
+                return GameTableLayout.Regular;
+            }
+            else
+            {
+                throw new NotImplementedException();
             }
         }
+    }
 
-        private void _RearrangeSeats()
+    private ReplayControllerViewModel _replayController;
+
+    public ReplayControllerViewModel ReplayController
+    {
+        get
         {
-            Trace.Assert(_game.Players.Count == PlayerModels.Count);
-            int playerCount = _game.Players.Count;
-            for (int i = 0; i < playerCount; i++)
-            {
-                int gameSeat = (i + MainPlayerSeatNumber) % playerCount;
-                Player gamePlayer = _game.Players[gameSeat];
-                bool found = false;
-                for (int j = i; j < playerCount; j++)
-                {                    
-                    PlayerViewModel playerModel = PlayerModels[j];
-                    if (gamePlayer == playerModel.Player)
-                    {
-                        if (j != i)
-                        {
-                            PlayerModels.Move(j, i);
-                        }
-                        found = true;
-                        break;
-                    }                    
-                }
-                Trace.Assert(found);
-            }
+            return _replayController;
         }
-
-        int _mainPlayerSeatNumber;
-
-        public int MainPlayerSeatNumber
+        private set
         {
-            get { return _mainPlayerSeatNumber; }
-            set 
-            {
-                if (_mainPlayerSeatNumber == value) return;
-                _mainPlayerSeatNumber = value;
-                _RearrangeSeats();                
-                OnPropertyChanged("MainPlayerSeatNumber");
-                OnPropertyChanged("MainPlayerModel");
-            }
+            if (_replayController == value) return;
+            _replayController = value;
+            OnPropertyChanged("ReplayController");
         }
+    }
 
-        private WuGuChoiceViewModel _wuGuModel;
-
-        public WuGuChoiceViewModel WuGuModel
+    public bool IsReplay
+    {
+        get
         {
-            get
-            {
-                return _wuGuModel;
-            }
-            set
-            {
-                if (_wuGuModel == value) return;
-                _wuGuModel = value;
-                OnPropertyChanged("WuGuModel");
-            }
+            if (_game == null) return false;
+            return _game.ReplayController != null;
         }
+    }
 
-        private TwoSidesCardChoiceViewModel _twoSidesCardChoiceModel;
-
-        public TwoSidesCardChoiceViewModel TwoSidesCardChoiceModel
+    public bool IsSpectating
+    {
+        get
         {
-            get { return _twoSidesCardChoiceModel; }
-            set 
-            {
-                if (_twoSidesCardChoiceModel == value) return;
-                _twoSidesCardChoiceModel = value;
-                OnPropertyChanged("TwoSidesCardChoiceModel");
-            }
+            if (_game == null) return false;
+            if (_game.GameClient == null) return false;
+            return _game.GameClient.SelfId >= _game.Players.Count;
         }
+    }
 
-        public PlayerViewModel CurrentActivePlayer
+    public bool IsPlayable
+    {
+        get
         {
-            get;
-            set;
-        }
-
-        public GameTableLayout TableLayout
-        {
-            get 
-            {
-                if (_game is RoleGame)
-                {
-                    return GameTableLayout.Regular;
-                }
-                else
-                {
-                    throw new NotImplementedException();
-                }
-            }
-        }
-
-        private ReplayControllerViewModel _replayController;
-
-        public ReplayControllerViewModel ReplayController
-        {
-            get
-            {
-                return _replayController;
-            }
-            private set
-            {
-                if (_replayController == value) return;
-                _replayController = value;
-                OnPropertyChanged("ReplayController");
-            }
-        }
-
-        public bool IsReplay
-        {
-            get
-            {
-                if (_game == null) return false;
-                return _game.ReplayController != null;
-            }
-        }
-
-        public bool IsSpectating
-        {
-            get
-            {
-                if (_game == null) return false;
-                if (_game.GameClient == null) return false;
-                return _game.GameClient.SelfId >= _game.Players.Count;
-            }
-        }
-
-        public bool IsPlayable
-        {
-            get
-            {
-                return !IsReplay && !IsSpectating;
-            }
+            return !IsReplay && !IsSpectating;
         }
     }
 }

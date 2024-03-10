@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿namespace Sanguosha.Expansions.OverKnightFame12.Skills;
 
-namespace Sanguosha.Expansions.OverKnightFame12.Skills
+public class SkillPriority
 {
-    public class SkillPriority
-    {
-        public static int LiHuo = -1;
-    }
+    public static int LiHuo = -1;
 }

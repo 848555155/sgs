@@ -1,118 +1,94 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Players;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Cards;
 
-namespace Sanguosha.Core.Triggers
+namespace Sanguosha.Core.Triggers;
+
+public delegate bool TriggerPredicate(Player player, GameEvent gameEvent, GameEventArgs args);
+
+public delegate void TriggerAction(Player owner, GameEvent gameEvent, GameEventArgs args);
+
+public enum TriggerCondition
 {
-    public delegate bool TriggerPredicate(Player player, GameEvent gameEvent, GameEventArgs args);
+    Global = 1 << 0,
+    SourceHasCards = 1 << 1,
+    SourceHasHandCards = 1 << 2,
+    SourceHasNoHandCards = 1 << 3,
+    OwnerHasNoHandCards = 1 << 4,
+    OwnerIsSource = 1 << 5,
+    OwnerIsTarget = 1 << 6,
+}
 
-    public delegate void TriggerAction(Player owner, GameEvent gameEvent, GameEventArgs args);
+public class RelayTrigger : Trigger
+{
 
-    public enum TriggerCondition
+    public TriggerAction Execute { get; set; }
+
+    public TriggerPredicate CanExecute { get; set; }
+
+    public TriggerCondition Condition { get; set; }
+
+    public RelayTrigger(TriggerPredicate predicate, TriggerAction action, TriggerCondition condition)
     {
-        Global = (1 << 0),
-        SourceHasCards = (1 << 1),
-        SourceHasHandCards = (1 << 2),
-        SourceHasNoHandCards = (1 << 3),
-        OwnerHasNoHandCards = (1 << 4),
-        OwnerIsSource = (1 << 5),
-        OwnerIsTarget = (1 << 6),
+        CanExecute = predicate;
+        Execute = action;
+        Condition = condition;
     }
 
-    public class RelayTrigger : Trigger
+    public RelayTrigger(TriggerAction action, TriggerCondition condition)
     {
-        public RelayTrigger() { }
+        CanExecute = (p, a, e) => { return true; };
+        Execute = action;
+        Condition = condition;
+    }
 
-        private TriggerAction execute;
+    private bool CheckCondition(TriggerCondition checkAgainst)
+    {
+        return (Condition & checkAgainst) == checkAgainst;
+    }
 
-        public TriggerAction Execute
+    public bool CheckConditions(GameEvent gameEvent, GameEventArgs eventArgs)
+    {
+        if (CheckCondition(TriggerCondition.OwnerIsSource)
+            && (eventArgs.Source == null || eventArgs.Source != Owner))
         {
-            get { return execute; }
-            set { execute = value; }
+            return false;
         }
-
-        private TriggerPredicate canExecute;
-
-        public TriggerPredicate CanExecute
+        else if (CheckCondition(TriggerCondition.OwnerIsTarget)
+                 && (eventArgs.Targets == null || !eventArgs.Targets.Contains(Owner)))
         {
-            get { return canExecute; }
-            set { canExecute = value; }
+            return false;
         }
-
-        private TriggerCondition triggerCondition;
-
-        public TriggerCondition Condition
+        else if (CheckCondition(TriggerCondition.SourceHasCards)
+                 && Game.CurrentGame.Decks[eventArgs.Source, DeckType.Hand].Count == 0 &&
+                    Game.CurrentGame.Decks[eventArgs.Source, DeckType.Equipment].Count == 0)
         {
-            get { return triggerCondition; }
-            set { triggerCondition = value; }
+            return false;
         }
-
-        public RelayTrigger(TriggerPredicate predicate, TriggerAction action, TriggerCondition condition)
+        else if (CheckCondition(TriggerCondition.SourceHasHandCards) && (Game.CurrentGame.Decks[eventArgs.Source, DeckType.Hand].Count == 0))
         {
-            CanExecute = predicate;
-            Execute = action;
-            Condition = condition;
+            return false;
         }
-
-        public RelayTrigger(TriggerAction action, TriggerCondition condition)
+        else if (CheckCondition(TriggerCondition.SourceHasNoHandCards) && (Game.CurrentGame.Decks[eventArgs.Source, DeckType.Hand].Count > 0))
         {
-            CanExecute = (p, a, e) => { return true; };
-            Execute = action;
-            Condition = condition;
+            return false;
         }
-
-        private bool CheckCondition(TriggerCondition checkAgainst)
+        else if (CheckCondition(TriggerCondition.OwnerHasNoHandCards) && (Game.CurrentGame.Decks[Owner, DeckType.Hand].Count > 0))
         {
-            return (Condition & checkAgainst) == checkAgainst;
+            return false;
         }
+        return true;
+    }
 
-        public bool CheckConditions(GameEvent gameEvent, GameEventArgs eventArgs)
+
+    public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
+    {
+        if (!CheckConditions(gameEvent, eventArgs)) return;
+        if (CanExecute(Owner, gameEvent, eventArgs))
         {
-            if (CheckCondition(TriggerCondition.OwnerIsSource)
-                && (eventArgs.Source == null || eventArgs.Source != Owner))
+            if (Execute != null)
             {
-                return false;
-            }
-            else if (CheckCondition(TriggerCondition.OwnerIsTarget)
-                     && (eventArgs.Targets == null || !eventArgs.Targets.Contains(Owner)))
-            {
-                return false;
-            }
-            else if (CheckCondition(TriggerCondition.SourceHasCards)
-                     && (Game.CurrentGame.Decks[eventArgs.Source, DeckType.Hand].Count == 0 &&
-                        Game.CurrentGame.Decks[eventArgs.Source, DeckType.Equipment].Count == 0))
-            {
-                return false;
-            }
-            else if (CheckCondition(TriggerCondition.SourceHasHandCards) && (Game.CurrentGame.Decks[eventArgs.Source, DeckType.Hand].Count == 0))
-            {
-                return false;
-            }
-            else if (CheckCondition(TriggerCondition.SourceHasNoHandCards) && (Game.CurrentGame.Decks[eventArgs.Source, DeckType.Hand].Count > 0))
-            {
-                return false;
-            }
-            else if (CheckCondition(TriggerCondition.OwnerHasNoHandCards) && (Game.CurrentGame.Decks[Owner, DeckType.Hand].Count > 0))
-            {
-                return false;
-            }
-            return true;
-        }
-
-
-        public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
-        {
-            if (!CheckConditions(gameEvent, eventArgs)) return;
-            if (CanExecute(Owner, gameEvent, eventArgs))
-            {
-                if (Execute != null)
-                {
-                    Execute(Owner, gameEvent, eventArgs);
-                }
+                Execute(Owner, gameEvent, eventArgs);
             }
         }
     }

@@ -1,22 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Sanguosha.Core.Cards;
 
-using Sanguosha.Core.Cards;
+namespace Sanguosha.Core.UI;
 
-namespace Sanguosha.Core.UI
+public class AlwaysTrueChoiceVerifier : ICardChoiceVerifier
 {
-    public class AlwaysTrueChoiceVerifier : ICardChoiceVerifier
+    public VerifierResult Verify(List<List<Card>> answer)
     {
-        public VerifierResult Verify(List<List<Card>> answer)
-        {
-            return VerifierResult.Success;
-        }
+        return VerifierResult.Success;
+    }
 
-        public UiHelper Helper
-        {
-            get { return null; }
-        }
+    public UiHelper Helper
+    {
+        get { return null; }
     }
 }

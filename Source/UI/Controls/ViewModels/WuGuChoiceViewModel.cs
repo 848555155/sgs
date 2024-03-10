@@ -1,85 +1,82 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+public class WuGuChoiceViewModel : ViewModelBase
 {
-    public class WuGuChoiceViewModel : ViewModelBase
+    public WuGuChoiceViewModel()
     {
-        public WuGuChoiceViewModel()
+        _cards1 = new ObservableCollection<CardViewModel>();
+        _cards2 = new ObservableCollection<CardViewModel>();
+    }
+
+    private bool _isEnabled;
+
+    public bool IsEnabled
+    {
+        get
         {
-            _cards1 = new ObservableCollection<CardViewModel>();
-            _cards2 = new ObservableCollection<CardViewModel>();
+            return _isEnabled;
         }
-
-        private bool _isEnabled;
-
-        public bool IsEnabled
+        set
         {
-            get
-            {
-                return _isEnabled;
-            }
-            set
-            {
-                if (_isEnabled == value) return;
-                _isEnabled = value;
-                OnPropertyChanged("IsEnabled");
-            }
+            if (_isEnabled == value) return;
+            _isEnabled = value;
+            OnPropertyChanged("IsEnabled");
         }
+    }
 
-        private string _prompt;
-        public string Prompt
+    private string _prompt;
+    public string Prompt
+    {
+        get { return _prompt; }
+        set
         {
-            get { return _prompt; }
-            set
-            {
-                if (_prompt == value) return;
-                _prompt = value;
-                OnPropertyChanged("Prompt");
-            }
+            if (_prompt == value) return;
+            _prompt = value;
+            OnPropertyChanged("Prompt");
         }
+    }
 
-        private ObservableCollection<CardViewModel> _cards1;
+    private ObservableCollection<CardViewModel> _cards1;
 
-        public ObservableCollection<CardViewModel> Cards1
+    public ObservableCollection<CardViewModel> Cards1
+    {
+        get
         {
-            get
-            {
-                return _cards1;
-            }
-            set
-            {
-                if (_cards1 == value) return;
-                _cards1 = value;
-                OnPropertyChanged("Cards1");
-            }
+            return _cards1;
         }
-
-        private ObservableCollection<CardViewModel> _cards2;
-
-        public ObservableCollection<CardViewModel> Cards2
+        set
         {
-            get
-            {
-                return _cards2;
-            }
-            set
-            {
-                if (_cards2 == value) return;
-                _cards2 = value;
-                OnPropertyChanged("Cards2");
-            }
+            if (_cards1 == value) return;
+            _cards1 = value;
+            OnPropertyChanged("Cards1");
         }
+    }
 
-        public IEnumerable<CardViewModel> Cards
+    private ObservableCollection<CardViewModel> _cards2;
+
+    public ObservableCollection<CardViewModel> Cards2
+    {
+        get
         {
-            get
-            {
-                return Cards1.Concat(Cards2);
-            }
+            return _cards2;
+        }
+        set
+        {
+            if (_cards2 == value) return;
+            _cards2 = value;
+            OnPropertyChanged("Cards2");
+        }
+    }
+
+    public IEnumerable<CardViewModel> Cards
+    {
+        get
+        {
+            return Cards1.Concat(Cards2);
         }
     }
 }

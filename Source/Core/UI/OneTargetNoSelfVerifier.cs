@@ -1,51 +1,45 @@
 ﻿using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using Sanguosha.Core.Cards;
 
-namespace Sanguosha.Core.UI
+namespace Sanguosha.Core.UI;
+
+public class OneTargetNoSelfVerifier : ICardUsageVerifier
 {
-    public class OneTargetNoSelfVerifier : ICardUsageVerifier
+
+    public VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
     {
-
-        public VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
+        if (skill != null || (cards != null && cards.Count != 0))
         {
-            if (skill != null || (cards != null && cards.Count != 0))
-            {
-                return VerifierResult.Fail;
-            }
-            if (players == null || players.Count == 0)
-            {
-                return VerifierResult.Partial;
-            }
-            if (players.Count > 1)
-            {
-                return VerifierResult.Fail;
-            }
-            if (players[0] == source)
-            {
-                return VerifierResult.Fail;
-            }
-            return VerifierResult.Success;
+            return VerifierResult.Fail;
         }
-
-        public IList<CardHandler> AcceptableCardTypes
+        if (players == null || players.Count == 0)
         {
-            get { return null; }
+            return VerifierResult.Partial;
         }
-
-        public VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
+        if (players.Count > 1)
         {
-            return FastVerify(source, skill, cards, players);
+            return VerifierResult.Fail;
         }
-
-        public UiHelper Helper
+        if (players[0] == source)
         {
-            get { return new UiHelper(); }
+            return VerifierResult.Fail;
         }
+        return VerifierResult.Success;
+    }
+
+    public IList<CardHandler> AcceptableCardTypes
+    {
+        get { return null; }
+    }
+
+    public VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
+    {
+        return FastVerify(source, skill, cards, players);
+    }
+
+    public UiHelper Helper
+    {
+        get { return new UiHelper(); }
     }
 }

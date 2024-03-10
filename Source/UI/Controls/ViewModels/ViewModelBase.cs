@@ -1,192 +1,190 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Windows.Threading;
 using System.Threading;
 using System.Windows;
 using System.Collections.Generic;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+/// <summary>
+/// Base class for all ViewModel classes in the application.
+/// It provides support for property change notifications 
+/// and has a DisplayName property.  This class is abstract.
+/// </summary>
+public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
 {
+    #region Constructor
+
+    protected ViewModelBase()
+    {            
+    }
+
+    #endregion // Constructor
+
+    #region DisplayName
+
     /// <summary>
-    /// Base class for all ViewModel classes in the application.
-    /// It provides support for property change notifications 
-    /// and has a DisplayName property.  This class is abstract.
+    /// Returns the user-friendly name of this object.
+    /// Child classes can set this property to a new value,
+    /// or override it to determine the value on-demand.
     /// </summary>
-    public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
+    public virtual string DisplayName { get; protected set; }
+
+    #endregion // DisplayName
+
+    #region Debugging Aides
+
+    /// <summary>
+    /// Warns the developer if this object does not have
+    /// a public property with the specified name. This 
+    /// method does not exist in a Release build.
+    /// </summary>
+    [Conditional("DEBUG")]
+    [DebuggerStepThrough]
+    public void VerifyPropertyName(string propertyName)
     {
-        #region Constructor
-
-        protected ViewModelBase()
-        {            
-        }
-
-        #endregion // Constructor
-
-        #region DisplayName
-
-        /// <summary>
-        /// Returns the user-friendly name of this object.
-        /// Child classes can set this property to a new value,
-        /// or override it to determine the value on-demand.
-        /// </summary>
-        public virtual string DisplayName { get; protected set; }
-
-        #endregion // DisplayName
-
-        #region Debugging Aides
-
-        /// <summary>
-        /// Warns the developer if this object does not have
-        /// a public property with the specified name. This 
-        /// method does not exist in a Release build.
-        /// </summary>
-        [Conditional("DEBUG")]
-        [DebuggerStepThrough]
-        public void VerifyPropertyName(string propertyName)
+        // Verify that the property name matches a real,  
+        // public, instance property on this object.
+        if (TypeDescriptor.GetProperties(this)[propertyName] == null)
         {
-            // Verify that the property name matches a real,  
-            // public, instance property on this object.
-            if (TypeDescriptor.GetProperties(this)[propertyName] == null)
-            {
-                string msg = "Invalid property name: " + propertyName;
+            string msg = "Invalid property name: " + propertyName;
 
-                if (this.ThrowOnInvalidPropertyName)
-                    throw new Exception(msg);
-                else
-                    Debug.Fail(msg);
-            }
-        }
-
-        /// <summary>
-        /// Returns whether an exception is thrown, or if a Debug.Fail() is used
-        /// when an invalid property name is passed to the VerifyPropertyName method.
-        /// The default value is false, but subclasses used by unit tests might 
-        /// override this property's getter to return true.
-        /// </summary>
-        protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
-
-        #endregion // Debugging Aides
-
-        #region INotifyPropertyChanged Members
-
-        /// <summary>
-        /// Raised when a property on this object has a new value.
-        /// </summary>
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        private HashSet<string> _queuedChangedProperties;
-        private static HashSet<ViewModelBase> _queuedChangedViewModelBases = new HashSet<ViewModelBase>();
-
-        private void _UpdateAll()
-        {
-            Trace.Assert(!ViewModelBase.IsDetached);
-            if (_queuedChangedProperties == null) return;
-            foreach (var prop in _queuedChangedProperties)
-            {
-                OnPropertyChanged(prop);
-            }
-            _queuedChangedProperties.Clear();
-        }
-
-        /// <summary>
-        /// Raises this object's PropertyChanged event.
-        /// </summary>
-        /// <param name="propertyName">The property that has a new value.</param>
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            this.VerifyPropertyName(propertyName);
-            if (_isDetached)
-            {
-                if (_queuedChangedProperties == null)
-                {
-                    _queuedChangedProperties = new HashSet<string>();
-                }
-                if (!_queuedChangedProperties.Contains(propertyName))
-                {
-                    _queuedChangedProperties.Add(propertyName);
-                }
-                if (!_queuedChangedViewModelBases.Contains(this))
-                {
-                    _queuedChangedViewModelBases.Add(this);
-                }
-            }
+            if (this.ThrowOnInvalidPropertyName)
+                throw new Exception(msg);
             else
+                Debug.Fail(msg);
+        }
+    }
+
+    /// <summary>
+    /// Returns whether an exception is thrown, or if a Debug.Fail() is used
+    /// when an invalid property name is passed to the VerifyPropertyName method.
+    /// The default value is false, but subclasses used by unit tests might 
+    /// override this property's getter to return true.
+    /// </summary>
+    protected virtual bool ThrowOnInvalidPropertyName { get; private set; }
+
+    #endregion // Debugging Aides
+
+    #region INotifyPropertyChanged Members
+
+    /// <summary>
+    /// Raised when a property on this object has a new value.
+    /// </summary>
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    private HashSet<string> _queuedChangedProperties;
+    private static readonly HashSet<ViewModelBase> _queuedChangedViewModelBases = new HashSet<ViewModelBase>();
+
+    private void _UpdateAll()
+    {
+        Trace.Assert(!IsDetached);
+        if (_queuedChangedProperties == null) return;
+        foreach (var prop in _queuedChangedProperties)
+        {
+            OnPropertyChanged(prop);
+        }
+        _queuedChangedProperties.Clear();
+    }
+
+    /// <summary>
+    /// Raises this object's PropertyChanged event.
+    /// </summary>
+    /// <param name="propertyName">The property that has a new value.</param>
+    protected virtual void OnPropertyChanged(string propertyName)
+    {
+        this.VerifyPropertyName(propertyName);
+        if (_isDetached)
+        {
+            if (_queuedChangedProperties == null)
             {
-                PropertyChangedEventHandler handler = this.PropertyChanged;
-                if (handler != null)
+                _queuedChangedProperties = new HashSet<string>();
+            }
+            if (!_queuedChangedProperties.Contains(propertyName))
+            {
+                _queuedChangedProperties.Add(propertyName);
+            }
+            if (!_queuedChangedViewModelBases.Contains(this))
+            {
+                _queuedChangedViewModelBases.Add(this);
+            }
+        }
+        else
+        {
+            PropertyChangedEventHandler handler = this.PropertyChanged;
+            if (handler != null)
+            {
+                if (Application.Current.Dispatcher.CheckAccess())
                 {
-                    if (Application.Current.Dispatcher.CheckAccess())
+                    var e = new PropertyChangedEventArgs(propertyName);
+                    handler(this, e);
+                }
+                else
+                {
+                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
                     {
-                        var e = new PropertyChangedEventArgs(propertyName);
-                        handler(this, e);
-                    }
-                    else
-                    {
-                        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
-                        {
-                            handler(this, new PropertyChangedEventArgs(propertyName));
-                        });
-                    }
+                        handler(this, new PropertyChangedEventArgs(propertyName));
+                    });
                 }
             }
-        }        
-
-        #endregion // INotifyPropertyChanged Members
-
-        #region IDisposable Members
-
-        /// <summary>
-        /// Invoked when this object is being removed from the application
-        /// and will be subject to garbage collection.
-        /// </summary>
-        public void Dispose()
-        {
-            this.OnDispose();
         }
+    }        
 
-        /// <summary>
-        /// Child classes can override this method to perform 
-        /// clean-up logic, such as removing event handlers.
-        /// </summary>
-        protected virtual void OnDispose()
-        {
-        }
+    #endregion // INotifyPropertyChanged Members
+
+    #region IDisposable Members
+
+    /// <summary>
+    /// Invoked when this object is being removed from the application
+    /// and will be subject to garbage collection.
+    /// </summary>
+    public void Dispose()
+    {
+        this.OnDispose();
+    }
+
+    /// <summary>
+    /// Child classes can override this method to perform 
+    /// clean-up logic, such as removing event handlers.
+    /// </summary>
+    protected virtual void OnDispose()
+    {
+    }
 
 #if DEBUG
-        /// <summary>
-        /// Useful for ensuring that ViewModel objects are properly garbage collected.
-        /// </summary>
-        ~ViewModelBase()
-        {
-            string msg = string.Format("{0} ({1}) ({2}) Finalized", this.GetType().Name, this.DisplayName, this.GetHashCode());
-            System.Diagnostics.Debug.WriteLine(msg);
-        }
+    /// <summary>
+    /// Useful for ensuring that ViewModel objects are properly garbage collected.
+    /// </summary>
+    ~ViewModelBase()
+    {
+        string msg = string.Format("{0} ({1}) ({2}) Finalized", this.GetType().Name, this.DisplayName, this.GetHashCode());
+        Debug.WriteLine(msg);
+    }
 #endif
 
-        #endregion // IDisposable Members
+    #endregion // IDisposable Members
 
-        private static bool _isDetached = false;
+    private static bool _isDetached = false;
 
-        public static bool IsDetached
+    public static bool IsDetached
+    {
+        get { return _isDetached; }
+        set { _isDetached = value; }
+    }
+
+    public static void DetachAll()
+    {
+        _isDetached = true;            
+    }
+
+    public static void AttachAll()
+    {
+        _isDetached = false;
+        foreach (var vmb in _queuedChangedViewModelBases)
         {
-            get { return ViewModelBase._isDetached; }
-            set { ViewModelBase._isDetached = value; }
+            vmb._UpdateAll();
         }
-
-        public static void DetachAll()
-        {
-            _isDetached = true;            
-        }
-
-        public static void AttachAll()
-        {
-            _isDetached = false;
-            foreach (var vmb in _queuedChangedViewModelBases)
-            {
-                vmb._UpdateAll();
-            }
-            _queuedChangedViewModelBases.Clear();
-        }
+        _queuedChangedViewModelBases.Clear();
     }
 }

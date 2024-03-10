@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 using Sanguosha.Core.UI;
@@ -12,94 +9,93 @@ using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Cards;
 
-namespace Sanguosha.Expansions.Basic.Cards
+namespace Sanguosha.Expansions.Basic.Cards;
+
+public abstract class Aoe : CardHandler
 {
-    public abstract class Aoe : CardHandler
+    protected abstract string UsagePromptString { get; }
+
+    protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
-        protected abstract string UsagePromptString { get; }
-
-        protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
+        SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()); }, false, RequiredCard);
+        List<Player> sourceList = new List<Player>();
+        sourceList.Add(source);
+        GameEventArgs args = new GameEventArgs();
+        args.Source = dest;
+        args.Targets = sourceList;
+        args.Card = new CompositeCard();
+        args.Card.Type = RequiredCard;
+        args.ReadonlyCard = readonlyCard;
+        try
         {
-            SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()); }, false, RequiredCard);
-            List<Player> sourceList = new List<Player>();
-            sourceList.Add(source);
-            GameEventArgs args = new GameEventArgs();
-            args.Source = dest;
-            args.Targets = sourceList;
-            args.Card = new CompositeCard();
-            args.Card.Type = RequiredCard;
-            args.ReadonlyCard = readonlyCard;
-            try
+            Game.CurrentGame.Emit(GameEvent.PlayerRequireCard, args);
+        }
+        catch (TriggerResultException e)
+        {
+            if (e.Status == TriggerResult.Success)
             {
-                Game.CurrentGame.Emit(GameEvent.PlayerRequireCard, args);
+                Game.CurrentGame.HandleCardPlay(dest, args.Skill, args.Cards, sourceList);
+                return;
             }
-            catch (TriggerResultException e)
+        }
+        while (true)
+        {
+            IPlayerProxy ui = Game.CurrentGame.UiProxies[dest];
+            ISkill skill;
+            List<Player> p;
+            List<Card> cards;
+            Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = dest, Verifier = v1 });
+            if (!ui.AskForCardUsage(new CardUsagePrompt(UsagePromptString, source),
+                                                  v1, out skill, out cards, out p))
             {
-                if (e.Status == TriggerResult.Success)
+                Trace.TraceInformation("Player {0} Invalid answer", dest);
+                Game.CurrentGame.DoDamage(source.IsDead ? null : source, dest, 1, DamageElement.None, card, readonlyCard);
+            }
+            else
+            {
+                if (!Game.CurrentGame.HandleCardPlay(dest, skill, cards, sourceList))
                 {
-                    Game.CurrentGame.HandleCardPlay(dest, args.Skill, args.Cards, sourceList);
-                    return;
+                    continue;
                 }
+                Trace.TraceInformation("Player {0} Responded. ", dest.Id);
             }
-            while (true)
+            break;
+        }
+    }
+
+    public abstract CardHandler RequiredCard 
+    {
+        get;
+        protected set;
+    }
+
+    public override List<Player> ActualTargets(Player source, List<Player> dests, ICard card)
+    {
+        var targets = new List<Player>(Game.CurrentGame.AlivePlayers);
+        targets.Remove(source);
+        var backup = new List<Player>(targets);
+        foreach (var t in backup)
+        {
+            if (!Game.CurrentGame.PlayerCanBeTargeted(source, new List<Player>() { t }, card))
             {
-                IPlayerProxy ui = Game.CurrentGame.UiProxies[dest];
-                ISkill skill;
-                List<Player> p;
-                List<Card> cards;
-                Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = dest, Verifier = v1 });
-                if (!ui.AskForCardUsage(new CardUsagePrompt(UsagePromptString, source),
-                                                      v1, out skill, out cards, out p))
-                {
-                    Trace.TraceInformation("Player {0} Invalid answer", dest);
-                    Game.CurrentGame.DoDamage(source.IsDead ? null : source, dest, 1, DamageElement.None, card, readonlyCard);
-                }
-                else
-                {
-                    if (!Game.CurrentGame.HandleCardPlay(dest, skill, cards, sourceList))
-                    {
-                        continue;
-                    }
-                    Trace.TraceInformation("Player {0} Responded. ", dest.Id);
-                }
-                break;
+                targets.Remove(t);
             }
         }
+        return targets;
+    }
 
-        public abstract CardHandler RequiredCard 
+    public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
+    {
+        if (targets != null && targets.Count >= 1)
         {
-            get;
-            protected set;
+            return VerifierResult.Fail;
         }
+        if (ActualTargets(source, targets, card).Count == 0) return VerifierResult.Fail;
+        return VerifierResult.Success;
+    }
 
-        public override List<Player> ActualTargets(Player source, List<Player> dests, ICard card)
-        {
-            var targets = new List<Player>(Game.CurrentGame.AlivePlayers);
-            targets.Remove(source);
-            var backup = new List<Player>(targets);
-            foreach (var t in backup)
-            {
-                if (!Game.CurrentGame.PlayerCanBeTargeted(source, new List<Player>() { t }, card))
-                {
-                    targets.Remove(t);
-                }
-            }
-            return targets;
-        }
-
-        public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
-        {
-            if (targets != null && targets.Count >= 1)
-            {
-                return VerifierResult.Fail;
-            }
-            if (ActualTargets(source, targets, card).Count == 0) return VerifierResult.Fail;
-            return VerifierResult.Success;
-        }
-
-        public override CardCategory Category
-        {
-            get { return CardCategory.ImmediateTool; }
-        }
+    public override CardCategory Category
+    {
+        get { return CardCategory.ImmediateTool; }
     }
 }

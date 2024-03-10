@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Collections.ObjectModel;
 using Sanguosha.Lobby.Core;
 using System.Windows.Input;
@@ -9,441 +8,439 @@ using System.ServiceModel;
 using System.Windows;
 using System.Threading;
 using System.Diagnostics;
-using System.IO;
 using System.ComponentModel;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+//[CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, UseSynchronizationContext = false)]
+public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 {
-    [CallbackBehavior(ConcurrencyMode = ConcurrencyMode.Reentrant, UseSynchronizationContext = false)]
-    public class LobbyViewModel : IGameClient, INotifyPropertyChanged
+    private LobbyViewModel()
     {
-        private LobbyViewModel()
+        _chatCache = new List<KeyValuePair<string, string>>();
+        Rooms = new ObservableCollection<RoomViewModel>();
+        UpdateRoomCommand = new SimpleRelayCommand(o => UpdateRooms()) { CanExecuteStatus = true };
+        EnterRoomCommand = new SimpleRelayCommand(o => EnterRoom()) { CanExecuteStatus = true };
+        StartGameCommand = new SimpleRelayCommand(o => StartGame()) { CanExecuteStatus = false };
+        SpectateCommand = new SimpleRelayCommand(o => SpectateGame()) { CanExecuteStatus = true };
+        ReadyCommand = new SimpleRelayCommand(o => PlayerReady()) { CanExecuteStatus = true };
+        CancelReadyCommand = new SimpleRelayCommand(o => PlayerCancelReady()) { CanExecuteStatus = true};
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    // Create the OnPropertyChanged method to raise the event 
+    protected void OnPropertyChanged(string name)
+    {
+        PropertyChangedEventHandler handler = PropertyChanged;
+        if (handler != null)
         {
-            _chatCache = new List<KeyValuePair<string, string>>();
-            Rooms = new ObservableCollection<RoomViewModel>();
-            UpdateRoomCommand = new SimpleRelayCommand(o => UpdateRooms()) { CanExecuteStatus = true };
-            EnterRoomCommand = new SimpleRelayCommand(o => EnterRoom()) { CanExecuteStatus = true };
-            StartGameCommand = new SimpleRelayCommand(o => StartGame()) { CanExecuteStatus = false };
-            SpectateCommand = new SimpleRelayCommand(o => SpectateGame()) { CanExecuteStatus = true };
-            ReadyCommand = new SimpleRelayCommand(o => PlayerReady()) { CanExecuteStatus = true };
-            CancelReadyCommand = new SimpleRelayCommand(o => PlayerCancelReady()) { CanExecuteStatus = true};
+            handler(this, new PropertyChangedEventArgs(name));
         }
+    }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        // Create the OnPropertyChanged method to raise the event 
-        protected void OnPropertyChanged(string name)
+    private void PlayerCancelReady()        
+    {
+        var result = _connection.CancelReady();
+        if (result == RoomOperationResult.Success)
         {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            if (handler != null)
-            {
-                handler(this, new PropertyChangedEventArgs(name));
-            }
         }
+    }
 
-        private void PlayerCancelReady()        
-        {
-            var result = _connection.CancelReady();
-            if (result == RoomOperationResult.Success)
-            {
-            }
+    private void PlayerReady()
+    {
+        var result = _connection.Ready();
+        if (result == RoomOperationResult.Success)
+        {                
         }
+    }
 
-        private void PlayerReady()
+    #region Fields
+    private static LobbyViewModel _instance;
+
+    /// <summary>
+    /// Gets the singleton instance of <c>LobbyViewModel</c>.
+    /// </summary>
+    public static LobbyViewModel Instance
+    {
+        get
         {
-            var result = _connection.Ready();
-            if (result == RoomOperationResult.Success)
-            {                
-            }
+            if (_instance == null) _instance = new LobbyViewModel();
+            return _instance;
         }
+    }
 
-        #region Fields
-        private static LobbyViewModel _instance;
+    private ILobbyService _connection;
 
-        /// <summary>
-        /// Gets the singleton instance of <c>LobbyViewModel</c>.
-        /// </summary>
-        public static LobbyViewModel Instance
+    /// <summary>
+    /// Gets/sets connection to lobby service. 
+    /// </summary>
+    public ILobbyService Connection
+    {
+        get { return _connection; }
+        set { _connection = value; }
+    }
+
+    private LoginToken _loginToken;
+
+    /// <summary>
+    /// Gets/sets current user's login token used for authentication purposes.
+    /// </summary>
+    public LoginToken LoginToken
+    {
+        get { return _loginToken; }
+        set { _loginToken = value; }
+    }
+
+
+    private RoomViewModel _currentRoom;
+            
+
+    /// <summary>
+    /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
+    /// </summary>
+    public RoomViewModel CurrentRoom
+    {
+        get
         {
-            get
-            {
-                if (_instance == null) _instance = new LobbyViewModel();
-                return _instance;
-            }
+            return _currentRoom;
         }
-
-        ILobbyService _connection;
-
-        /// <summary>
-        /// Gets/sets connection to lobby service. 
-        /// </summary>
-        public ILobbyService Connection
+        set
         {
-            get { return _connection; }
-            set { _connection = value; }
-        }
-
-        LoginToken _loginToken;
-
-        /// <summary>
-        /// Gets/sets current user's login token used for authentication purposes.
-        /// </summary>
-        public LoginToken LoginToken
-        {
-            get { return _loginToken; }
-            set { _loginToken = value; }
-        }
-
-
-        private RoomViewModel _currentRoom;
-                
-
-        /// <summary>
-        /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
-        /// </summary>
-        public RoomViewModel CurrentRoom
-        {
-            get
+            if (_currentRoom == value) return;
+            _currentRoom = value;
+            OnPropertyChanged("CurrentRoom");
+            if (value != null)
             {
-                return _currentRoom;
+                StartGameCommand.CanExecuteStatus = !(_currentRoom.Seats.Any(s => s.Account != null &&
+                                                                             s.State != SeatState.Host &&
+                                                                             s.State != SeatState.GuestReady))
+                                                    && _currentRoom.Seats.Count(s => s.Account != null) >= 2;
+                CurrentSeat = CurrentRoom.Seats.FirstOrDefault(s => s.Account != null && s.Account.UserName == CurrentAccount.UserName);
             }
-            set
-            {
-                if (_currentRoom == value) return;
-                _currentRoom = value;
-                OnPropertyChanged("CurrentRoom");
-                if (value != null)
-                {
-                    StartGameCommand.CanExecuteStatus = !(_currentRoom.Seats.Any(s => s.Account != null &&
-                                                                                 s.State != SeatState.Host &&
-                                                                                 s.State != SeatState.GuestReady))
-                                                        && _currentRoom.Seats.Count(s => s.Account != null) >= 2;
-                    CurrentSeat = CurrentRoom.Seats.FirstOrDefault(s => s.Account != null && s.Account.UserName == CurrentAccount.UserName);
-                }
-                else
-                {
-                    CurrentSeat = null;
-                }
-            }
-        }
-
-        private Account _currentAccount;
-
-        /// <summary>
-        /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
-        /// </summary>
-        public Account CurrentAccount
-        {
-            get
-            {
-                return _currentAccount;
-            }
-            set
-            {
-                if (_currentAccount == value) return;
-                _currentAccount = value;
-                OnPropertyChanged("CurrentAccount");
-            }
-        }
-
-        private SeatViewModel _currentSeat;
-
-        /// <summary>
-        /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
-        /// </summary>
-        public SeatViewModel CurrentSeat
-        {
-            get
-            {
-                return _currentSeat;
-            }
-            set
-            {
-                if (_currentSeat == value) return;
-                if (_currentSeat != null) _currentSeat.IsCurrentSeat = false;
-                _currentSeat = value;
-                if (value != null) value.IsCurrentSeat = true;
-                OnPropertyChanged("CurrentSeat");
-            }
-        }
-
-        private ObservableCollection<RoomViewModel> _rooms;
-
-        /// <summary>
-        /// Gets/sets all available rooms since last synchronization with the server.
-        /// </summary>
-        public ObservableCollection<RoomViewModel> Rooms
-        {
-            get
-            {
-                return _rooms;
-            }
-            private set
-            {
-                if (_rooms == value) return;
-                _rooms = value;
-                OnPropertyChanged("Rooms");
-            }
-        }
-
-        private string _gameServerConnectionString;
-
-        public string GameServerConnectionString
-        {
-            get { return _gameServerConnectionString; }
-            set { _gameServerConnectionString = value; }
-        }
-
-        #region Commands
-        public ICommand UpdateRoomCommand { get; set; }
-        public ICommand CreateSingleHeroRoomCommand { get; set; }
-        public ICommand CreateDualHeroRoomCommand { get; set; }
-        public ICommand EnterRoomCommand { get; set; }
-        public SimpleRelayCommand StartGameCommand { get; set; }
-        public SimpleRelayCommand SpectateCommand { get; set; }
-        public SimpleRelayCommand ReadyCommand { get; set; }
-        public SimpleRelayCommand CancelReadyCommand { get; set; }        
-        #endregion
-
-        #endregion
-
-        #region Events
-        private ChatEventHandler chatEventHandler;
-
-        public event ChatEventHandler OnChat
-        {
-            add 
-            {
-                chatEventHandler = value;
-                if (value != null)
-                {
-                    foreach (var cache in _chatCache)
-                    {
-                        value(cache.Key, cache.Value);
-                    }
-                    _chatCache.Clear();
-                }
-            }
-            remove 
-            {
-                if (chatEventHandler == value)
-                    chatEventHandler = null;
-            }
-        }
-
-        #endregion
-
-        #region Public Functions
-        /// <summary>
-        /// Updates all rooms in the lobby.
-        /// </summary>
-        public void UpdateRooms()
-        {
-            var result = _connection.GetRooms(false);
-            Rooms.Clear();
-            bool found = false;
-            foreach (var room in result)
-            {
-                var model = new RoomViewModel() { Room = room };
-                Rooms.Add(model);
-                if (CurrentRoom != null && room.Id == CurrentRoom.Id)
-                {
-                    found = true;
-                    CurrentRoom = model;
-                }
-            }
-            if (!found)
-            {
-                CurrentRoom = null;
-            }
-        }
-
-        /// <summary>
-        /// Creates and enters a new room.
-        /// </summary>
-        public void CreateRoom(RoomSettings settings)
-        {
-            var room = _connection.CreateRoom(settings);
-            if (room != null)
-            {
-                CurrentRoom = new RoomViewModel() { Room = room };
-                UpdateRooms();
-                Trace.Assert(CurrentSeat != null, "Successfully created a room, but do not find myself in the room");
-            }
-        }
-
-        private bool _IsSuccess(RoomOperationResult result)
-        {
-            return result == RoomOperationResult.Success;
-        }
-
-        public bool EnterRoom()
-        {
-            Room room;
-            if (CurrentSeat != null)
-            {
-                if (!ExitRoom()) return false;
-            }
-            if (_IsSuccess(Connection.EnterRoom(_currentRoom.Id, false, null, out room)))
-            {
-                CurrentRoom = new RoomViewModel() { Room = room };                
-                Trace.Assert(CurrentSeat != null, "Successfully joined a room, but do not find myself in the room");
-                return true;
-            }
-            return false;
-        }
-
-        public bool ExitRoom()
-        {
-            if (CurrentRoom == null) return false;
-            var result = Connection.ExitRoom();
-            if (_IsSuccess(result))
+            else
             {
                 CurrentSeat = null;
-                UpdateRooms();
-                return true;
             }
-            return false;
         }
+    }
 
-        public bool StartGame()
+    private Account _currentAccount;
+
+    /// <summary>
+    /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
+    /// </summary>
+    public Account CurrentAccount
+    {
+        get
         {
-            if (_IsSuccess(_connection.StartGame()))
+            return _currentAccount;
+        }
+        set
+        {
+            if (_currentAccount == value) return;
+            _currentAccount = value;
+            OnPropertyChanged("CurrentAccount");
+        }
+    }
+
+    private SeatViewModel _currentSeat;
+
+    /// <summary>
+    /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
+    /// </summary>
+    public SeatViewModel CurrentSeat
+    {
+        get
+        {
+            return _currentSeat;
+        }
+        set
+        {
+            if (_currentSeat == value) return;
+            if (_currentSeat != null) _currentSeat.IsCurrentSeat = false;
+            _currentSeat = value;
+            if (value != null) value.IsCurrentSeat = true;
+            OnPropertyChanged("CurrentSeat");
+        }
+    }
+
+    private ObservableCollection<RoomViewModel> _rooms;
+
+    /// <summary>
+    /// Gets/sets all available rooms since last synchronization with the server.
+    /// </summary>
+    public ObservableCollection<RoomViewModel> Rooms
+    {
+        get
+        {
+            return _rooms;
+        }
+        private set
+        {
+            if (_rooms == value) return;
+            _rooms = value;
+            OnPropertyChanged("Rooms");
+        }
+    }
+
+    private string _gameServerConnectionString;
+
+    public string GameServerConnectionString
+    {
+        get { return _gameServerConnectionString; }
+        set { _gameServerConnectionString = value; }
+    }
+
+    #region Commands
+    public ICommand UpdateRoomCommand { get; set; }
+    public ICommand CreateSingleHeroRoomCommand { get; set; }
+    public ICommand CreateDualHeroRoomCommand { get; set; }
+    public ICommand EnterRoomCommand { get; set; }
+    public SimpleRelayCommand StartGameCommand { get; set; }
+    public SimpleRelayCommand SpectateCommand { get; set; }
+    public SimpleRelayCommand ReadyCommand { get; set; }
+    public SimpleRelayCommand CancelReadyCommand { get; set; }        
+    #endregion
+
+    #endregion
+
+    #region Events
+    private ChatEventHandler chatEventHandler;
+
+    public event ChatEventHandler OnChat
+    {
+        add 
+        {
+            chatEventHandler = value;
+            if (value != null)
             {
-                CurrentRoom.State = RoomState.Gaming;
-                return true;
+                foreach (var cache in _chatCache)
+                {
+                    value(cache.Key, cache.Value);
+                }
+                _chatCache.Clear();
             }
-            return false;
         }
-
-        public bool SpectateGame()
+        remove 
         {
-            if (_IsSuccess(_connection.Spectate(_currentRoom.Id)))
+            if (chatEventHandler == value)
+                chatEventHandler = null;
+        }
+    }
+
+    #endregion
+
+    #region Public Functions
+    /// <summary>
+    /// Updates all rooms in the lobby.
+    /// </summary>
+    public void UpdateRooms()
+    {
+        var result = _connection.GetRooms(false);
+        Rooms.Clear();
+        bool found = false;
+        foreach (var room in result)
+        {
+            var model = new RoomViewModel() { Room = room };
+            Rooms.Add(model);
+            if (CurrentRoom != null && room.Id == CurrentRoom.Id)
             {
-                return true;
+                found = true;
+                CurrentRoom = model;
             }
-            return false;
         }
-
-        #region Server Callbacks
-        public void NotifyKicked()
+        if (!found)
         {
-            LobbyView.Instance.NotifyKeyEvent(Application.Current.TryFindResource("Lobby.Event.SelfKicked") as string);
             CurrentRoom = null;
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
-            {
-                UpdateRooms();
-            });
         }
+    }
 
-        public void NotifyGameStart(string connectionString, LoginToken token)
+    /// <summary>
+    /// Creates and enters a new room.
+    /// </summary>
+    public void CreateRoom(RoomSettings settings)
+    {
+        var room = _connection.CreateRoom(settings);
+        if (room != null)
         {
-            GameServerConnectionString = connectionString;
-            _loginToken = token;
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
-            {
-                LobbyView.Instance.StartGame();
-            });
+            CurrentRoom = new RoomViewModel() { Room = room };
+            UpdateRooms();
+            Trace.Assert(CurrentSeat != null, "Successfully created a room, but do not find myself in the room");
         }
+    }
 
-        public void NotifyRoomUpdate(int id, Room room)
+    private bool _IsSuccess(RoomOperationResult result)
+    {
+        return result == RoomOperationResult.Success;
+    }
+
+    public bool EnterRoom()
+    {
+        Room room;
+        if (CurrentSeat != null)
         {
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
-            {
-                var result = Rooms.FirstOrDefault(r => r.Id == id);
-                if (result != null)
-                {
-                    result.Room = room;
-                }
-                else
-                {
-                    Rooms.Add(new RoomViewModel() { Room = room });
-                }
-                if (CurrentRoom != null && CurrentRoom.Id == id)
-                {
-                    CurrentRoom = new RoomViewModel() { Room = room };                    
-                }
-            });
+            if (!ExitRoom()) return false;
         }
-        #endregion
-        #endregion
-
-        private List<KeyValuePair<string, string>> _chatCache;
-
-        public void NotifyChat(Account act, string message)
+        if (_IsSuccess(Connection.EnterRoom(_currentRoom.Id, false, null, out room)))
         {
-            Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
-            {
-                if (_chatCache.Count > 100) _chatCache.RemoveRange(0, 50);
-                _chatCache.Add(new KeyValuePair<string, string>(act.UserName, message));                
-                var handler = chatEventHandler;
-                if (handler != null)
-                {
-                    foreach (var cache in _chatCache)
-                    {
-                        handler(cache.Key, cache.Value);
-                    }
-                    _chatCache.Clear();
-                }
-            });
+            CurrentRoom = new RoomViewModel() { Room = room };                
+            Trace.Assert(CurrentSeat != null, "Successfully joined a room, but do not find myself in the room");
+            return true;
         }
+        return false;
+    }
 
-        public bool JoinSeat(SeatViewModel seat)
+    public bool ExitRoom()
+    {
+        if (CurrentRoom == null) return false;
+        var result = Connection.ExitRoom();
+        if (_IsSuccess(result))
         {
-            if (CurrentSeat == null)
-            {
-                if (!EnterRoom()) return false;
-            }
-            var index = CurrentRoom.Seats.IndexOf(seat);
-            if (index < 0) return false;
-            return _IsSuccess(Connection.ChangeSeat(index));
+            CurrentSeat = null;
+            UpdateRooms();
+            return true;
         }
+        return false;
+    }
 
-        public bool CloseSeat(SeatViewModel seat)
+    public bool StartGame()
+    {
+        if (_IsSuccess(_connection.StartGame()))
         {
-            var index = CurrentRoom.Seats.IndexOf(seat);
-            if (index < 0) return false;
-            return _IsSuccess(Connection.CloseSeat(index));
+            CurrentRoom.State = RoomState.Gaming;
+            return true;
         }
+        return false;
+    }
 
-        public bool OpenSeat(SeatViewModel seat)
-        {
-            var index = CurrentRoom.Seats.IndexOf(seat);
-            if (index < 0) return false;
-            return _IsSuccess(Connection.OpenSeat(index));
-        }
-
-        public bool KickPlayer(SeatViewModel seat)
-        {
-            var index = CurrentRoom.Seats.IndexOf(seat);
-            if (index < 0) return false;
-            return _IsSuccess(Connection.Kick(index));
-        }
-
-        public bool SendMessage(string msg)
-        {
-            try
-            {
-                return _IsSuccess(Connection.Chat(msg));
-            }
-            catch (Exception)
-            {
-                return false;
-            }
-        }
-
-        public bool Ping()
+    public bool SpectateGame()
+    {
+        if (_IsSuccess(_connection.Spectate(_currentRoom.Id)))
         {
             return true;
         }
-
-        public void Logout()
-        {
-            Connection.Logout();
-            LoginToken = new LoginToken();
-        }
-
+        return false;
     }
 
-    public delegate void ChatEventHandler(string userName, string msg);
+    #region Server Callbacks
+    public void NotifyKicked()
+    {
+        LobbyView.Instance.NotifyKeyEvent(Application.Current.TryFindResource("Lobby.Event.SelfKicked") as string);
+        CurrentRoom = null;
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        {
+            UpdateRooms();
+        });
+    }
+
+    public void NotifyGameStart(string connectionString, LoginToken token)
+    {
+        GameServerConnectionString = connectionString;
+        _loginToken = token;
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        {
+            LobbyView.Instance.StartGame();
+        });
+    }
+
+    public void NotifyRoomUpdate(int id, Room room)
+    {
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        {
+            var result = Rooms.FirstOrDefault(r => r.Id == id);
+            if (result != null)
+            {
+                result.Room = room;
+            }
+            else
+            {
+                Rooms.Add(new RoomViewModel() { Room = room });
+            }
+            if (CurrentRoom != null && CurrentRoom.Id == id)
+            {
+                CurrentRoom = new RoomViewModel() { Room = room };                    
+            }
+        });
+    }
+    #endregion
+    #endregion
+
+    private readonly List<KeyValuePair<string, string>> _chatCache;
+
+    public void NotifyChat(Account act, string message)
+    {
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        {
+            if (_chatCache.Count > 100) _chatCache.RemoveRange(0, 50);
+            _chatCache.Add(new KeyValuePair<string, string>(act.UserName, message));                
+            var handler = chatEventHandler;
+            if (handler != null)
+            {
+                foreach (var cache in _chatCache)
+                {
+                    handler(cache.Key, cache.Value);
+                }
+                _chatCache.Clear();
+            }
+        });
+    }
+
+    public bool JoinSeat(SeatViewModel seat)
+    {
+        if (CurrentSeat == null)
+        {
+            if (!EnterRoom()) return false;
+        }
+        var index = CurrentRoom.Seats.IndexOf(seat);
+        if (index < 0) return false;
+        return _IsSuccess(Connection.ChangeSeat(index));
+    }
+
+    public bool CloseSeat(SeatViewModel seat)
+    {
+        var index = CurrentRoom.Seats.IndexOf(seat);
+        if (index < 0) return false;
+        return _IsSuccess(Connection.CloseSeat(index));
+    }
+
+    public bool OpenSeat(SeatViewModel seat)
+    {
+        var index = CurrentRoom.Seats.IndexOf(seat);
+        if (index < 0) return false;
+        return _IsSuccess(Connection.OpenSeat(index));
+    }
+
+    public bool KickPlayer(SeatViewModel seat)
+    {
+        var index = CurrentRoom.Seats.IndexOf(seat);
+        if (index < 0) return false;
+        return _IsSuccess(Connection.Kick(index));
+    }
+
+    public bool SendMessage(string msg)
+    {
+        try
+        {
+            return _IsSuccess(Connection.Chat(msg));
+        }
+        catch (Exception)
+        {
+            return false;
+        }
+    }
+
+    public bool Ping()
+    {
+        return true;
+    }
+
+    public void Logout()
+    {
+        Connection.Logout();
+        LoginToken = new LoginToken();
+    }
+
 }
+
+public delegate void ChatEventHandler(string userName, string msg);

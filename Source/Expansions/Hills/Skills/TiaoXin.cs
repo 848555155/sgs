@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 
 using Sanguosha.Core.Triggers;
@@ -13,87 +10,86 @@ using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Exceptions;
 
-namespace Sanguosha.Expansions.Hills.Skills
+namespace Sanguosha.Expansions.Hills.Skills;
+
+/// <summary>
+/// 挑衅-出牌阶段，你可以指定一名你在其攻击范围内的角色，该角色选择一项：对你使用一张【杀】，或令你弃置其一张牌，每阶段限一次。
+/// </summary>
+public class TiaoXin : AutoVerifiedActiveSkill
 {
-    /// <summary>
-    /// 挑衅-出牌阶段，你可以指定一名你在其攻击范围内的角色，该角色选择一项：对你使用一张【杀】，或令你弃置其一张牌，每阶段限一次。
-    /// </summary>
-    public class TiaoXin : AutoVerifiedActiveSkill
+    protected override int GenerateSpecialEffectHintIndex(Player source, List<Player> targets, List<Card> cards)
     {
-        protected override int GenerateSpecialEffectHintIndex(Player source, List<Player> targets, List<Card> cards)
-        {
-            Trace.Assert(Owner != null && Owner.Hero != null);
-            if (Owner == null || Owner.Hero == null) return 0;
-            else if (Owner.Hero.Name == "XiahouBa" || (Owner.Hero2 != null && Owner.Hero2.Name == "XiahouBa")) return 1;
-            return 0;
-        }
+        Trace.Assert(Owner != null && Owner.Hero != null);
+        if (Owner == null || Owner.Hero == null) return 0;
+        else if (Owner.Hero.Name == "XiahouBa" || (Owner.Hero2 != null && Owner.Hero2.Name == "XiahouBa")) return 1;
+        return 0;
+    }
 
-        public override bool Commit(GameEventArgs arg)
+    public override bool Commit(GameEventArgs arg)
+    {
+        Owner[TiaoXinUsed] = 1;
+        var target = arg.Targets[0];
+        ISkill skill;
+        List<Card> cards;
+        List<Player> players;
+        while (true)
         {
-            Owner[TiaoXinUsed] = 1;
-            var target = arg.Targets[0];
-            ISkill skill;
-            List<Card> cards;
-            List<Player> players;
-            while (true)
+            var v = new JieDaoShaRen.JieDaoShaRenVerifier(Owner);
+            Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = target, Verifier = v });
+            if (Game.CurrentGame.UiProxies[target].AskForCardUsage(new CardUsagePrompt("TiaoXin", Owner), v,
+                out skill, out cards, out players))
             {
-                var v = new JieDaoShaRen.JieDaoShaRenVerifier(Owner);
-                Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = target, Verifier = v });
-                if (Game.CurrentGame.UiProxies[target].AskForCardUsage(new CardUsagePrompt("TiaoXin", Owner), v,
-                    out skill, out cards, out players))
+                try
                 {
-                    try
-                    {
-                        GameEventArgs args = new GameEventArgs();
-                        target[Sha.NumberOfShaUsed]--;
-                        args.Source = target;
-                        args.Targets = new List<Player>(players);
-                        args.Targets.Add(Owner);
-                        args.Skill = skill;
-                        args.Cards = cards;
-                        Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
-                    }
-                    catch (TriggerResultException e)
-                    {
-                        Trace.Assert(e.Status == TriggerResult.Retry);
-                        continue;
-                    }
+                    GameEventArgs args = new GameEventArgs();
+                    target[Sha.NumberOfShaUsed]--;
+                    args.Source = target;
+                    args.Targets = new List<Player>(players);
+                    args.Targets.Add(Owner);
+                    args.Skill = skill;
+                    args.Cards = cards;
+                    Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
                 }
-                else
+                catch (TriggerResultException e)
                 {
-                    var theCard = Game.CurrentGame.SelectACardFrom(arg.Targets[0], Owner, new CardChoicePrompt("TiaoXin", Owner), "TiaoXin");
-                    if (theCard != null )Game.CurrentGame.HandleCardDiscard(arg.Targets[0], new List<Card>() { theCard });
+                    Trace.Assert(e.Status == TriggerResult.Retry);
+                    continue;
                 }
-                break;
             }
-            return true;
+            else
+            {
+                var theCard = Game.CurrentGame.SelectACardFrom(arg.Targets[0], Owner, new CardChoicePrompt("TiaoXin", Owner), "TiaoXin");
+                if (theCard != null )Game.CurrentGame.HandleCardDiscard(arg.Targets[0], new List<Card>() { theCard });
+            }
+            break;
         }
+        return true;
+    }
 
-        public TiaoXin()
-        {
-            MinCards = 0;
-            MaxCards = 0;
-            MaxPlayers = 1;
-            MinPlayers = 1;
-        }
+    public TiaoXin()
+    {
+        MinCards = 0;
+        MaxCards = 0;
+        MaxPlayers = 1;
+        MinPlayers = 1;
+    }
 
-        public static PlayerAttribute TiaoXinUsed = PlayerAttribute.Register("TiaoXinUsed", true);
+    public static PlayerAttribute TiaoXinUsed = PlayerAttribute.Register("TiaoXinUsed", true);
 
-        protected override bool? AdditionalVerify(Player source, List<Card> cards, List<Player> players)
-        {
-            if (Owner[TiaoXinUsed] == 1) return false;
-            return true;
-        }
+    protected override bool? AdditionalVerify(Player source, List<Card> cards, List<Player> players)
+    {
+        if (Owner[TiaoXinUsed] == 1) return false;
+        return true;
+    }
 
-        protected override bool VerifyPlayer(Player source, Player player)
-        {
-            if (Game.CurrentGame.DistanceTo(player, source) > player[Player.AttackRange] + 1) return false;
-            return source != player;
-        }
+    protected override bool VerifyPlayer(Player source, Player player)
+    {
+        if (Game.CurrentGame.DistanceTo(player, source) > player[Player.AttackRange] + 1) return false;
+        return source != player;
+    }
 
-        protected override bool VerifyCard(Player source, Card card)
-        {
-            return true;
-        }
+    protected override bool VerifyCard(Player source, Card card)
+    {
+        return true;
     }
 }

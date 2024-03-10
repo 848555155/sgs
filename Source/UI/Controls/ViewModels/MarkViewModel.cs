@@ -1,95 +1,90 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 using Sanguosha.Core.Players;
 
-namespace Sanguosha.UI.Controls
+namespace Sanguosha.UI.Controls;
+
+public class MarkViewModel : ViewModelBase
 {
-    public class MarkViewModel : ViewModelBase
+    public MarkViewModel()
     {
-        public MarkViewModel()
+        _digits = new ObservableCollection<int>();
+    }
+
+    private PlayerAttribute _attribute;
+
+    public PlayerAttribute PlayerAttribute
+    {
+        get
         {
-            _digits = new ObservableCollection<int>();
+            return _attribute;
         }
-
-        private PlayerAttribute _attribute;
-
-        public PlayerAttribute PlayerAttribute
+        set
         {
-            get
-            {
-                return _attribute;
-            }
-            set
-            {
-                if (_attribute == value) return;
-                _attribute = value;
-                _markName = _attribute.Name;
-            }
+            if (_attribute == value) return;
+            _attribute = value;
+            _markName = _attribute.Name;
         }
+    }
 
-        public int _number;
+    public int _number;
 
-        public int Number
+    public int Number
+    {
+        get
         {
-            get
+            return _number;
+        }
+        set
+        {
+            if (_number == value) return;
+            _number = value;
+            OnPropertyChanged("Number");
+            _digits.Clear();
+            IsExisted = (_number > 0);
+            if (_number > 1)
             {
-                return _number;
-            }
-            set
-            {
-                if (_number == value) return;
-                _number = value;
-                OnPropertyChanged("Number");
-                _digits.Clear();
-                IsExisted = (_number > 0);
-                if (_number > 1)
+                int num = _number;
+                while (num > 0)
                 {
-                    int num = _number;
-                    while (num > 0)
-                    {
-                        _digits.Insert(0, num % 10);
-                        num /= 10;
-                    }
+                    _digits.Insert(0, num % 10);
+                    num /= 10;
                 }
             }
         }
+    }
 
-        private bool _isExisted;
+    private bool _isExisted;
 
-        public bool IsExisted
+    public bool IsExisted
+    {
+        get
         {
-            get
-            {
-                return _isExisted;
-            }
-            set
-            {
-                if (_isExisted == value) return;
-                _isExisted = value;
-                OnPropertyChanged("IsExisted");
-            }
+            return _isExisted;
         }
-
-        private string _markName;
-
-        public string MarkName
+        set
         {
-            get
-            {
-                return _markName;
-            }
+            if (_isExisted == value) return;
+            _isExisted = value;
+            OnPropertyChanged("IsExisted");
         }
+    }
 
-        ObservableCollection<int> _digits;
-        public ObservableCollection<int> Digits
+    private string _markName;
+
+    public string MarkName
+    {
+        get
         {
-            get
-            {
-               return _digits; 
-            }
+            return _markName;
+        }
+    }
+
+    private readonly ObservableCollection<int> _digits;
+    public ObservableCollection<int> Digits
+    {
+        get
+        {
+           return _digits; 
         }
     }
 }
