@@ -1,11 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
     <RootNamespace>Sanguosha.Expansions.Wind</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWPF>true</UseWPF>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\..\..\bin\Debug\</OutputPath>
@@ -20,8 +19,8 @@
     <ProjectReference Include="..\Basic\Basic.csproj" />
     <ProjectReference Include="..\Battle\Battle.csproj" />
   </ItemGroup>
-  <!--<PropertyGroup>
-    <PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>
-  </PropertyGroup>-->
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
+copy $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+  </Target>
 </Project>

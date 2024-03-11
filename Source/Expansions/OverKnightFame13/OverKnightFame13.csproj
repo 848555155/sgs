@@ -1,6 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
     <RootNamespace>Sanguosha.Expansions.OverKnightFame13</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -31,12 +32,14 @@
     </None>
   </ItemGroup>
   <PropertyGroup>
-    <!--<PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy /Y $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>-->
     <AssemblyTitle>OverKnightFame12</AssemblyTitle>
     <Product>OverKnightFame12</Product>
     <Copyright>Copyright ©  2012</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
+copy $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+  </Target>
 </Project>

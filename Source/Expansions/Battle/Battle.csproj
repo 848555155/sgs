@@ -1,12 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0</TargetFrameworks>
+    <ImplicitUsings>enable</ImplicitUsings>
     <OutputType>Library</OutputType>
     <RootNamespace>Sanguosha.Expansions.Battle</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\..\..\Bin\Debug\</OutputPath>
@@ -21,12 +19,14 @@
     <ProjectReference Include="..\Basic\Basic.csproj" />
   </ItemGroup>
   <PropertyGroup>
-    <!--<PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>-->
     <AssemblyTitle>Battle</AssemblyTitle>
     <Product>Battle</Product>
     <Copyright>Copyright ©  2012</Copyright>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
+copy $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
+  </Target>
 </Project>
