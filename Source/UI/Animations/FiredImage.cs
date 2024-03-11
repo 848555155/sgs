@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace Sanguosha.UI.Animations;
@@ -124,7 +124,7 @@ public class FiredImage : UserControl
     public static readonly DependencyProperty FadeFactorProperty =
         DependencyProperty.Register("FadeFactor", typeof(int), typeof(FiredImage), new UIPropertyMetadata(1));
 
-    
+
 
     private BitmapPalette SetupFirePalette()
     {
@@ -132,11 +132,11 @@ public class FiredImage : UserControl
         // seutp the basic array we will modify
         for (int i = 0; i <= 255; i++)
         {
-           myList.Add(new Color());
+            myList.Add(new Color());
         }
-    
+
         if (Palette == null)
-        {           
+        {
             for (int i = 0; i < 64; i++)
             {
                 Color c1 = new Color();
@@ -179,16 +179,16 @@ public class FiredImage : UserControl
                 {
                     double offset1 = Palette.GradientStops[j].Offset;
                     double offset2 = Palette.GradientStops[j + 1].Offset;
-                    
+
                     if (offset1 != offset2 && offset1 <= percentage &&
                         offset2 >= percentage)
                     {
                         Color color1 = Palette.GradientStops[j].Color;
                         Color color2 = Palette.GradientStops[j + 1].Color;
                         Color color = new Color();
-                        color.R = (byte)((int)(color2.R - color1.R) / (offset2 - offset1) * (percentage - offset1) + color1.R); 
-                        color.G = (byte)((int)(color2.G - color1.G) / (offset2 - offset1) * (percentage - offset1) + color1.G); 
-                        color.B = (byte)((int)(color2.B - color1.B) / (offset2 - offset1) * (percentage - offset1) + color1.B); 
+                        color.R = (byte)((int)(color2.R - color1.R) / (offset2 - offset1) * (percentage - offset1) + color1.R);
+                        color.G = (byte)((int)(color2.G - color1.G) / (offset2 - offset1) * (percentage - offset1) + color1.G);
+                        color.B = (byte)((int)(color2.B - color1.B) / (offset2 - offset1) * (percentage - offset1) + color1.B);
                         color.A = (byte)((int)(color2.A - color1.A) / (offset2 - offset1) * (percentage - offset1) + color1.A);
                         myList[i] = color;
                         break;

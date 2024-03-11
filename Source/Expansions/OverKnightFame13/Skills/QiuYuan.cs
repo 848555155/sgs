@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Expansions.Basic.Cards;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -55,7 +52,7 @@ public class QiuYuan : TriggerSkill
         qiuYuanVerifier = new QiuYuanVerifier();
         var trigger = new AutoNotifyUsagePassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 if (a.ReadonlyCard.Type is Sha)
                 {
@@ -99,7 +96,8 @@ public class QiuYuan : TriggerSkill
             },
             TriggerCondition.OwnerIsTarget,
             qiuYuanVerifier
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.CardUsageTargetConfirming, trigger);
         IsAutoInvoked = null;
     }

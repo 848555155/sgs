@@ -26,7 +26,7 @@ public partial class GuHuoSkillButton : UserControl
     {
         IsDropDown = true;
     }
-    
+
     public bool IsDropDown
     {
         get { return (bool)GetValue(IsDropDownProperty); }
@@ -43,13 +43,13 @@ public partial class GuHuoSkillButton : UserControl
         GuHuoSkillButton button = d as GuHuoSkillButton;
         if (button != null)
         {
-            button.popupChoices.IsOpen = ((bool)e.NewValue);                
+            button.popupChoices.IsOpen = ((bool)e.NewValue);
         }
     }
 
     private void btnGuHuoType_Click(object sender, RoutedEventArgs e)
     {
-        IsDropDown = false;            
+        IsDropDown = false;
     }
-    
+
 }

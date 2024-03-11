@@ -1,8 +1,8 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -17,7 +17,7 @@ internal class LuoShenGetCard : GetJudgeCardTrigger
         if (eventArgs.Cards.Count > 0 && eventArgs.Cards[0].SuitColor == SuitColorType.Black)
             base.Run(gameEvent, eventArgs);
         else
-            Game.CurrentGame.UnregisterTrigger(GameEvent.PlayerJudgeDone, this); 
+            Game.CurrentGame.UnregisterTrigger(GameEvent.PlayerJudgeDone, this);
     }
 
     public LuoShenGetCard(Player p, ISkill skill, ICard card, bool permenant = false) :
@@ -47,7 +47,8 @@ public class LuoShen : TriggerSkill
             (p, e, a) => { return true; },
             OnPhaseBegin,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.Start], trigger);
         IsAutoInvoked = true;
     }

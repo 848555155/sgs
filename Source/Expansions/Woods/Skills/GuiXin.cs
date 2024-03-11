@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -54,7 +52,7 @@ public class GuiXin : TriggerSkill
                         answer = new List<List<Card>>();
                         answer.Add(Game.CurrentGame.PickDefaultCardsFrom(places));
                     }
-                    Game.CurrentGame.HandleCardTransferToHand(p, Owner, new List<Card>() {answer[0][0]});
+                    Game.CurrentGame.HandleCardTransferToHand(p, Owner, new List<Card>() { answer[0][0] });
                 }
                 Owner.IsImprisoned = !Owner.IsImprisoned;
             }
@@ -67,7 +65,8 @@ public class GuiXin : TriggerSkill
             this,
             Run,
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
     }
 }

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -33,7 +31,8 @@ public class XiaoJi : TriggerSkill
         var trigger = new RelayTrigger(
             Run,
             TriggerCondition.OwnerIsSource
-        ) { Priority = SkillPriority.XiaoJi };
+        )
+        { Priority = SkillPriority.XiaoJi };
         Triggers.Add(GameEvent.CardsLost, trigger);
         IsAutoInvoked = true;
     }

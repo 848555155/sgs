@@ -1,8 +1,6 @@
-﻿using System.Linq;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
@@ -13,7 +11,7 @@ public class JueCe : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 var ret = a.Cards.Any(c => c[Card.IsLastHandCard] == 1) && Game.CurrentGame.CurrentPlayer == p;
                 if (ret)
@@ -31,7 +29,8 @@ public class JueCe : TriggerSkill
                     Game.CurrentGame.DoDamage(p, card.HistoryPlace1.Player, 1, DamageElement.None, null, null);
             },
             TriggerCondition.Global
-        ) {  };
+        )
+        { };
         Triggers.Add(GameEvent.CardsLost, trigger);
         IsAutoInvoked = null;
     }

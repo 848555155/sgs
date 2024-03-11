@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -72,7 +69,8 @@ public class AoCai : CardTransformSkill
                     Game.CurrentGame.SyncImmutableCards(p, cards);
                 },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.PlayerIsAboutToPlayCard, trigger);
             Triggers.Add(GameEvent.PlayerIsAboutToUseCard, trigger);
         }

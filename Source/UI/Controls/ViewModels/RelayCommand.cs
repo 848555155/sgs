@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Input;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -40,13 +40,13 @@ public class RelayCommand : ViewModelBase, ICommand
 
     public event EventHandler CanExecuteChanged
     {
-        add 
+        add
         {
-            CommandManager.RequerySuggested += value; 
+            CommandManager.RequerySuggested += value;
         }
-        remove 
+        remove
         {
-            CommandManager.RequerySuggested -= value; 
+            CommandManager.RequerySuggested -= value;
         }
     }
 

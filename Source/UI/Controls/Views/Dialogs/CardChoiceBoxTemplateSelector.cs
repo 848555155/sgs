@@ -9,7 +9,7 @@ public class CardChoiceBoxSelector
     public static FrameworkElement CreateBox(CardChoiceViewModel choiceModel)
     {
         if (choiceModel == null) return null;
-        
+
         var results = from line in choiceModel.CardStacks
                       where line.IsResultDeck
                       select line;
@@ -20,7 +20,7 @@ public class CardChoiceBoxSelector
         else
         {
             return new CardChoiceBox() { DataContext = choiceModel, IsHitTestVisible = !choiceModel.DisplayOnly };
-        }            
+        }
     }
 
 }

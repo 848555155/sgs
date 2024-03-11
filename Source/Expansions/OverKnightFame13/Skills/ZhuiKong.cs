@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
@@ -52,7 +52,7 @@ public class ZhuiKong : TriggerSkill
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return p != a.Source && p.LostHealth > 0 && p.HandCards().Count > 0 && a.Source.HandCards().Count > 0; },
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 if (Game.CurrentGame.PinDian(p, a.Source, this) == true)
                 {

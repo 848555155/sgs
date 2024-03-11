@@ -3,12 +3,12 @@
 /// <summary>
 /// Specifies the update type that the AutomaticUpdater uses.
 /// </summary>
-public enum UpdateType 
+public enum UpdateType
 {
     /// <summary>
     /// The AutomaticUpdater will check, download, and install the update completely silently.
     /// </summary>
-    Automatic = 0, 
+    Automatic = 0,
 
     /// <summary>
     /// The AutomaticUpdater will check for and download updatest automatically, then notify the user.

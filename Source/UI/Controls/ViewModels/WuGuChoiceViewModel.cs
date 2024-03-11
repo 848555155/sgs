@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using System.Collections.ObjectModel;
+using System.Linq;
 
 namespace Sanguosha.UI.Controls;
 

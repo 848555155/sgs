@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -59,7 +57,7 @@ public class TiaoXin : AutoVerifiedActiveSkill
             else
             {
                 var theCard = Game.CurrentGame.SelectACardFrom(arg.Targets[0], Owner, new CardChoicePrompt("TiaoXin", Owner), "TiaoXin");
-                if (theCard != null )Game.CurrentGame.HandleCardDiscard(arg.Targets[0], new List<Card>() { theCard });
+                if (theCard != null) Game.CurrentGame.HandleCardDiscard(arg.Targets[0], new List<Card>() { theCard });
             }
             break;
         }

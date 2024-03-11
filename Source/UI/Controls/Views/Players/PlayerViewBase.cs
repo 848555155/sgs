@@ -1,14 +1,14 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Controls;
-using System.Windows;
-using System.Diagnostics;
-using Sanguosha.Core.Cards;
-using System.Windows.Media;
-using Sanguosha.UI.Animations;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.UI.Animations;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Threading;
+using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Sanguosha.UI.Controls;
 
@@ -82,7 +82,7 @@ public class PlayerViewBase : UserControl, IDeckContainer
             {
                 DeckPlace = new DeckPlace(player, deck)
             };
-            
+
             PlayerModel.PrivateDecks.Add(deckModel);
             var cards = Game.CurrentGame.Decks[player, deck];
             foreach (var card in cards)
@@ -174,7 +174,7 @@ public class PlayerViewBase : UserControl, IDeckContainer
 
     public void PlayAnimationAsync(AnimationBase animation, int playCenter, Point offset)
     {
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             PlayAnimation(animation, playCenter, offset);
         });
@@ -437,6 +437,6 @@ public class PlayerViewBase : UserControl, IDeckContainer
     }
 
     public virtual void Update()
-    {           
+    {
     }
 }

@@ -1,10 +1,9 @@
-﻿using System;
-using System.Linq;
-
-using Sanguosha.Core.Heroes;
+﻿using Sanguosha.Core.Heroes;
+using System;
 using System.Collections.ObjectModel;
-using System.Windows;
 using System.ComponentModel;
+using System.Linq;
+using System.Windows;
 
 namespace Sanguosha.UI.Controls;
 
@@ -183,7 +182,7 @@ public class HeroViewModel : ViewModelBase
     public string ImpersonatedHeroName
     {
         get { return _impersonatedHeroName; }
-        set 
+        set
         {
             if (_impersonatedHeroName == value) return;
             _impersonatedHeroName = value;

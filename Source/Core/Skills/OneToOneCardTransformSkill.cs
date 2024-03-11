@@ -1,6 +1,6 @@
 ﻿using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Core.Skills;
 
@@ -17,7 +17,7 @@ public abstract class OneToOneCardTransformSkill : CardTransformSkill
         {
             return VerifierResult.Fail;
         }
-        if (cards[0].Place.DeckType != DeckType.None && cards[0].Owner != Owner && !(Helper.OtherDecksUsed.Count != 0 && Helper.OtherDecksUsed.Contains(cards[0].Place.DeckType)) )
+        if (cards[0].Place.DeckType != DeckType.None && cards[0].Owner != Owner && !(Helper.OtherDecksUsed.Count != 0 && Helper.OtherDecksUsed.Contains(cards[0].Place.DeckType)))
         {
             return VerifierResult.Fail;
         }

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -58,7 +56,8 @@ public class ZongShi2 : TriggerSkill
                 }
             },
             TriggerCondition.Global
-        ) {IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PinDianComplete, trigger2);
         IsEnforced = true;
     }

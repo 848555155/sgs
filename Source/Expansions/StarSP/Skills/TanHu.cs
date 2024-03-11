@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -54,13 +52,14 @@ public class TanHu : AutoVerifiedActiveSkill
                 (p, e, a) => { return p[TanHuWin[a.Targets[0]]] != 0; },
                 (p, e, a) => { var arg = a as AdjustmentEventArgs; arg.AdjustmentAmount = 1; },
                 TriggerCondition.OwnerIsSource
-                ) { AskForConfirmation = false, IsAutoNotify = false };
+                )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.PlayerDistanceOverride, trigger);
 
             var trigger2 = new AutoNotifyPassiveSkillTrigger(
                 this,
                 (p, e, a) => { return p[TanHuWin[a.Targets[0]]] != 0; },
-                (p, e, a) => 
+                (p, e, a) =>
                 {
                     if (a.ReadonlyCard.Type.IsCardCategory(CardCategory.ImmediateTool))
                     {
@@ -68,7 +67,8 @@ public class TanHu : AutoVerifiedActiveSkill
                     }
                 },
                 TriggerCondition.OwnerIsSource
-                ) { AskForConfirmation = false, IsAutoNotify = false };
+                )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.CardUsageBeforeEffected, trigger2);
         }
     }

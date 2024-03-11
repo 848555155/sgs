@@ -118,7 +118,7 @@ public class SingleRowCardStack : CardStack
         if (!IsDraggingHandled) return;
         Trace.TraceInformation("DragEnd");
         int newPos = InteractingCardIndex;
-        CardStatus = CardInteraction.None;            
+        CardStatus = CardInteraction.None;
         int oldPos = Cards.IndexOf(InteractingCard);
         if (newPos != oldPos)
         {

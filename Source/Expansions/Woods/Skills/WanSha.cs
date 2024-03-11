@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Exceptions;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -19,7 +18,8 @@ public class WanSha : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.CurrentPlayer == Owner && a.Source != Owner && Game.CurrentGame.DyingPlayers.Count > 0 && Game.CurrentGame.DyingPlayers.Last() != a.Source && a.Card.Type is Tao; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.Fail); },
             TriggerCondition.Global
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerCanUseCard, trigger);
 
         var notify = new AutoNotifyPassiveSkillTrigger(
@@ -27,7 +27,8 @@ public class WanSha : TriggerSkill
              (p, e, a) => { return Game.CurrentGame.CurrentPlayer == Owner; },
              (p, e, a) => { NotifySkillUse(a.Targets); },
              TriggerCondition.Global
-         ) { IsAutoNotify = false };
+         )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerIsAboutToDie, notify);
         IsEnforced = true;
     }

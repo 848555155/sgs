@@ -1,8 +1,8 @@
 ﻿using Sanguosha.Core.Cards;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Skills;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 
 namespace Sanguosha.Core.UI;
 
@@ -105,7 +105,7 @@ public class DummyNotificationProxy : INotificationProxy
     }
 
     public void NotifyGameStart()
-    {            
+    {
     }
 
     public void NotifyWuGuStart(Prompt prompt, DeckPlace place)
@@ -127,7 +127,7 @@ public class DummyNotificationProxy : INotificationProxy
     public void NotifyPinDianEnd(Card c1, Card c2)
     {
     }
-    
+
     public void NotifyCardChoiceCallback(CardRearrangement o)
     {
     }

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -137,7 +135,7 @@ public class QiaoShui : TriggerSkill
                     theSkill.NotifySkillUse(players);
                     if (eventArgs.Targets.Contains(players[0]))
                     {
-                        eventArgs.Targets.Remove(players[0]);                            
+                        eventArgs.Targets.Remove(players[0]);
                     }
                     else
                     {
@@ -176,5 +174,5 @@ public class QiaoShui : TriggerSkill
             Owner = p;
             winTrigger = win;
         }
-    }        
+    }
 }

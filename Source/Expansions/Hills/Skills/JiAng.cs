@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -24,7 +22,7 @@ public class JiAng : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return (a.Source == p || a.Targets.Contains(p)) && ((a.ReadonlyCard.Type is JueDou) || ((a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Red));},
+            (p, e, a) => { return (a.Source == p || a.Targets.Contains(p)) && ((a.ReadonlyCard.Type is JueDou) || ((a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Red)); },
             (p, e, a) => { Game.CurrentGame.DrawCards(p, 1); },
             TriggerCondition.Global
         );

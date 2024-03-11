@@ -1,12 +1,12 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Heroes;
-using Sanguosha.Core.Utils;
 using Sanguosha.Core.Network;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Core.Utils;
 using System.Diagnostics;
 
 namespace Sanguosha.Core.Games;
@@ -382,8 +382,8 @@ public class Pk1v1Game : RoleGame
     {
         private readonly List<Card> usedRoleCards = [];
         private static readonly List<Card> allRoleCards = new List<Card>(from c in GameEngine.CardSet
-                                          where c.Type is RoleCardHandler
-                                          select c);
+                                                                         where c.Type is RoleCardHandler
+                                                                         select c);
 
         private Card _FindARoleCard(Role role)
         {
@@ -655,7 +655,7 @@ public class Pk1v1Game : RoleGame
                             hero.Skills.Remove(skill);
                         }
                     }
-                    
+
                     if (repeat == 0)
                     {
                         p.Hero = hero;
@@ -689,7 +689,7 @@ public class Pk1v1Game : RoleGame
             foreach (var st in game.Decks[game.Players[1], SelectedHero])
             {
                 st.Place = new DeckPlace(game.Players[1], SelectedHero);
-            } 
+            }
             game.Shuffle(game.Decks[DeckType.Heroes]);
             if (game.IsClient)
             {

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
@@ -118,7 +115,8 @@ public class ZhaoLie : TriggerSkill
                },
                TriggerCondition.OwnerIsSource,
                new ZhaoLieVerifier()
-           ) { AskForConfirmation = false };
+           )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseProceedEvents[TurnPhase.Draw], trigger);
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
@@ -126,7 +124,8 @@ public class ZhaoLie : TriggerSkill
                (p, e, a) => { return ZhaoLieUsed && ZhaoLieTarget != null; },
                ZhaoLieProcess,
                TriggerCondition.OwnerIsSource
-           ) { AskForConfirmation = false, IsAutoNotify = false };
+           )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseEndEvents[TurnPhase.Draw], trigger2);
 
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
@@ -134,7 +133,8 @@ public class ZhaoLie : TriggerSkill
                (p, e, a) => { return ZhaoLieTarget != null && a.Targets.Contains(ZhaoLieTarget) && a.ReadonlyCard != null && a.ReadonlyCard[ZhaoLieDamage] != 0; },
                (p, e, a) => { a.ReadonlyCard[ZhaoLieDamage[ZhaoLieTarget]] = 1; },
                TriggerCondition.OwnerIsSource
-           ) { AskForConfirmation = false, IsAutoNotify = false, Priority = int.MinValue };
+           )
+        { AskForConfirmation = false, IsAutoNotify = false, Priority = int.MinValue };
         Triggers.Add(GameEvent.DamageInflicted, trigger3);
 
         var trigger4 = new AutoNotifyPassiveSkillTrigger(
@@ -142,7 +142,8 @@ public class ZhaoLie : TriggerSkill
                (p, e, a) => { return ZhaoLieTarget != null && a.ReadonlyCard != null && a.ReadonlyCard[ZhaoLieDamage[a.Targets[0]]] != 0; },
                (p, e, a) => { Game.CurrentGame.HandleCardTransferToHand(null, a.Targets[0], basicCards); ZhaoLieTarget = null; },
                TriggerCondition.OwnerIsSource
-           ) { AskForConfirmation = false, IsAutoNotify = false };
+           )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.DamageComputingFinished, trigger4);
 
         IsAutoInvoked = null;

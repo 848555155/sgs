@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
@@ -70,7 +68,8 @@ public class AnXian : TriggerSkill
                 }
             },
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.CardUsageTargetConfirming, trigger2);
 
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
@@ -78,7 +77,8 @@ public class AnXian : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard != null && a.ReadonlyCard[AnXianSha[p]] != 0; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.CardUsageTargetValidating, trigger3);
         IsAutoInvoked = null;
     }

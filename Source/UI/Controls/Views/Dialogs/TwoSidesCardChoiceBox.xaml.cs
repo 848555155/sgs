@@ -111,7 +111,7 @@ public partial class TwoSidesCardChoiceBox : UserControl
         var copy = CardView.CreateCard(card.CardModel, canvasCards, Settings.TwoSidesCardChoiceBox.CardWidth, Settings.TwoSidesCardChoiceBox.CardHeight);
         copy.SetCurrentPosition(p);
         copy.Opacity = 1.0d;
-        int num; 
+        int num;
         CardView cv;
         if (isMainPlayer)
         {

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -17,7 +15,7 @@ public class ZhiBaGivenSkill : ActiveSkill, IRulerGivenSkill
 {
     private static readonly PlayerAttribute ZhiBaUsed = PlayerAttribute.Register("ZhiBaUsedUsed", true);
     public override VerifierResult Validate(GameEventArgs arg)
-    {            
+    {
         if (Owner[ZhiBaUsed[Master]] != 0)
         {
             return VerifierResult.Fail;

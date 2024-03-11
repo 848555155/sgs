@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Fire.Skills;
 
@@ -84,7 +82,8 @@ public class QiXing : TriggerSkill
             this,
             GameStart,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return Game.CurrentGame.Decks[Owner, QiXingDeck].Count > 0; },
@@ -95,7 +94,8 @@ public class QiXing : TriggerSkill
             this,
             (p, e, a) => { p[Player.DealAdjustment] += 7; },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerGameStartAction, trigger);
         Triggers.Add(GameEvent.PhaseEndEvents[TurnPhase.Draw], trigger2);
         Triggers.Add(GameEvent.StartGameDeal, trigger3);

@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
@@ -178,7 +175,8 @@ public class JunWei : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.Decks[p, YinLing.JinDeck].Count >= 3; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.End], trigger);
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
@@ -195,14 +193,16 @@ public class JunWei : TriggerSkill
                 }
             },
             TriggerCondition.Global
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhasePostEnd, trigger2);
 
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { DiscardedTempCard(); },
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerIsDead, trigger3);
 
         IsAutoInvoked = null;

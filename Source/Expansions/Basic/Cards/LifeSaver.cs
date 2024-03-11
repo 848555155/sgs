@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
@@ -84,7 +80,7 @@ public class PlayerDying : Trigger
 {
     private bool _CanUseTaoToSaveOther(Player player)
     {
-        return Game.CurrentGame.PlayerCanUseCard(player, new Card() { Place = new DeckPlace(player, DeckType.None), Type = new Tao()});
+        return Game.CurrentGame.PlayerCanUseCard(player, new Card() { Place = new DeckPlace(player, DeckType.None), Type = new Tao() });
     }
 
     private bool _CanUseSaveLifeSkillToSaveOther(Player player)

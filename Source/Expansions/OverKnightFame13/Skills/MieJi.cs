@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -62,13 +59,14 @@ public class MieJi : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
-                return a.Card.Type.IsCardCategory(CardCategory.ImmediateTool) && a.Card.SuitColor == SuitColorType.Black && a.Targets.Count == 1; 
+                return a.Card.Type.IsCardCategory(CardCategory.ImmediateTool) && a.Card.SuitColor == SuitColorType.Black && a.Targets.Count == 1;
             },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.CardUsageTargetConfirmed, trigger);
         IsAutoInvoked = true;
     }

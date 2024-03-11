@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using System.Diagnostics;
+using System.Windows;
 using System.Windows.Navigation;
-using System.Diagnostics;
 
 namespace Sanguosha.UI.Main;
 
@@ -8,9 +8,9 @@ namespace Sanguosha.UI.Main;
 /// Interaction logic for MainWindow.xaml
 /// </summary>
 public partial class MainWindow : Window
-{        
+{
     public MainWindow()
-    {            
+    {
         InitializeComponent();
 #if !DEBUG
         automaticUpdater.ForceCheckForUpdate();

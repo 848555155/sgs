@@ -1,7 +1,7 @@
-﻿using System.Windows;
-using Sanguosha.Core.Heroes;
+﻿using Sanguosha.Core.Heroes;
 using Sanguosha.Core.Players;
 using Sanguosha.UI.Controls;
+using System.Windows;
 
 namespace Tests;
 
@@ -25,11 +25,14 @@ public partial class PlayerViewTest : Window
         playerView5.DataContext = new PlayerViewModel() { Player = new Player() { Hero = new Hero("ZhangJiao", true, Allegiance.Qun, 3) } };
         playerView6.DataContext = new PlayerViewModel() { Player = new Player() { Hero = new Hero("WangYi", true, Allegiance.Wei, 3), IsImprisoned = true, IsIronShackled = true } };
         playerView7.DataContext = new PlayerViewModel() { Player = new Player() { Hero = new Hero("SimaYi", true, Allegiance.Wei, 3) } };
-        playerView8.DataContext = new PlayerViewModel() { Player = new Player() 
+        playerView8.DataContext = new PlayerViewModel()
         {
-            Hero = new Hero("LuSu", true, Allegiance.Wu, 3),
-            Hero2 = new Hero("DiaoChan", true, Allegiance.Qun, 3),
-        } };
+            Player = new Player()
+            {
+                Hero = new Hero("LuSu", true, Allegiance.Wu, 3),
+                Hero2 = new Hero("DiaoChan", true, Allegiance.Qun, 3),
+            }
+        };
     }
 
     private void Button_Click_1(object sender, RoutedEventArgs e)

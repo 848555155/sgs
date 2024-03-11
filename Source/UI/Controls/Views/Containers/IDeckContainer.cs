@@ -1,5 +1,5 @@
-﻿using System.Collections.Generic;
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
+using System.Collections.Generic;
 
 namespace Sanguosha.UI.Controls;
 
@@ -12,7 +12,7 @@ public interface IDeckContainer
     /// <param name="cards">Cards to be added.</param>
     /// <param name="isFaked">If true, append rather than move cards to the end of the deck.</param>
     void AddCards(DeckType deck, IList<CardView> cards, bool isFaked = false);
-    
+
     /// <summary>
     /// Remove cards from a deck.
     /// </summary>

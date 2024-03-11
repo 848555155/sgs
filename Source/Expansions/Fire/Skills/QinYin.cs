@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
+﻿using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
 
 namespace Sanguosha.Expansions.Fire.Skills;
 
@@ -60,16 +58,17 @@ public class QinYin : TriggerSkill
             }
         }
     }
-    
+
 
     public QinYin()
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return Game.CurrentGame.CurrentPhase == TurnPhase.Discard && Game.CurrentGame.CurrentPlayer == p && p[QinYinUsed] == 0;},
+            (p, e, a) => { return Game.CurrentGame.CurrentPhase == TurnPhase.Discard && Game.CurrentGame.CurrentPlayer == p && p[QinYinUsed] == 0; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
         Triggers.Add(GameEvent.CardsEnteredDiscardDeck, trigger);
         IsAutoInvoked = null;

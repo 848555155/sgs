@@ -1,7 +1,7 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Text;
-using System.Globalization;
 
 namespace wyUpdate.Common;
 
@@ -97,7 +97,7 @@ public static partial class WriteFiles
 
         //the string data to be written
         byte[] tempBytes = Encoding.UTF8.GetBytes(text);
-        
+
         //the byte-length of the string. 
         //(Previously I used the string-length, this caused problems for non-bytelong characters)
         byte[] tempLength = BitConverter.GetBytes(tempBytes.Length);
@@ -187,7 +187,7 @@ public static partial class ReadFiles
 
         byte[] tempBytes = new byte[length];
         ReadWholeArray(fs, tempBytes);
-        
+
         return Encoding.UTF8.GetString(tempBytes);
     }
 
@@ -261,12 +261,12 @@ public static partial class ReadFiles
     {
         if (endByte == readValue)
             return true;
-        
+
         if (fs.Length == fs.Position)
             //prevent infinite loops because the end of the file has been reached
             //but the 'end byte' hasn't been detected.
             throw new Exception("Premature end of file.");
-        
+
         return false;
     }
 

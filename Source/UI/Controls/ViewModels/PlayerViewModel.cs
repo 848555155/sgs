@@ -1,21 +1,20 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows;
-using System.ComponentModel;
-
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Heroes;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Cards;
-using System.Windows.Input;
-using System.Collections.ObjectModel;
-using System.Threading;
-using Sanguosha.Core.UI;
-using System.Diagnostics;
-using Sanguosha.Lobby.Core;
+using Sanguosha.Core.Heroes;
 using Sanguosha.Core.Network;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
+using Sanguosha.Lobby.Core;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -233,7 +232,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
         }
         else if (name == "Hero")
         {
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 Hero1Model.Hero = Hero;
                 OnPropertyChanged("Hero");
@@ -241,7 +240,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
         }
         else if (name == "Hero2")
         {
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 Hero2Model.Hero = Hero2;
                 OnPropertyChanged("Hero2");
@@ -255,7 +254,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
             }
             else
             {
-                Application.Current.Dispatcher.Invoke((ThreadStart)delegate() { _UpdateSkills(); });
+                Application.Current.Dispatcher.Invoke((ThreadStart)delegate () { _UpdateSkills(); });
             }
         }
         else if (name == "Attributes")
@@ -266,7 +265,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
             }
             else
             {
-                Application.Current.Dispatcher.Invoke((ThreadStart)delegate() { _UpdateAttributes(); });
+                Application.Current.Dispatcher.Invoke((ThreadStart)delegate () { _UpdateAttributes(); });
             }
         }
         else
@@ -1389,7 +1388,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
                             card.OnSelectedChanged += _OnCardSelected;
                             deckModel.Cards.Add(card);
                         }
-                        
+
                         CurrentSpecialDeck = deckModel;
                     }
                 }
@@ -1398,7 +1397,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
                     CurrentSpecialDeck = null;
                 }
             }
-            
+
             // Handler GuHuo, QiCe
             GuHuoSkillCommand cmdGuhuo = skillCommand as GuHuoSkillCommand;
             if (cmdGuhuo != null)
@@ -1421,7 +1420,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
                 }
             }
         }
-        
+
         if (hideSpecialDeck) CurrentSpecialDeck = null;
 
         var status = currentUsageVerifier.Verify(HostPlayer, skill, cards, players);
@@ -1594,10 +1593,10 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
     }
 
     public void AskForCardUsage(Prompt prompt, ICardUsageVerifier verifier, int timeOutSeconds)
-    {            
+    {
         if (IsDetached) return;
         Trace.Assert(!Player.IsDead);
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             GameModel.CurrentActivePlayer = this;
             TimeOutSeconds = timeOutSeconds;
@@ -1905,14 +1904,14 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
         }
         Trace.Assert(resultDeckMaximums.Count == resultDeckNames.Count);
 
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             GameModel.CurrentActivePlayer = this;
             if (!IsPlayable)
             {
                 Trace.Assert(currentUsageVerifier == null);
                 TimeOutSeconds = timeOutSeconds;
-                CardChoiceAnsweredEvent(null);                    
+                CardChoiceAnsweredEvent(null);
             }
             if (GameModel.MainPlayerModel != this)
             {
@@ -1980,7 +1979,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
     {
         if (IsDetached) return;
         Trace.Assert(!Player.IsDead);
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             GameModel.CurrentActivePlayer = this;
             CurrentPrompt = prompt;
@@ -2070,7 +2069,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
     public void Freeze()
     {
         if (IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             _ResetAll();
 

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame12.Skills;
 
@@ -38,7 +36,8 @@ public class ZhenLie : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard[ZhenLieUsed[p]] == 1; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
         Triggers.Add(GameEvent.CardUsageTargetConfirmed, trigger);
         Triggers.Add(GameEvent.CardUsageTargetValidating, trigger2);

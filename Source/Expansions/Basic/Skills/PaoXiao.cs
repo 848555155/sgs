@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -55,7 +53,8 @@ public class PaoXiao : TriggerSkill
             this,
             (p, e, a) => { return p[Sha.NumberOfShaUsed] >= 1 && (a.Card.Type is Sha); },
             (p, e, a) => { },
-            TriggerCondition.OwnerIsSource) { AskForConfirmation = false };
+            TriggerCondition.OwnerIsSource)
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.PlayerUsedCard, aooo);
         IsEnforced = true;
     }

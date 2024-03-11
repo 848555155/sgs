@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -34,7 +31,7 @@ public class GuiDao : TriggerSkill
             theCard.Log.SkillAction = this;
             theCard.Log.GameAction = GameAction.ReplaceJudge;
             Game.CurrentGame.EnterAtomicContext();
-            List<Card> toDiscard = new List<Card>() {Game.CurrentGame.Decks[eventArgs.Source, DeckType.JudgeResult].Last()};
+            List<Card> toDiscard = new List<Card>() { Game.CurrentGame.Decks[eventArgs.Source, DeckType.JudgeResult].Last() };
             CardsMovement move = new CardsMovement();
             move.Cards = new List<Card>();
             move.Cards.AddRange(cards);

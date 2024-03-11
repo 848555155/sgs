@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -24,12 +21,12 @@ public class GuiCai : TriggerSkill
         card.Log.GameAction = GameAction.ReplaceJudge;
         Game.CurrentGame.EnterAtomicContext();
         var judgeDeck = Game.CurrentGame.Decks[judgePlayer, DeckType.JudgeResult];
-        List<Card> toDiscard = new List<Card>() {judgeDeck.Last()};
+        List<Card> toDiscard = new List<Card>() { judgeDeck.Last() };
         CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>() {card};
+        move.Cards = new List<Card>() { card };
         move.To = new DeckPlace(judgePlayer, DeckType.JudgeResult);
         Game.CurrentGame.MoveCards(move);
-        Game.CurrentGame.PlayerLostCard(card.Place.Player, new List<Card>() {card});
+        Game.CurrentGame.PlayerLostCard(card.Place.Player, new List<Card>() { card });
         Game.CurrentGame.HandleCardDiscard(judgePlayer, toDiscard, DiscardReason.Judge);
         Game.CurrentGame.ExitAtomicContext();
     }

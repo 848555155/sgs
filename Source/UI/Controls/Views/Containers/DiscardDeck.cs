@@ -1,9 +1,9 @@
-﻿using System;
+﻿using Sanguosha.Core.Cards;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
-using Sanguosha.Core.Cards;
 using System.Windows.Threading;
 
 namespace Sanguosha.UI.Controls;
@@ -36,7 +36,7 @@ public class DiscardDeck : CardStack, IDeckContainer
     private static readonly int _MaxVisibleCards = 10;
 
     private void _MakeDisappear(CardView card)
-    {            
+    {
         card.SetValue(ZIndexProperty, (int)card.GetValue(ZIndexProperty) - 100);
         Cards.Remove(card);
         card.Disappear(0.5d, true);
@@ -49,7 +49,7 @@ public class DiscardDeck : CardStack, IDeckContainer
         foreach (var card in backup)
         {
             card.Disappear(0.5d, true);
-        }            
+        }
     }
 
     private void MarkClearance(CardView card)
@@ -83,7 +83,7 @@ public class DiscardDeck : CardStack, IDeckContainer
         if (changed)
         {
             RearrangeCards();
-        }         
+        }
     }
 
     /// <summary>
@@ -98,7 +98,7 @@ public class DiscardDeck : CardStack, IDeckContainer
     }
 
     private void FilterExistingCards(IList<CardView> cards)
-    {            
+    {
         int total = Cards.Count;
         for (int i = 0; i < total; i++)
         {
@@ -165,7 +165,7 @@ public class DiscardDeck : CardStack, IDeckContainer
 
         DeckType from = cards[0].Card.Place.DeckType;
         Canvas canvas = cards[0].Parent as Canvas;
-        
+
         // canvas can only be null on reconnection. 
         // @todo: Probably fix canvas on its source rather than here.
         if (canvas == null) return;
@@ -192,20 +192,20 @@ public class DiscardDeck : CardStack, IDeckContainer
             AppendCards(cards);
         }
         else
-        {                
+        {
             foreach (var card in cards)
-            {                    
-                canvas.Children.Remove(card);             
+            {
+                canvas.Children.Remove(card);
             }
-        }            
-        
+        }
+
         // When a card enters discard area, every thing in the deck should fade out (but
         // not disappear).
         // When there are too many cards in the deck, remove the dated ones.
         for (int i = 0; i < numRemoved; i++)
         {
             MarkClearance(Cards[i]);
-        }                      
+        }
     }
 
     public IList<CardView> RemoveCards(DeckType deck, IList<Card> cards, bool isCopy)
@@ -219,17 +219,17 @@ public class DiscardDeck : CardStack, IDeckContainer
                 c => ((card.Id > 0 && c.Card.Id == card.Id) || (card.Id <= 0 && c.Card == card)));
             var cardView = CardView.CreateCard(card);
             if (oldCardView != null)
-            {                    
+            {
                 ParentCanvas.Children.Add(cardView);
-                cardView.SetCurrentPosition(oldCardView.Position);                   
+                cardView.SetCurrentPosition(oldCardView.Position);
             }
             else
             {
                 remaining.Add(cardView);
             }
             result.Add(cardView);
-        }            
-        RemoveCards(remaining);            
+        }
+        RemoveCards(remaining);
         return result;
     }
 }

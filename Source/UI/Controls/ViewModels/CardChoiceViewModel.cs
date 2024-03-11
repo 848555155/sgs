@@ -1,8 +1,8 @@
-﻿using System.Collections.Generic;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
 
 namespace Sanguosha.UI.Controls;
 
@@ -19,7 +19,7 @@ public class CardChoiceLineViewModel : ViewModelBase
     public bool IsResultDeck
     {
         get { return isResultDeck; }
-        set 
+        set
         {
             if (isResultDeck == value) return;
             isResultDeck = value;
@@ -44,7 +44,7 @@ public class CardChoiceLineViewModel : ViewModelBase
     public int Capacity
     {
         get { return capacity; }
-        set 
+        set
         {
             if (capacity == value) return;
             capacity = value;
@@ -57,7 +57,7 @@ public class CardChoiceLineViewModel : ViewModelBase
     public bool Rearrangable
     {
         get { return rearrangable; }
-        set 
+        set
         {
             if (rearrangable == value) return;
             rearrangable = value;
@@ -76,7 +76,7 @@ public class CardChoiceLineViewModel : ViewModelBase
         {
             if (cards == value) return;
             cards = value;
-            OnPropertyChanged("Cards"); 
+            OnPropertyChanged("Cards");
         }
     }
 }

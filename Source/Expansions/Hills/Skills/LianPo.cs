@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -17,13 +17,15 @@ public class LianPo : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.PhasesOwner != null; },
             (p, e, a) => { p[LianPoCount]++; },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { int count = p[LianPoCount]; p[LianPoCount] = 0; return count > 0; },
             (p, e, a) => { Game.CurrentGame.DoPlayer(p); },
             TriggerCondition.Global
-        ) { Priority = int.MinValue };
+        )
+        { Priority = int.MinValue };
         Triggers.Add(GameEvent.PlayerIsDead, trigger);
         Triggers.Add(GameEvent.PhasePostEnd, trigger2);
         IsAutoInvoked = true;

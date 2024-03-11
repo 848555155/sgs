@@ -1,7 +1,6 @@
-﻿using System;
-
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
@@ -39,7 +38,7 @@ public class GameViewModel : ViewModelBase
     public Game Game
     {
         get { return _game; }
-        set 
+        set
         {
             if (_game == value) return;
             _game = value;
@@ -49,19 +48,19 @@ public class GameViewModel : ViewModelBase
             foreach (var player in _game.Players)
             {
                 Trace.Assert(_game.Settings.Accounts.Count == _game.Players.Count);
-                PlayerModels.Add(new PlayerViewModel(player, this) 
+                PlayerModels.Add(new PlayerViewModel(player, this)
                 {
-                    Account = _game.Settings.Accounts[i] 
+                    Account = _game.Settings.Accounts[i]
                 });
                 i++;
             }
             if (_game.ReplayController != null)
             {
-                ReplayController = new ReplayControllerViewModel(_game.ReplayController);                    
+                ReplayController = new ReplayControllerViewModel(_game.ReplayController);
             }
         }
-    }        
-    
+    }
+
     public PlayerViewModel MainPlayerModel
     {
         get
@@ -81,7 +80,7 @@ public class GameViewModel : ViewModelBase
             Player gamePlayer = _game.Players[gameSeat];
             bool found = false;
             for (int j = i; j < playerCount; j++)
-            {                    
+            {
                 PlayerViewModel playerModel = PlayerModels[j];
                 if (gamePlayer == playerModel.Player)
                 {
@@ -91,7 +90,7 @@ public class GameViewModel : ViewModelBase
                     }
                     found = true;
                     break;
-                }                    
+                }
             }
             Trace.Assert(found);
         }
@@ -102,11 +101,11 @@ public class GameViewModel : ViewModelBase
     public int MainPlayerSeatNumber
     {
         get { return _mainPlayerSeatNumber; }
-        set 
+        set
         {
             if (_mainPlayerSeatNumber == value) return;
             _mainPlayerSeatNumber = value;
-            _RearrangeSeats();                
+            _RearrangeSeats();
             OnPropertyChanged("MainPlayerSeatNumber");
             OnPropertyChanged("MainPlayerModel");
         }
@@ -133,7 +132,7 @@ public class GameViewModel : ViewModelBase
     public TwoSidesCardChoiceViewModel TwoSidesCardChoiceModel
     {
         get { return _twoSidesCardChoiceModel; }
-        set 
+        set
         {
             if (_twoSidesCardChoiceModel == value) return;
             _twoSidesCardChoiceModel = value;
@@ -149,7 +148,7 @@ public class GameViewModel : ViewModelBase
 
     public GameTableLayout TableLayout
     {
-        get 
+        get
         {
             if (_game is RoleGame)
             {

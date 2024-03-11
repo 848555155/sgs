@@ -1,5 +1,5 @@
-﻿using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
@@ -20,7 +20,8 @@ public class JingCe : TriggerSkill
                 _count++;
             },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerUsedCard, cardUsedCount);
 
         var tagClear = new AutoNotifyPassiveSkillTrigger(
@@ -30,7 +31,8 @@ public class JingCe : TriggerSkill
                 _count = 0;
             },
             TriggerCondition.Global
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeforeStart, tagClear);
 
         var trigger = new AutoNotifyPassiveSkillTrigger(

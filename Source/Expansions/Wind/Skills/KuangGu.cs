@@ -1,9 +1,9 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -51,7 +51,8 @@ public class KuangGu : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.DistanceTo(p, a.Targets[0]) <= 1; },
             (p, e, a) => { a.ReadonlyCard[KuangGuUsable] = 1; Game.CurrentGame.RegisterTrigger(GameEvent.AfterDamageCaused, new KuangGuRecover(p, this)); },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false, Priority = int.MinValue };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false, Priority = int.MinValue };
         Triggers.Add(GameEvent.DamageInflicted, trigger);
         IsEnforced = true;
     }

@@ -8,5 +8,5 @@ public partial class RevealRoleAnimation : AnimationBase
     public RevealRoleAnimation()
     {
         InitializeComponent();
-    }     
+    }
 }

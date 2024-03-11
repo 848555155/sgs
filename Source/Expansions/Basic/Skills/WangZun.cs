@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -33,7 +33,8 @@ public class WangZun : TriggerSkill
                 }
             },
             TriggerCondition.Global
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PlayerHandCardCapacityAdjustment, trigger2);
         IsAutoInvoked = false;
 

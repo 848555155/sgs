@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Skills;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -86,7 +84,8 @@ public class XuanFeng : TriggerSkill
             Run,
             TriggerCondition.OwnerIsSource,
             new XuanFengVerifier()
-        ) { Priority = SkillPriority.XiaoJi };
+        )
+        { Priority = SkillPriority.XiaoJi };
         Triggers.Add(GameEvent.CardsLost, trigger);
         Triggers.Add(GameEvent.CardsEnteredDiscardDeck, trigger);
         IsAutoInvoked = null;

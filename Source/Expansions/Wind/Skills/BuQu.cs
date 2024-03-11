@@ -1,10 +1,9 @@
-﻿using System.Collections.Generic;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -122,7 +121,8 @@ public class BuQu : TriggerSkill
             },
             Run,
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false, Type = TriggerType.Skill };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false, Type = TriggerType.Skill };
         Triggers.Add(GameEvent.AfterHealthChanged, trigger);
         IsAutoInvoked = true;
     }

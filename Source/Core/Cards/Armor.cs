@@ -11,13 +11,13 @@ public abstract class Armor : Equipment
     /// </summary>
     /// <remarks>高顺</remarks>
     public static readonly PlayerAttribute PlayerIgnoreArmor = PlayerAttribute.Register(nameof(PlayerIgnoreArmor));
-    
+
     /// <summary>
     /// 无条件防具无效
     /// </summary>
     /// <seealso cref="Sanguosha.Expansions.Woods.Skills.WuQian"/>
     public static readonly PlayerAttribute UnconditionalIgnoreArmor = PlayerAttribute.Register(nameof(UnconditionalIgnoreArmor), false);
-    
+
     /// <summary>
     /// 卡牌无视所有防具
     /// </summary>

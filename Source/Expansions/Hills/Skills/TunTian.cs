@@ -1,13 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Utils;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.Utils;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -51,13 +48,15 @@ public class TunTian : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.PhasesOwner != p; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.CardsLost, trigger);
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { var args = a as AdjustmentEventArgs; args.AdjustmentAmount = -Game.CurrentGame.Decks[p, TianDeck].Count; },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PlayerDistanceAdjustment, trigger2);
         IsAutoInvoked = true;
         DeckCleanup.Add(TianDeck);

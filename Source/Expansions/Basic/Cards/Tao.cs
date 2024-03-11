@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -46,10 +43,10 @@ public class Tao : LifeSaver
     {
         Trace.Assert(targets != null);
         if (targets == null) return VerifierResult.Fail;
-        
+
         if ((!isLooseVerify && targets.Count > 0) ||
             ActualTargets(source, targets, card).Any(p => p.Health >= p.MaxHealth))
-        {           
+        {
             return VerifierResult.Fail;
         }
         return VerifierResult.Success;

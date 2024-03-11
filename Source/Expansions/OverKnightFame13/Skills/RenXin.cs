@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -44,7 +42,8 @@ public class RenXin : TriggerSkill
                 Game.CurrentGame.RecoverHealth(p, target, 1);
             },
             TriggerCondition.Global
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerIsAboutToDie, trigger);
         IsAutoInvoked = false;
     }

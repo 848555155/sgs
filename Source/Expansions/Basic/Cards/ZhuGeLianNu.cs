@@ -1,9 +1,8 @@
-﻿using System;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -29,7 +28,7 @@ public class ZhuGeLianNu : Weapon
                 this,
                 (p, e, a) =>
                 {
-                    return a.Source[Sha.NumberOfShaUsed] > 0 &&  a.Card.Type is Sha;
+                    return a.Source[Sha.NumberOfShaUsed] > 0 && a.Card.Type is Sha;
                 },
                 (p, e, a) => { },
                 TriggerCondition.OwnerIsSource
@@ -38,7 +37,8 @@ public class ZhuGeLianNu : Weapon
                 this,
                 (p, e, a) => { throw new TriggerResultException(TriggerResult.Success); },
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false };
+            )
+            { IsAutoNotify = false };
             var trigger3 = new AutoNotifyPassiveSkillTrigger(
                 this,
                 (p, e, a) =>
@@ -47,7 +47,8 @@ public class ZhuGeLianNu : Weapon
                     args.TargetApproval[0] = true;
                 },
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false, Priority = int.MaxValue, Type = TriggerType.Skill };
+            )
+            { IsAutoNotify = false, Priority = int.MaxValue, Type = TriggerType.Skill };
             Triggers.Add(GameEvent.PlayerUsedCard, trigger);
             Triggers.Add(Sha.PlayerNumberOfShaCheck, trigger2);
             Triggers.Add(Sha.PlayerShaTargetValidation, trigger3);

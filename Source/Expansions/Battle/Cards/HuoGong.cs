@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Battle.Cards;
 
@@ -139,7 +137,7 @@ public class HuoGong : CardHandler
         Player player = targets[0];
 
         if (Game.CurrentGame.Decks[player, DeckType.Hand].Count == 0)
-        {                
+        {
             return VerifierResult.Fail;
         }
         return VerifierResult.Success;

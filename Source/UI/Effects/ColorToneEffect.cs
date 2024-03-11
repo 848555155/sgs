@@ -1,6 +1,6 @@
-﻿using System.Windows.Media.Effects;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 
 namespace Sanguosha.UI.Effects;
@@ -18,12 +18,12 @@ public class ColorToneEffect : ShaderEffect
     static ColorToneEffect()
     {
         pixelShader = new PixelShader();
-        pixelShader.UriSource = Global.MakePackUri("ShaderSource/ColorTone.ps");            
+        pixelShader.UriSource = Global.MakePackUri("ShaderSource/ColorTone.ps");
     }
 
     public ColorToneEffect()
     {
-        this.PixelShader = pixelShader;            
+        this.PixelShader = pixelShader;
 
         this.UpdateShaderValue(InputProperty);
         this.UpdateShaderValue(DesaturationProperty);

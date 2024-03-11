@@ -1,6 +1,6 @@
-﻿using System.Windows.Media.Effects;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Media;
+using System.Windows.Media.Effects;
 
 
 namespace Sanguosha.UI.Effects;
@@ -21,28 +21,37 @@ public class RippleTransitionEffect : ShaderEffect
         this.UpdateShaderValue(Texture2Property);
         this.UpdateShaderValue(ProgressProperty);
     }
-    public Brush Input {
-        get {
+    public Brush Input
+    {
+        get
+        {
             return ((Brush)(this.GetValue(InputProperty)));
         }
-        set {
+        set
+        {
             this.SetValue(InputProperty, value);
         }
     }
-    public Brush Texture2 {
-        get {
+    public Brush Texture2
+    {
+        get
+        {
             return ((Brush)(this.GetValue(Texture2Property)));
         }
-        set {
+        set
+        {
             this.SetValue(Texture2Property, value);
         }
     }
     /// <summary>The amount(%) of the transition from first texture to the second texture. </summary>
-    public double Progress {
-        get {
+    public double Progress
+    {
+        get
+        {
             return ((double)(this.GetValue(ProgressProperty)));
         }
-        set {
+        set
+        {
             this.SetValue(ProgressProperty, value);
         }
     }

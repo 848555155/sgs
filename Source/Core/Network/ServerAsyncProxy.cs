@@ -17,7 +17,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
     private ServerGamer _gamer;
     public object receiveInProcess;
 
-    public ServerGamer Gamer 
+    public ServerGamer Gamer
     {
         get
         {
@@ -29,7 +29,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
             if (_gamer != null)
             {
                 _gamer.OnGameDataPacketReceived -= OnGameDataPacketReceived;
-            }                
+            }
             if (value != null)
             {
                 value.OnGameDataPacketReceived += OnGameDataPacketReceived;
@@ -124,7 +124,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
         }
     }
 
-    
+
     private enum QuestionState
     {
         None,

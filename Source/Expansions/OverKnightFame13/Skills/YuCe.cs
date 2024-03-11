@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -54,7 +51,8 @@ public class YuCe : TriggerSkill
             },
             TriggerCondition.OwnerIsTarget,
             new YuCeVerfier()
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
 
         IsAutoInvoked = null;

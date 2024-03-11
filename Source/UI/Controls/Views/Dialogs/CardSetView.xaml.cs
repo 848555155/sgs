@@ -1,22 +1,22 @@
-﻿using System.Windows;
+﻿using Sanguosha.Core.Cards;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.UI.Controls;
 
 
-public delegate void CardSelectedHandler(Card card);    
+public delegate void CardSelectedHandler(Card card);
 
-	/// <summary>
-	/// Interaction logic for CardSetView.xaml
-	/// </summary>
-	public partial class CardSetView : UserControl
-	{
-		public CardSetView()
-		{
-			this.InitializeComponent();
-		}
+/// <summary>
+/// Interaction logic for CardSetView.xaml
+/// </summary>
+public partial class CardSetView : UserControl
+{
+    public CardSetView()
+    {
+        this.InitializeComponent();
+    }
 
     public bool IsGetCardButtonShown
     {
@@ -56,10 +56,10 @@ public delegate void CardSelectedHandler(Card card);
     public event CardSelectedHandler OnCardSelected;
 
     private void gridCardSet_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-    {            
+    {
         if (btnGetCard.IsEnabled && gridCardSet.SelectedItem != null)
         {
             btnGetCard_Click(sender, e);
         }
     }
-	}
+}

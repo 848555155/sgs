@@ -1,44 +1,44 @@
-﻿using System.Windows;
+﻿using Sanguosha.Core.Cards;
+using System.Windows;
 using System.Windows.Controls;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.UI.Controls;
 
 
 public delegate void SkillNameSelectedHandler(string skillName);
 
-	/// <summary>
-	/// Interaction logic for HeroSetView.xaml
-	/// </summary>
-	public partial class HeroSetView : UserControl
-	{
-		public HeroSetView()
-		{
-			this.InitializeComponent();
-		}
-    
-		private void gridHeroSet_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
-		{
-			// TODO: Add event handler implementation here.
+/// <summary>
+/// Interaction logic for HeroSetView.xaml
+/// </summary>
+public partial class HeroSetView : UserControl
+{
+    public HeroSetView()
+    {
+        this.InitializeComponent();
+    }
+
+    private void gridHeroSet_SelectionChanged(object sender, System.Windows.Controls.SelectionChangedEventArgs e)
+    {
+        // TODO: Add event handler implementation here.
         var model = gridHeroSet.SelectedItem as HeroViewModel;
-			if (model != null)
-			{
+        if (model != null)
+        {
             heroCardView.DataContext = new CardViewModel()
             {
                 Card = new Card()
                 {
-                    Id = model.Id                        
+                    Id = model.Id
                 }
             };
             heroCardView.Visibility = Visibility.Visible;
-				gridHeroInfo.Visibility = Visibility.Visible;
-			}
-			else
-			{
+            gridHeroInfo.Visibility = Visibility.Visible;
+        }
+        else
+        {
             heroCardView.Visibility = Visibility.Collapsed;
-				gridHeroInfo.Visibility = Visibility.Collapsed;
-			}
-		}
+            gridHeroInfo.Visibility = Visibility.Collapsed;
+        }
+    }
 
     public event SkillNameSelectedHandler OnSkillNameSelected;
 
@@ -54,4 +54,4 @@ public delegate void SkillNameSelectedHandler(string skillName);
             }
         }
     }
-	}
+}

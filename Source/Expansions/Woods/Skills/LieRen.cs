@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using System.Diagnostics;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 

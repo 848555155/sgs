@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -13,7 +13,7 @@ public class QingGangJian : Weapon
         EquipmentSkill = new QingGangJianSkill() { ParentEquipment = this };
     }
 
-    
+
     public class QingGangJianSkill : TriggerSkill, IEquipmentSkill
     {
         public Equipment ParentEquipment { get; set; }
@@ -43,9 +43,10 @@ public class QingGangJian : Weapon
                 {
                     return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha);
                 },
-                (p, e, a) => { var args = a as DamageEventArgs; args.ReadonlyCard[Armor.IgnorePlayerArmor[args.Targets[0]]]--;},
+                (p, e, a) => { var args = a as DamageEventArgs; args.ReadonlyCard[Armor.IgnorePlayerArmor[args.Targets[0]]]--; },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false, Priority = int.MinValue };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false, Priority = int.MinValue };
             Triggers.Add(GameEvent.DamageInflicted, trigger2);
             var trigger3 = new AutoNotifyPassiveSkillTrigger(
                 this,
@@ -55,7 +56,8 @@ public class QingGangJian : Weapon
                 },
                 (p, e, a) => { a.ReadonlyCard[Armor.IgnorePlayerArmor[a.Targets[0]]]--; },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false, Priority = int.MinValue };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false, Priority = int.MinValue };
             Triggers.Add(ShaCancelling.PlayerShaTargetDodged, trigger3);
             IsEnforced = true;
         }

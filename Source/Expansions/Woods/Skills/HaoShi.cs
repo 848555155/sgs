@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Woods.Skills;
@@ -41,7 +39,7 @@ public class HaoShi : TriggerSkill
         List<Player> players;
         ISkill skill;
         int halfHC = Game.CurrentGame.Decks[owner, DeckType.Hand].Count / 2;
-                    
+
         int minHC = int.MaxValue;
         List<Player> minHCPlayers = new List<Player>();
         var alivePlayers = Game.CurrentGame.AlivePlayers;
@@ -85,7 +83,8 @@ public class HaoShi : TriggerSkill
             (p, e, a) => { return p[HaoShiUsed] == 1 && Game.CurrentGame.Decks[p, DeckType.Hand].Count > 5; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, Type = TriggerType.Skill, Priority = int.MaxValue };
+        )
+        { AskForConfirmation = false, Type = TriggerType.Skill, Priority = int.MaxValue };
         Triggers.Add(GameEvent.PhaseEndEvents[TurnPhase.Draw], trigger);
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,

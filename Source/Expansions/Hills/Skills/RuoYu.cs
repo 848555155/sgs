@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Skills;
 
 namespace Sanguosha.Expansions.Hills.Skills;
@@ -15,17 +15,18 @@ public class RuoYu : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 int minHp = int.MaxValue;
                 foreach (var pl in Game.CurrentGame.AlivePlayers) if (pl.Health < minHp) minHp = pl.Health;
-                return p[RuoYuAwakened] == 0 && p.Health == minHp; },
-            (p, e, a) => 
-            { 
-                p[RuoYuAwakened] = 1; 
-                p.MaxHealth++; 
+                return p[RuoYuAwakened] == 0 && p.Health == minHp;
+            },
+            (p, e, a) =>
+            {
+                p[RuoYuAwakened] = 1;
+                p.MaxHealth++;
                 Game.CurrentGame.RecoverHealth(p, p, 1);
-                Game.CurrentGame.PlayerAcquireAdditionalSkill(p, new JiJiang(), HeroTag); 
+                Game.CurrentGame.PlayerAcquireAdditionalSkill(p, new JiJiang(), HeroTag);
             },
             TriggerCondition.OwnerIsSource
         );

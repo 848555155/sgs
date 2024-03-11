@@ -1,8 +1,7 @@
-﻿using System.Diagnostics;
-
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
+using System.Diagnostics;
 
 namespace Sanguosha.UI.Controls;
 
@@ -14,14 +13,14 @@ public class CardViewModel : SelectableItem
         isFootnoteVisible = false;
     }
     #endregion
-    
+
     #region Fields
     private Card _card;
     private Card _uiCard;
-    public virtual Card Card 
+    public virtual Card Card
     {
         get { return _card; }
-        set 
+        set
         {
             if (_card == value) return;
             _card = value;
@@ -42,7 +41,7 @@ public class CardViewModel : SelectableItem
     public string Footnote
     {
         get { return footnote; }
-        set 
+        set
         {
             if (footnote == value) return;
             footnote = value;
@@ -114,7 +113,7 @@ public class CardViewModel : SelectableItem
         get
         {
             if (_uiCard == null) return string.Empty;
-            return string.Concat(_uiCard.SuitColor, ".", RankString);                
+            return string.Concat(_uiCard.SuitColor, ".", RankString);
         }
     }
 
@@ -198,7 +197,7 @@ public class CardViewModel : SelectableItem
     }
 
     public CardCategory Category
-    {            
+    {
         get
         {
             return _uiCard.Type.Category;
@@ -208,7 +207,7 @@ public class CardViewModel : SelectableItem
     public HeroViewModel HeroModel
     {
         get;
-        set;            
+        set;
     }
 
     public int AttackRange
@@ -216,7 +215,7 @@ public class CardViewModel : SelectableItem
         get
         {
             if (_uiCard == null) return 0;
-            
+
             Weapon weapon = _uiCard.Type as Weapon;
             if (weapon == null)
             {
@@ -253,9 +252,9 @@ public class CardViewModel : SelectableItem
                 else if (_uiCard.Id == Card.UnknownRoleId)
                 {
                     _uiCard.Type = new UnknownRoleCardHandler();
-                }           
+                }
             }
-            
+
             var heroCard = _uiCard.Type as HeroCardHandler;
             if (heroCard != null)
             {
@@ -280,7 +279,7 @@ public class CardViewModel : SelectableItem
         OnPropertyChanged("Id");
         OnPropertyChanged("IsKnownCard");
         OnPropertyChanged("Suit");
-        OnPropertyChanged("SuitColor");            
+        OnPropertyChanged("SuitColor");
         OnPropertyChanged("ActualTypeString");
         OnPropertyChanged("RankString");
         OnPropertyChanged("ColoredRankString");

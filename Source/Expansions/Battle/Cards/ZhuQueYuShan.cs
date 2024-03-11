@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Battle.Cards;
@@ -38,7 +38,8 @@ public class ZhuQueYuShan : Weapon
                     a.ReadonlyCard = new ReadOnlyCard(a.Card);
                 },
                 TriggerCondition.OwnerIsSource
-            ) { Priority = int.MaxValue };
+            )
+            { Priority = int.MaxValue };
             Triggers.Add(GameEvent.PlayerUsedCard, trigger);
         }
     }

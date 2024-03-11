@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.OverKnightFame12.Skills;
 

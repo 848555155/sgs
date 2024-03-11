@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Skills;
 using Sanguosha.Expansions.Woods.Skills;
 
@@ -103,7 +100,8 @@ public class BaiYin : TriggerSkill
                 (p, e, a) => { return p[RenJie.RenMark] > 0 && CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.ImmediateTool); },
                 (p, e, a) => { p[RenJie.RenMark]--; Game.CurrentGame.DrawCards(p, 1); },
                 TriggerCondition.OwnerIsSource
-            ) { Type = TriggerType.Skill });
+            )
+            { Type = TriggerType.Skill });
         }
     }
 

@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Expansions.Pk1v1.Cards;
 
 namespace Sanguosha.Expansions.Pk1v1.Skills;
@@ -77,7 +75,8 @@ public class HuWei : TriggerSkill
             },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
 
         Triggers.Add(GameEvent.HeroDebut, trigger);

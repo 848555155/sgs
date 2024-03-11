@@ -73,10 +73,10 @@ public class FireGenerator
     public int FadeFactor
     {
         get { return fadeFactor; }
-        set 
+        set
         {
             if (fadeFactor < 0 || fadeFactor > 255) return;
-            fadeFactor = value; 
+            fadeFactor = value;
         }
     }
 

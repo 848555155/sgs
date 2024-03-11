@@ -1,6 +1,4 @@
-﻿using System.IO;
-
-namespace Sanguosha.Core.Utils;
+﻿namespace Sanguosha.Core.Utils;
 
 public class RecordTakingInputStream(Stream inputStream, Stream recordStream) : Stream
 {

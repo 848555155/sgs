@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -41,7 +39,7 @@ public class WuGuFengDeng : CardHandler
         }
         public UiHelper Helper
         {
-            get { return new UiHelper() { RevealCards = !noCardReveal, ShowToAll = true}; }
+            get { return new UiHelper() { RevealCards = !noCardReveal, ShowToAll = true }; }
         }
     }
 

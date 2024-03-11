@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -124,7 +122,7 @@ public class LiJian : ActiveSkill
 
     protected override void TargetsSplit(List<Player> targets, out List<Player> firstTargets, out List<Player> secondaryTargets)
     {
-        firstTargets = new List<Player>(){targets[1]};
+        firstTargets = new List<Player>() { targets[1] };
         secondaryTargets = null;
     }
 

@@ -1,6 +1,6 @@
 ﻿namespace Sanguosha.Core.Cards;
 
-[Serializable]    
+[Serializable]
 public class DeckType
 {
     private static readonly Dictionary<string, DeckType> registeredDeckTypes = [];
@@ -30,7 +30,7 @@ public class DeckType
     /// <summary>
     /// Sets/gets abbreviated name used to uniquely identify and serialize this DeckType.
     /// </summary>
-    public string AbbriviatedName{get;private set;}
+    public string AbbriviatedName { get; private set; }
 
     public override bool Equals(object obj)
     {

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -16,7 +14,7 @@ public class ZhangBaSheMao : Weapon
         EquipmentSkill = new ZhangBaSheMaoTransform() { ParentEquipment = this };
     }
 
-    
+
     public class ZhangBaSheMaoTransform : CardTransformSkill, IEquipmentSkill
     {
         public Equipment ParentEquipment { get; set; }
@@ -51,7 +49,7 @@ public class ZhangBaSheMao : Weapon
 
         public override List<CardHandler> PossibleResults
         {
-            get { return new List<CardHandler>() {new Sha()}; }
+            get { return new List<CardHandler>() { new Sha() }; }
         }
     }
 

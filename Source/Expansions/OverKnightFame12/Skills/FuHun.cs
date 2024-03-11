@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Expansions.Basic.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using Sanguosha.Expansions.Basic.Skills;
 
 namespace Sanguosha.Expansions.OverKnightFame12.Skills;
 
@@ -88,7 +85,8 @@ public class FuHun : CardTransformSkill
                     Game.CurrentGame.RegisterTrigger(GameEvent.PhasePostEnd, tri);
                 },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false };
+            )
+            { AskForConfirmation = false };
             Triggers.Add(GameEvent.AfterDamageCaused, trigger);
 
             var trigger2 = new AutoNotifyPassiveSkillTrigger(
@@ -96,7 +94,8 @@ public class FuHun : CardTransformSkill
                 (p, e, a) => { return a.Card[FuHunSha] == 1; },
                 (p, e, a) => { throw new TriggerResultException(TriggerResult.Fail); },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.PlayerCanPlayCard, trigger2);
         }
     }

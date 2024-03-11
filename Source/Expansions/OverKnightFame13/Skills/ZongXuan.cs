@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -34,7 +32,8 @@ public class ZongXuan : TriggerSkill
             (p, e, a) => { return (a as DiscardCardEventArgs).Source == p && (a as DiscardCardEventArgs).Reason == DiscardReason.Discard; },
             Run,
             TriggerCondition.Global
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.CardsEnteringDiscardDeck, trigger);
         IsAutoInvoked = false;
     }

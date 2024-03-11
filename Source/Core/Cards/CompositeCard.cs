@@ -69,7 +69,7 @@ public class CompositeCard : ICard
     {
         get
         {
-            if (Subcards is null) 
+            if (Subcards is null)
                 return SuitColorType.None;
             var colors = Subcards.Select(card => card.SuitColor);
             if (colors is not null) colors = colors.Distinct();

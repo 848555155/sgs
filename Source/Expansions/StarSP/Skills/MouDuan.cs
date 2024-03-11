@@ -1,10 +1,10 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.UI;
+﻿using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Skills;
 using Sanguosha.Expansions.Hills.Skills;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -91,7 +91,8 @@ internal class MouDuan : TriggerSkill
                 }
             },
             TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+            )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerGameStartAction, trigger1);
         Triggers.Add(GameEvent.PlayerSkillSetChanged, trigger1);
 
@@ -108,7 +109,8 @@ internal class MouDuan : TriggerSkill
                 Game.CurrentGame.PlayerAcquireAdditionalSkill(p, mdKeJi, HeroTag);
             },
             TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false };
+            )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.CardsLost, trigger2);
 
         var trigger3 = new AutoNotifyUsagePassiveSkillTrigger(
@@ -127,7 +129,8 @@ internal class MouDuan : TriggerSkill
             },
             TriggerCondition.Global,
             new MouDuanVerifier()
-            ) { AskForConfirmation = false };
+            )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseBeforeStart, trigger3);
 
         IsAutoInvoked = null;

@@ -1,11 +1,10 @@
-﻿using System.Diagnostics;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Cards;
 
@@ -19,7 +18,7 @@ public abstract class CardHandler : ICloneable
         return Activator.CreateInstance(GetType());
     }
 
-    public abstract CardCategory Category{get;}
+    public abstract CardCategory Category { get; }
 
     /// <summary>
     /// 临时将卡牌提出，verify时使用

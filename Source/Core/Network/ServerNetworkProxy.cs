@@ -1,9 +1,9 @@
 ﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
-using System.Diagnostics;
 using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Network;
 
@@ -12,7 +12,7 @@ public class ServerNetworkProxy : IPlayerProxy
     public void Freeze()
     {
     }
-    
+
     public Player HostPlayer
     {
         get;
@@ -287,7 +287,7 @@ public class ServerNetworkProxy : IPlayerProxy
                     j++;
                 }
             }
-            server.SendPacket(i, AskForCardChoiceResponse.Parse(proxy.QuestionId, answer, options == null? 0 : options.OptionResult, i));
+            server.SendPacket(i, AskForCardChoiceResponse.Parse(proxy.QuestionId, answer, options == null ? 0 : options.OptionResult, i));
         }
     }
     public bool AskForCardChoice(Prompt prompt, List<DeckPlace> sourceDecks, List<string> resultDeckNames, List<int> resultDeckMaximums, ICardChoiceVerifier verifier, out List<List<Card>> answer, AdditionalCardChoiceOptions options, CardChoiceRearrangeCallback callback)
@@ -363,7 +363,7 @@ public class ServerNetworkProxy : IPlayerProxy
     }
 
     public int TimeOutSeconds { get; set; }
-    
+
     public bool IsPlayable
     {
         get { return proxy.IsPlayable; }

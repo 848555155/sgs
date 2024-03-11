@@ -1,9 +1,7 @@
-﻿using System.Text.RegularExpressions;
-
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using System.IO;
+using System.Text.RegularExpressions;
 
 namespace Sanguosha.Core.UI;
 
@@ -74,7 +72,7 @@ public class TestUiProxy : IPlayerProxy
                 {
                     if (s is CardTransformSkill)
                     {
-                        
+
                     }
                     if (s is ActiveSkill)
                     {

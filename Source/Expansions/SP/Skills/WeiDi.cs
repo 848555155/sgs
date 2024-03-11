@@ -1,11 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -36,7 +32,8 @@ public class WeiDi : TriggerSkill
                 }
             },
             TriggerCondition.Global
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerSkillSetChanged, trigger);
         Triggers.Add(GameEvent.PlayerChangedHero, trigger);
 

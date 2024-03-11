@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Assassin.Skills;
@@ -75,19 +71,21 @@ public class MouKui : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard.Type is Sha; },
             Run1,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.CardUsageTargetConfirmed, trigger);
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             Run2,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(ShaCancelling.PlayerShaTargetDodged, trigger2);
 
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 if (a.ReadonlyCard[MouKuiCheck] == 0)
                 {
@@ -98,7 +96,8 @@ public class MouKui : TriggerSkill
             }
             ,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(ShaCancelling.PlayerShaTargetShanModifier, trigger3);
         IsAutoInvoked = null;
     }

@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -26,8 +26,8 @@ public class TianDu : TriggerSkill
 
         private readonly _AskTianDuDelegate askDel;
         private readonly TriggerSkill skill;
-        public AlwaysGetJudgeCardTrigger(Player owner, _AskTianDuDelegate del, TriggerSkill skill) : base(owner, null, null, true) 
-        { 
+        public AlwaysGetJudgeCardTrigger(Player owner, _AskTianDuDelegate del, TriggerSkill skill) : base(owner, null, null, true)
+        {
             askDel = del;
             this.skill = skill;
         }

@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 using System.Diagnostics;
 
@@ -31,7 +28,7 @@ public class Jiu : LifeSaver
     {
         Trace.Assert(targets != null);
         if (targets == null) return VerifierResult.Fail;
-        
+
         if (Game.CurrentGame.DyingPlayers.Count == 0)
         {
             if ((!isLooseVerify && targets.Count >= 1) || source[JiuUsed] == 1)

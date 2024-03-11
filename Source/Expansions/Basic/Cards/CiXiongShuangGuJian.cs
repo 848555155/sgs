@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -17,7 +15,7 @@ public class CiXiongShuangGuJian : Weapon
         EquipmentSkill = new CiXiongShuangGuJianSkill() { ParentEquipment = this };
     }
 
-    
+
     public class CiXiongShuangGuJianSkill : TriggerSkill, IEquipmentSkill
     {
         protected void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)

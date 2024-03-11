@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
@@ -69,7 +67,7 @@ public class GuanShiFu : Weapon
 
     }
 
-    
+
     public class GuanShiFuSkill : TriggerSkill, IEquipmentSkill
     {
         public Equipment ParentEquipment { get; set; }
@@ -100,7 +98,8 @@ public class GuanShiFu : Weapon
                 this,
                 Run,
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false, AskForConfirmation = false };
+            )
+            { IsAutoNotify = false, AskForConfirmation = false };
             Triggers.Add(ShaCancelling.PlayerShaTargetDodged, trigger);
         }
     }

@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 

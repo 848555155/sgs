@@ -1,11 +1,10 @@
-﻿using System.Net;
-using System.Net.Sockets;
+﻿using ProtoBuf;
 using Sanguosha.Core.Games;
-using System.Diagnostics;
-using System.IO;
 using Sanguosha.Lobby.Core;
 using System.ComponentModel;
-using ProtoBuf;
+using System.Diagnostics;
+using System.Net;
+using System.Net.Sockets;
 
 namespace Sanguosha.Core.Network;
 
@@ -43,8 +42,8 @@ public class Server
             ServerGamer gamer = new ServerGamer() { Game = game, OnlineStatus = OnlineStatus.Offline };
             gamer.OnDisconnected += Server_OnDisconnected;
             gamer.StartSender();
-            Gamers.Add(gamer);                
-        }            
+            Gamers.Add(gamer);
+        }
         this.game = game;
         Trace.TraceInformation("Server initialized with capacity {0}", capacity);
     }
@@ -57,11 +56,11 @@ public class Server
         {
             game.Players[id].OnlineStatus = status;
         }
-        Gamers[id].OnlineStatus = status;            
+        Gamers[id].OnlineStatus = status;
         for (int i = 0; i < MaxClients; i++)
-        {                
-            Gamers[i].SendAsync(new OnlineStatusUpdate() { PlayerId = id, OnlineStatus = status } );
-        }             
+        {
+            Gamers[i].SendAsync(new OnlineStatusUpdate() { PlayerId = id, OnlineStatus = status });
+        }
     }
 
     private bool killServer;
@@ -87,15 +86,15 @@ public class Server
     /// Ready the server. Block if require more clients to connect.
     /// </summary>
     public void Start()
-    { 
+    {
         Trace.TraceInformation("Listener Started on {0} : {1}", ipAddress.ToString(), IpPort);
         connectThread = new Thread(ConnectionListener) { IsBackground = true };
-        connectThread.Start();            
+        connectThread.Start();
         for (int i = 0; i < 50; i++)
         {
             if (!Gamers.Any(g => g.OnlineStatus == OnlineStatus.Offline)) break;
             Thread.Sleep(100);
-        }            
+        }
     }
 
     private Thread connectThread;
@@ -125,21 +124,21 @@ public class Server
         if (killServer) return;
         Trace.TraceInformation("Client connected");
         var stream = client.GetStream();
-        LoginToken? token = _ReadLoginToken(stream, 4000);            
+        LoginToken? token = _ReadLoginToken(stream, 4000);
         var timeOut = stream.ReadTimeout;
         if (token == null) return;
 
         Account theAccount = game.Settings.Accounts.FirstOrDefault
             (a => a.LoginToken.TokenString == token.Value.TokenString);
         int indexC;
-        
+
         if (theAccount != null)
         {
             indexC = game.Settings.Accounts.IndexOf(theAccount);
         }
         else
         {
-            indexC = numberOfGamers;                
+            indexC = numberOfGamers;
         }
         try
         {
@@ -153,14 +152,14 @@ public class Server
             catch (Exception) { }
             return;
         }
-        ServerGamer gamer = Gamers[indexC];         
+        ServerGamer gamer = Gamers[indexC];
         gamer.AddStream(stream);
         gamer.IsSpectator = (indexC == numberOfGamers);
         if (indexC != numberOfGamers)
         {
             gamer.StartReceiver();
             SetOnlineStatus(indexC, OnlineStatus.Online);
-        }       
+        }
     }
 
     private void ConnectionListener()
@@ -175,12 +174,12 @@ public class Server
                 client = listener.AcceptTcpClient();
             }
             catch (Exception)
-            {                    
+            {
                 if (errorCount++ > 10) return;
                 continue;
             }
-            
-            if (client == null) continue;                
+
+            if (client == null) continue;
             BackgroundWorker worker = new BackgroundWorker();
             worker.DoWork += (o, e) =>
             {
@@ -232,7 +231,7 @@ public class Server
             {
                 gamer.Abort();
             }
-        }            
+        }
     }
 
 }

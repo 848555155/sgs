@@ -1,16 +1,16 @@
-﻿using System;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Animation;
-using System.ComponentModel;
-using Sanguosha.Core.Cards;
-using System.Diagnostics;
-using Sanguosha.UI.Animations;
-using Sanguosha.Core.Games;
 
 namespace Sanguosha.UI.Controls;
 
@@ -48,7 +48,7 @@ public partial class PlayerView : PlayerViewBase
         if (model != null)
         {
             model.PropertyChanged -= _OnPropertyChanged;
-        }            
+        }
         model = e.NewValue as PlayerViewModel;
         if (model != null)
         {

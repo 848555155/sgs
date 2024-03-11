@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.SP.Skills;
@@ -83,7 +81,8 @@ public class DuWu : AutoVerifiedActiveSkill
                     Game.CurrentGame.LoseHealth(Owner, 1);
                 },
                 TriggerCondition.Global
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.PlayerIsAboutToDie, trigger);
             IsAutoInvoked = null;
         }

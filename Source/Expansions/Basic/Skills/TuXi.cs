@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -101,7 +99,8 @@ public class TuXi : TriggerSkill
             this,
             GetTheirCards,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, Priority = SkillPriority.TuXi, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, Priority = SkillPriority.TuXi, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.Draw], trigger);
         IsAutoInvoked = null;
     }

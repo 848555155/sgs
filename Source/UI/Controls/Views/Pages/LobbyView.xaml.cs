@@ -1,15 +1,15 @@
-﻿using System;
+﻿using Sanguosha.Core.Network;
+using Sanguosha.Core.Utils;
+using Sanguosha.Lobby.Core;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Navigation;
-using Sanguosha.Lobby.Core;
-using System.Diagnostics;
-using Sanguosha.Core.Network;
-using System.ComponentModel;
-using System.Threading;
-using Sanguosha.Core.Utils;
 using System.Windows.Threading;
 
 namespace Sanguosha.UI.Controls;
@@ -108,7 +108,7 @@ public partial class LobbyView : Page
     {
         get
         {
-            if (_instance == null) _instance = new LobbyView();        
+            if (_instance == null) _instance = new LobbyView();
             return _instance;
         }
     }
@@ -118,7 +118,7 @@ public partial class LobbyView : Page
         get
         {
             return LobbyViewModel.Instance;
-        }            
+        }
     }
 
     public void StartGame()
@@ -147,14 +147,14 @@ public partial class LobbyView : Page
             {
                 ea.Result = false;
                 var stream = FileRotator.CreateFile("./Replays", "SGSREPLAY", ".sgs", 10);
-                
+
                 stream.Write(BitConverter.GetBytes((int)0), 0, 4);
                 client.RecordStream = stream;
                 client.Start(stream, LobbyModel.LoginToken);
-                
+
                 MainGame game = null;
 
-                Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                 {
                     try
                     {
@@ -192,9 +192,9 @@ public partial class LobbyView : Page
         };
 
         worker.RunWorkerCompleted += (o, ea) =>
-        {                
+        {
             if ((bool)ea.Result)
-            {                   
+            {
                 return;
             }
             else
@@ -225,26 +225,26 @@ public partial class LobbyView : Page
 
     private void viewRoomButton_Click(object sender, RoutedEventArgs e)
     {
-        Trace.Assert(sender is Button);            
+        Trace.Assert(sender is Button);
         var model = (sender as Button).DataContext as RoomViewModel;
         if (model != null && (LobbyViewModel.Instance.CurrentSeat == null || LobbyViewModel.Instance.ExitRoom()))
         {
             LobbyModel.CurrentRoom = model;
-        }            
+        }
     }
 
     private void enterRoomButton_Click(object sender, RoutedEventArgs e)
     {
         Trace.Assert(sender is Button);
         var model = (sender as Button).DataContext as RoomViewModel;
-        if (model != null  && (LobbyViewModel.Instance.CurrentSeat == null || LobbyViewModel.Instance.ExitRoom()))
+        if (model != null && (LobbyViewModel.Instance.CurrentSeat == null || LobbyViewModel.Instance.ExitRoom()))
         {
             LobbyModel.CurrentRoom = model;
             if (!LobbyModel.EnterRoom())
             {
-                LobbyModel.CurrentRoom = null; 
-            }                
-        }            
+                LobbyModel.CurrentRoom = null;
+            }
+        }
     }
 
     private void Page_Loaded(object sender, RoutedEventArgs e)
@@ -255,7 +255,7 @@ public partial class LobbyView : Page
 
     public void NotifyKeyEvent(string p)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             FlowDocument doc = new FlowDocument();
             doc.Blocks.Add(new Paragraph(new Run(p)));
@@ -330,7 +330,7 @@ public class RoomButtonVisibilityConverter : IMultiValueConverter
         {
             return Visibility.Visible;
         }
-        var currentSeat = values[2];            
+        var currentSeat = values[2];
         if ((parameter as string) == "View")
         {
             if (room == currentRoom) return Visibility.Collapsed;
@@ -341,7 +341,7 @@ public class RoomButtonVisibilityConverter : IMultiValueConverter
             Trace.Assert((parameter as string) == "Enter");
             if (room == currentRoom && currentSeat != null) return Visibility.Collapsed;
             else return Visibility.Visible;
-        }            
+        }
     }
 
     public object[] ConvertBack(object value, Type[] targetTypes, object parameter, System.Globalization.CultureInfo culture)

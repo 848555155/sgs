@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Fire.Skills;
 
@@ -121,14 +119,16 @@ public class KuangFeng : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.Decks[Owner, QiXing.QiXingDeck].Count > 0; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.End], trigger);
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { Game.CurrentGame.RegisterTrigger(GameEvent.PlayerIsDead, new KuangFengOnDeath(p, this)); },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerGameStartAction, trigger2);
         IsAutoInvoked = null;
     }

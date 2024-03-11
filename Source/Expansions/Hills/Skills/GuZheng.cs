@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -127,18 +125,21 @@ public class GuZheng : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.CurrentPlayer != p && Game.CurrentGame.CurrentPhase == TurnPhase.Discard; },
             (p, e, a) => { GuZhengCards.AddRange(a.Cards); },
             TriggerCondition.Global
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return GuZhengCards.Count > 0 && Game.CurrentGame.CurrentPlayer != p; },
             Run,
             TriggerCondition.Global
-        ) { Priority = 1, AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { Priority = 1, AskForConfirmation = false, IsAutoNotify = false };
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { GuZhengCards = new List<Card>(); },
             TriggerCondition.Global
-        ) { Priority = 0, AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { Priority = 0, AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.CardsEnteredDiscardDeck, trigger);
         Triggers.Add(GameEvent.PhaseEndEvents[TurnPhase.Discard], trigger2);
         Triggers.Add(GameEvent.PhasePostEnd, trigger3);

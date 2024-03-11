@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -84,7 +82,7 @@ public class JiJiang : CardTransformSkill
                     ISkill skill;
                     List<Player> p;
                     List<Card> cards;
-                    Game.CurrentGame.Emit(isPlay? GameEvent.PlayerIsAboutToPlayCard : GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = player, Verifier = v1 });
+                    Game.CurrentGame.Emit(isPlay ? GameEvent.PlayerIsAboutToPlayCard : GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = player, Verifier = v1 });
                     if (!ui.AskForCardUsage(new CardUsagePrompt("JiJiang", Owner), v1, out skill, out cards, out p))
                     {
                         failToRespond = true;

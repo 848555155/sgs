@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Pk1v1.Skills;
 
@@ -41,14 +39,16 @@ public class ManYi : TriggerSkill
             },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.HeroDebut, trigger);
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.ReadonlyCard.Type is NanManRuQin; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { Type = TriggerType.Skill, AskForConfirmation = false };
+        )
+        { Type = TriggerType.Skill, AskForConfirmation = false };
         Triggers.Add(GameEvent.CardUsageTargetValidating, trigger2);
         IsAutoInvoked = null;
     }

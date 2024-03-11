@@ -1,18 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using Sanguosha.Core.Players;
-using System.Windows;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using System.Diagnostics;
-using System.Windows.Documents;
-using Sanguosha.Core.Cards;
-using System.Windows.Controls;
-using System.Windows.Media;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Text;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Documents;
+using System.Windows.Media;
 
 namespace Sanguosha.UI.Controls;
 
@@ -87,7 +87,7 @@ public class LogFormatter
         string formatter = Application.Current.TryFindResource("Deck.PrivateDeck.Name") as string;
         Trace.Assert(formatter != null);
         if (formatter == null) return string.Empty;
-        return string.Format(formatter, Translate(deckPlace.Player), Translate(deckPlace.DeckType));            
+        return string.Format(formatter, Translate(deckPlace.Player), Translate(deckPlace.DeckType));
     }
 
     public static string Translate(Prompt prompt)

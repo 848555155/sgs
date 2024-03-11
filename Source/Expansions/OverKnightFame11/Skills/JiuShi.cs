@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Battle.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
@@ -24,14 +22,16 @@ public class JiuShi : CardTransformSkill
                 (p, e, a) => { return (a as DamageEventArgs).ReadonlyCard[JiuShiUsable] == 1; },
                 (p, e, a) => { (a as DamageEventArgs).ReadonlyCard[JiuShiUsable] = 0; p.IsImprisoned = false; },
                 TriggerCondition.OwnerIsTarget
-            ) { };
+            )
+            { };
             Triggers.Add(GameEvent.DamageComputingFinished, trigger);
             var trigger2 = new AutoNotifyPassiveSkillTrigger(
                 this,
                 (p, e, a) => { return p.IsImprisoned; },
                 (p, e, a) => { (a as DamageEventArgs).ReadonlyCard[JiuShiUsable] = 1; },
                 TriggerCondition.OwnerIsTarget
-            ) { IsAutoNotify = false, AskForConfirmation = false, Priority = int.MinValue };
+            )
+            { IsAutoNotify = false, AskForConfirmation = false, Priority = int.MinValue };
             Triggers.Add(GameEvent.DamageInflicted, trigger2);
             IsAutoInvoked = null;
         }

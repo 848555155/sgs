@@ -1,9 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using System.Windows;
-using System.Collections.Generic;
 
 namespace Sanguosha.UI.Controls;
 
@@ -17,7 +17,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     #region Constructor
 
     protected ViewModelBase()
-    {            
+    {
     }
 
     #endregion // Constructor
@@ -122,14 +122,14 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
                 }
                 else
                 {
-                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
                     {
                         handler(this, new PropertyChangedEventArgs(propertyName));
                     });
                 }
             }
         }
-    }        
+    }
 
     #endregion // INotifyPropertyChanged Members
 
@@ -175,7 +175,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
 
     public static void DetachAll()
     {
-        _isDetached = true;            
+        _isDetached = true;
     }
 
     public static void AttachAll()

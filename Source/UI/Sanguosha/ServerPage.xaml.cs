@@ -1,6 +1,6 @@
-﻿using System.Windows;
+﻿using Sanguosha.Lobby.Server;
+using System.Windows;
 using System.Windows.Controls;
-using Sanguosha.Lobby.Server;
 
 namespace Sanguosha.UI.Main;
 

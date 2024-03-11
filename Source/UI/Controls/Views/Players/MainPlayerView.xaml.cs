@@ -1,17 +1,17 @@
-﻿using System;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Controls.Primitives;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.ComponentModel;
 using System.Windows.Media.Animation;
-using Sanguosha.Core.Cards;
-using System.Windows.Controls.Primitives;
-using System.Diagnostics;
-using Sanguosha.UI.Animations;
-using Sanguosha.Core.Games;
 
 namespace Sanguosha.UI.Controls;
 
@@ -70,7 +70,7 @@ public partial class MainPlayerView : PlayerViewBase
         }
         model = e.NewValue as PlayerViewModel;
         if (model != null)
-        {                
+        {
             model.PropertyChanged += _OnPropertyChanged;
             cbRoleBox.DataContext = model.PossibleRoles;
         }
@@ -171,7 +171,7 @@ public partial class MainPlayerView : PlayerViewBase
         deathIcon.Opacity = PlayerModel.IsDead ? 1.0d : 0.0d;
         deathEffect.BeginAnimation(Effects.MonochromeEffect.StrengthProperty, null);
         deathEffect.Strength = PlayerModel.IsDead ? 1.0d : 0.0d;
-        
+
         // Update impersonate status
         UpdateImpersonateStatus(true);
         if (PlayerModel != null &&
@@ -201,7 +201,7 @@ public partial class MainPlayerView : PlayerViewBase
         delayedToolsDock.Children.Clear();
         equipmentArea.Visibility = Visibility.Collapsed;
 
-        base.UpdateCards();        
+        base.UpdateCards();
 
         if (PlayerModel == null) return;
         var player = PlayerModel.Player;
@@ -226,7 +226,7 @@ public partial class MainPlayerView : PlayerViewBase
 
     protected override void AddHandCards(IList<CardView> cards, bool isFaked)
     {
-//            isFaked = true;
+        //            isFaked = true;
         foreach (var card in cards)
         {
             card.DragDirection = DragDirection.Horizontal;
@@ -289,7 +289,7 @@ public partial class MainPlayerView : PlayerViewBase
                     {
                         var copy = CardView.CreateCard(cardView.Card);
                         ParentGameView.GlobalCanvas.Children.Add(copy);
-                        copy.SetCurrentPosition(cardView.Position);                            
+                        copy.SetCurrentPosition(cardView.Position);
                         copy.Opacity = 100;
                         cardsToRemove.Add(copy);
                     }
@@ -297,7 +297,7 @@ public partial class MainPlayerView : PlayerViewBase
                     {
                         cardsToRemove.Add(cardView);
                         cardView.CardModel.IsSelected = false;
-                        cardView.DragDirection = DragDirection.None;                            
+                        cardView.DragDirection = DragDirection.None;
                     }
                     found = true;
                     break;
@@ -424,7 +424,7 @@ public partial class MainPlayerView : PlayerViewBase
         if (equip == null)
         {
             throw new ArgumentException("Cannot add non-equip to equip area.");
-        }            
+        }
 
         Grid targetArea = null;
         switch (equip.Category)
@@ -444,7 +444,7 @@ public partial class MainPlayerView : PlayerViewBase
             default:
                 throw new ArgumentException("Cannot install non-equips to equip area.");
         }
-        
+
         if (targetArea.Children.Count == 0)
         {
             throw new ArgumentException("No equip is found.");
@@ -473,7 +473,7 @@ public partial class MainPlayerView : PlayerViewBase
 
     protected override void AddDelayedTool(CardView card, bool isFaked)
     {
-        LargeDelayedToolView dtv = new LargeDelayedToolView() { Width=30, Height=30 };
+        LargeDelayedToolView dtv = new LargeDelayedToolView() { Width = 30, Height = 30 };
         dtv.DataContext = card.CardModel;
         dtv.Opacity = 0;
         dtv.Margin = new Thickness(50d, 0, 0, 0);
@@ -508,7 +508,7 @@ public partial class MainPlayerView : PlayerViewBase
         Storyboard.SetTargetProperty(animation2, new PropertyPath(OpacityProperty));
         storyBoard.Children.Add(animation1);
         storyBoard.Children.Add(animation2);
-        storyBoard.Begin();        
+        storyBoard.Begin();
     }
 
     protected override CardView RemoveDelayedTool(Card card, bool isCopy)
@@ -571,11 +571,11 @@ public partial class MainPlayerView : PlayerViewBase
         storyboard.Children.Add(rotateAnim);
         storyboard.Children.Add(scaleXAnim);
         storyboard.Children.Add(scaleYAnim);
-        card.AddRebaseAnimation(storyboard, 0.8d);            
+        card.AddRebaseAnimation(storyboard, 0.8d);
         storyboard.AccelerationRatio = 0.4d;
         storyboard.Begin();
         card.Disappear(1.2d, true);
-        
+
     }
 
     protected override CardView RemoveRoleCard(Card card)

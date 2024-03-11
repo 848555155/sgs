@@ -1,8 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using Sanguosha.Core.Cards;
 using System.Diagnostics;
-
-using Sanguosha.Core.Cards;
+using System.Windows;
+using System.Windows.Controls;
 
 
 namespace Sanguosha.UI.Controls;

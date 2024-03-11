@@ -6,9 +6,9 @@ namespace Sanguosha.UI.Controls;
 /// Interaction logic for GameResultBox.xaml
 /// </summary>
 public partial class GameResultBox : UserControl
-	{
-		public GameResultBox()
-		{
-			this.InitializeComponent();
-		}
-	}
+{
+    public GameResultBox()
+    {
+        this.InitializeComponent();
+    }
+}

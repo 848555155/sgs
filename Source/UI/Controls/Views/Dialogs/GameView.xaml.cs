@@ -1,27 +1,26 @@
-﻿using System;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Battle.Cards;
+using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Shapes;
-using System.Diagnostics;
-
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Skills;
-using System.Threading;
-using System.Collections.ObjectModel;
-using Sanguosha.UI.Animations;
-using System.ComponentModel;
 using System.Windows.Media.Animation;
-using Sanguosha.Expansions.Battle.Cards;
-using Xceed.Wpf.Toolkit;
+using System.Windows.Shapes;
 using System.Windows.Threading;
-using Sanguosha.Core.Heroes;
+using Xceed.Wpf.Toolkit;
 
 namespace Sanguosha.UI.Controls;
 
@@ -116,7 +115,7 @@ public partial class GameView : UserControl, INotificationProxy
         {
             pinDianWindow.Close();
         };
-        mainPlayerPanel.SetAnimationCenter(mainPlayerAnimationCenter);            
+        mainPlayerPanel.SetAnimationCenter(mainPlayerAnimationCenter);
         LobbyViewModel.Instance.OnChat += LobbyModel_OnChat;
     }
 
@@ -145,23 +144,23 @@ public partial class GameView : UserControl, INotificationProxy
             {
                 if (source == target) continue;
                 var key = new KeyValuePair<Player, Player>(source, target);
-                
+
                 Line line = new Line();
                 line.StrokeDashCap = PenLineCap.Triangle;
                 line.StrokeThickness = 1;
-                line.Stroke = Resources["indicatorLineBrush"] as Brush;                    
+                line.Stroke = Resources["indicatorLineBrush"] as Brush;
                 line.Visibility = Visibility.Collapsed;
                 line.SetValue(Panel.ZIndexProperty, _cueLineZIndex);
 
                 Line line2 = new Line();
                 line2.StrokeDashCap = PenLineCap.Triangle;
                 line2.StrokeThickness = 3;
-                line2.Stroke = Resources["indicatorLineGlowBrush"] as Brush;                    
+                line2.Stroke = Resources["indicatorLineGlowBrush"] as Brush;
                 line2.Visibility = Visibility.Collapsed;
                 line2.SetValue(Panel.ZIndexProperty, _cueLineZIndex - 1);
 
                 _cueLines.Add(key, new KeyValuePair<Line, Line>(line, line2));
-                                    
+
 
                 var anim1 = new DoubleAnimation();
                 anim1.Duration = _lineUpDuration;
@@ -223,7 +222,7 @@ public partial class GameView : UserControl, INotificationProxy
                 line2.X1 = srcPoint.X;
                 line2.X2 = dstPoint.X;
                 line2.Y1 = srcPoint.Y;
-                line2.Y2 = dstPoint.Y;                    
+                line2.Y2 = dstPoint.Y;
                 double distance = Math.Sqrt((srcPoint.X - dstPoint.X) * (srcPoint.X - dstPoint.X) + (srcPoint.Y - dstPoint.Y) * (srcPoint.Y - dstPoint.Y));
                 line.StrokeDashArray = new DoubleCollection() { distance * 2.0, 10000d };
                 line.StrokeDashOffset = distance * 2;
@@ -255,9 +254,9 @@ public partial class GameView : UserControl, INotificationProxy
         {
             var para2 = new Paragraph();
             para2.Inlines.AddRange(LogFormatter.RichTranslateChatMessage(msg));
-        
+
             playersMap[player.Player].Chat(para2);
-        }            
+        }
     }
 
     private void GameView_SizeChanged(object sender, SizeChangedEventArgs e)
@@ -452,7 +451,7 @@ public partial class GameView : UserControl, INotificationProxy
             _privateDeckChoiceWindow.Template = Resources["BlackWindowStyle"] as ControlTemplate;
             _privateDeckChoiceWindow.MaxWidth = 800;
             _privateDeckChoiceWindow.HorizontalContentAlignment = HorizontalAlignment.Center;
-            _privateDeckChoiceWindow.CloseButtonVisibility = Visibility.Collapsed;                
+            _privateDeckChoiceWindow.CloseButtonVisibility = Visibility.Collapsed;
             _privateDeckChoiceWindow.WindowStartupLocation = Xceed.Wpf.Toolkit.WindowStartupLocation.Center;
             string title = LogFormatter.Translate(new CardChoicePrompt("SpecialDeck", model.CurrentSpecialDeck.DeckPlace));
             _privateDeckChoiceWindow.Caption = title;
@@ -537,7 +536,7 @@ public partial class GameView : UserControl, INotificationProxy
     {
         PlayerViewModel model = sender as PlayerViewModel;
         if (model == null || model.Player == null) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             int count = GameModel.PlayerModels.Count;
             if (e.PropertyName == "IsCardChoiceQuestionShown")
@@ -625,7 +624,7 @@ public partial class GameView : UserControl, INotificationProxy
     private void _game_PropertyChanged(object sender, PropertyChangedEventArgs e)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             string name = e.PropertyName;
             if (name == "CurrentPlayer")
@@ -809,7 +808,7 @@ public partial class GameView : UserControl, INotificationProxy
     private void _LineUp(Player source, IList<Player> targets)
     {
 
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             Storyboard lineUpGroup = new Storyboard();
             foreach (var target in targets)
@@ -861,7 +860,7 @@ public partial class GameView : UserControl, INotificationProxy
         {
             if (move.Helper.IsWuGu)
             {
-                Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                 {
                     // WuGuModel can be null if we missed NotifyWuGuStart during reconnection.
                     if (GameModel.WuGuModel == null) return;
@@ -907,19 +906,19 @@ public partial class GameView : UserControl, INotificationProxy
                 Trace.Assert(move.Helper != null);
                 if (move.Helper != null && (!move.Helper.IsFakedMove || move.Helper.AlwaysShowLog))
                 {
-                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
                     {
                         gameLogs.AppendCardMoveLog(stackCards.Value, stackCards.Key, move.To);
                     });
                 }
-                Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                 {
                     cards = deck.RemoveCards(stackCards.Key.DeckType, stackCards.Value);
                 });
                 Trace.Assert(cards != null);
                 foreach (var card in cards)
                 {
-                    Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                    Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                     {
                         card.Update();
                     });
@@ -927,12 +926,12 @@ public partial class GameView : UserControl, INotificationProxy
                 cardsToAdd.AddRange(cards);
             }
 
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 _GetMovementDeck(move.To).AddCards(move.To.DeckType, cardsToAdd, move.Helper.IsFakedMove);
             });
         }
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             _UpdateRemainingCards();
             rtbLog.ScrollToEnd();
@@ -957,7 +956,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyDamage(Player source, Player target, int magnitude, DamageElement element)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             foreach (var profile in playersMap.Values)
             {
@@ -993,7 +992,7 @@ public partial class GameView : UserControl, INotificationProxy
                 if (equipAnimationResources.Contains(key1))
                 {
                     AnimationBase animation = null;
-                    Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                    Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                     {
                         animation = equipAnimationResources[key1] as AnimationBase;
                     });
@@ -1011,7 +1010,7 @@ public partial class GameView : UserControl, INotificationProxy
             }
             if (log.SkillAction.IsSingleUse || log.SkillAction.IsAwakening)
             {
-                Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+                Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
                 {
                     ExcitingSkillAnimation anim = new ExcitingSkillAnimation();
                     anim.SkillName = log.SkillAction.GetType().Name;
@@ -1029,7 +1028,7 @@ public partial class GameView : UserControl, INotificationProxy
                 if (s != string.Empty)
                 {
                     RegularSkillAnimation anim = null;
-                    Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                    Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                     {
                         anim = new RegularSkillAnimation() { Text = s };
                     });
@@ -1057,7 +1056,7 @@ public partial class GameView : UserControl, INotificationProxy
             {
                 foreach (var p in log.Targets)
                 {
-                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+                    Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
                     {
                         playersMap[p].PlayIronShackleAnimation();
                     });
@@ -1078,7 +1077,7 @@ public partial class GameView : UserControl, INotificationProxy
                     if (baseCardAnimationResources.Contains(key1))
                     {
                         AnimationBase animation = null;
-                        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                         {
                             animation = baseCardAnimationResources[key1] as AnimationBase;
                         });
@@ -1134,13 +1133,13 @@ public partial class GameView : UserControl, INotificationProxy
 
         if (!log.SkillSoundOnly)
         {
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 gameLogs.AppendLog(log);
                 rtbLog.ScrollToEnd();
             });
 
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 _AppendKeyEventLog(log);
             });
@@ -1149,7 +1148,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyUiAttached()
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             ViewModelBase.AttachAll();
             foreach (var player in playersMap.Values)
@@ -1170,7 +1169,7 @@ public partial class GameView : UserControl, INotificationProxy
                 twoSidesCardChoiceBox.DataContext = GameModel.TwoSidesCardChoiceModel;
                 twoSidesCardChoiceWindow.Show();
             }
-            
+
             busyIndicator.IsBusy = false;
             var handler = OnUiAttached;
             if (handler != null)
@@ -1183,7 +1182,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyUiDetached()
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             busyIndicator.BusyContent = Resources["Busy.Reconnecting"];
             busyIndicator.IsBusy = true;
@@ -1194,7 +1193,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyIronShackled(Player p)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             playersMap[p].OnIronShackled();
         });
@@ -1205,7 +1204,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyShowCardsStart(Player p, List<Card> cards)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             if (_showHandCardsWindow != null)
             {
@@ -1216,7 +1215,7 @@ public partial class GameView : UserControl, INotificationProxy
             _showHandCardsWindow.Template = Resources["BlackWindowStyle"] as ControlTemplate;
             _showHandCardsWindow.MaxWidth = 800;
             _showHandCardsWindow.HorizontalContentAlignment = HorizontalAlignment.Center;
-            _showHandCardsWindow.CloseButtonVisibility = Visibility.Visible;                
+            _showHandCardsWindow.CloseButtonVisibility = Visibility.Visible;
             _showHandCardsWindow.WindowStartupLocation = Xceed.Wpf.Toolkit.WindowStartupLocation.Center;
             string title = LogFormatter.Translate(new CardChoicePrompt("ShowCards", p));
             _showHandCardsWindow.Caption = title;
@@ -1242,7 +1241,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyShowCardsEnd()
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             if (_showHandCardsWindow == null) return;
             gridRoot.Children.Remove(_showHandCardsWindow);
@@ -1253,7 +1252,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyMultipleChoiceResult(Player p, OptionPrompt answer)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             gameLogs.AppendMultipleChoiceLog(p, LogFormatter.Translate(answer));
         });
@@ -1261,7 +1260,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyDeath(Player p, Player by)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             var role = GameModel.AvailableRoles.FirstOrDefault(r => (r.Role == p.Role) && r.IsAlive);
             //Trace.Assert(role != null);
@@ -1270,7 +1269,7 @@ public partial class GameView : UserControl, INotificationProxy
         });
 
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             var uri = GameSoundLocator.GetDeathSound(p.Hero.Name);
             GameSoundPlayer.PlaySoundEffect(uri);
@@ -1281,7 +1280,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyActionComplete()
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             foreach (var player in GameModel.PlayerModels)
             {
@@ -1294,7 +1293,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyLoseHealth(Player player, int delta)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             gameLogs.AppendLoseHealthLog(player, delta);
             rtbLog.ScrollToEnd();
@@ -1306,7 +1305,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyLoseMaxHealth(Player player, int delta)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             gameLogs.AppendLoseMaxHealthLog(player, delta);
             rtbLog.ScrollToEnd();
@@ -1318,7 +1317,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyRecoverHealth(Player player, int delta)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             gameLogs.AppendRecoverHealthLog(player, delta);
             rtbLog.ScrollToEnd();
@@ -1330,7 +1329,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyReforge(Player p, ICard card)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             Uri uri = GameSoundLocator.GetSystemSound("Reforge");
             GameSoundPlayer.PlaySoundEffect(uri);
@@ -1342,7 +1341,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyLogEvent(Prompt custom, List<Player> players = null, bool isKeyEvent = true, bool useUICard = true)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             gameLogs.AppendLogEvent(players == null ? Game.CurrentGame.Players : players, custom, useUICard);
             rtbLog.ScrollToEnd();
@@ -1353,7 +1352,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyShowCard(Player p, Card card)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             if (p == null)
             {
@@ -1377,7 +1376,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyCardChoiceCallback(CardRearrangement arrange)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             if (cardChoiceWindow == null) return;
             var box = cardChoiceWindow.Content as CardArrangeBox;
@@ -1388,7 +1387,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyImpersonation(Player p, Hero impersonator, Hero impersonatedHero, ISkill acquiredSkill)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             var view = playersMap[p];
             var model = view.PlayerModel.GetHeroModel(impersonator);
@@ -1409,8 +1408,8 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyGameStart()
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
-        { 
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
+        {
             GameModel.AvailableRoles.Clear();
             foreach (Role role in GameModel.Game.AvailableRoles)
             {
@@ -1424,8 +1423,8 @@ public partial class GameView : UserControl, INotificationProxy
         if (ViewModelBase.IsDetached) return;
         GameSoundPlayer.PlaySoundEffect(GameSoundLocator.GetSystemSound("GameStart"));
 
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
-        {                
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
+        {
             numRemainingCard.Text = Game.CurrentGame.Decks[DeckType.Dealing].Count().ToString();
             PlayAnimation(new GameStartAnimation());
         });
@@ -1434,7 +1433,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyJudge(Player p, Card card, ActionLog log, bool? isSuccess, bool isFinalResult)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             CardView cardView = discardDeck.Cards.FirstOrDefault(c => c.Card.Id == card.Id);
 
@@ -1458,7 +1457,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyTwoSidesCardPickStart(Prompt prompt, DeckPlace place, IDictionary<int, int> groupMap, int group0MaxPick, int group1MaxPick)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             var twoSidesCardChoiceModel = new TwoSidesCardChoiceViewModel();
             twoSidesCardChoiceModel.Prompt = LogFormatter.Translate(prompt);
@@ -1503,7 +1502,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyTwoSidesCardPicked(bool isGroup0, int cardIndex)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             if (GameModel == null || GameModel.TwoSidesCardChoiceModel == null) return;
             var model = GameModel.TwoSidesCardChoiceModel;
@@ -1529,8 +1528,8 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyTwoSidesCardPickEnd()
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
-        {                
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
+        {
             GameModel.TwoSidesCardChoiceModel = null;
             if (ViewModelBase.IsDetached) return;
             twoSidesCardChoiceWindow.Close();
@@ -1539,7 +1538,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyWuGuStart(Prompt prompt, DeckPlace place)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             var wuguModel = new WuGuChoiceViewModel();
             wuguModel.Prompt = LogFormatter.Translate(prompt);
@@ -1557,7 +1556,7 @@ public partial class GameView : UserControl, INotificationProxy
                 i++;
             }
             GameModel.WuGuModel = wuguModel;
-        
+
             if (ViewModelBase.IsDetached) return;
 
             wuGuBox.DataContext = wuguModel;
@@ -1580,12 +1579,12 @@ public partial class GameView : UserControl, INotificationProxy
     }
 
     public void NotifyWuGuEnd()
-    {            
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+    {
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             GameModel.WuGuModel = null;
             if (ViewModelBase.IsDetached) return;
-            wuGuWindow.Close();                
+            wuGuWindow.Close();
         });
     }
 
@@ -1593,7 +1592,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyPinDianStart(Player from, Player to, ISkill reason)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             pinDianWindow.Caption = LogFormatter.Translate(new Prompt("Window.PinDian.Prompt", reason));
             pinDianBox.StartPinDian(from, to);
@@ -1604,7 +1603,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyMultipleCardUsageResponded(Player player)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             pinDianBox.OnPinDianCardPlayed(player);
         });
@@ -1613,7 +1612,7 @@ public partial class GameView : UserControl, INotificationProxy
     public void NotifyPinDianEnd(Card c1, Card c2)
     {
         if (ViewModelBase.IsDetached) return;
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             pinDianBox.RevealResult(c1, c2);
         });
@@ -1624,7 +1623,7 @@ public partial class GameView : UserControl, INotificationProxy
 
     public void NotifyGameOver(bool isDraw, List<Player> winners)
     {
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             Uri uri = GameSoundLocator.GetSystemSound("GameOver");
             GameSoundPlayer.PlaySoundEffect(uri);

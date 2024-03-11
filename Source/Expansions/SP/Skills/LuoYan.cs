@@ -1,11 +1,9 @@
-﻿using System.Linq;
-
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Expansions.Wind.Skills;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Skills;
+using Sanguosha.Expansions.Wind.Skills;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -59,13 +57,13 @@ public class LuoYan : TriggerSkill
         var loseSkills = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.Cards.Any(c => c.HistoryPlace1.DeckType == XingWu.XingWuDeck) && Game.CurrentGame.Decks[p, XingWu.XingWuDeck].Count == 0; },
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 Game.CurrentGame.PlayerLoseAdditionalSkill(p, lyLiuLi, true);
                 Game.CurrentGame.PlayerLoseAdditionalSkill(p, lyTianXiang, true);
                 lyLiuLi = null;
                 lyTianXiang = null;
-            } ,
+            },
             TriggerCondition.OwnerIsSource
         );
         IsEnforced = true;

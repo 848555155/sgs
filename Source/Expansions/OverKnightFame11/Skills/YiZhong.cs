@@ -1,9 +1,9 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -16,7 +16,7 @@ public class YiZhong : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 return p.Armor() == null && a.ReadonlyCard.SuitColor == SuitColorType.Black && a.ReadonlyCard.Type is Sha;
             },

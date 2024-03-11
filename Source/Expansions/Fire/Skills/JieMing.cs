@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Fire.Skills;
 
@@ -52,7 +49,7 @@ public class JieMing : TriggerSkill
                                                       out players))
             {
                 NotifySkillUse(players);
-                int numCardsToDraw = Math.Min(5, players[0].MaxHealth) - 
+                int numCardsToDraw = Math.Min(5, players[0].MaxHealth) -
                                      game.Decks[players[0], DeckType.Hand].Count;
                 if (numCardsToDraw <= 0) continue;
                 game.DrawCards(players[0], numCardsToDraw);
@@ -67,7 +64,8 @@ public class JieMing : TriggerSkill
             this,
             Run,
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
         IsAutoInvoked = null;
     }

@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 

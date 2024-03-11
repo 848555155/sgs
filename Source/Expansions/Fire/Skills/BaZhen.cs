@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Fire.Skills;
@@ -49,7 +47,8 @@ public class BaZhen : TriggerSkill
             },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerRequireCard, trigger);
         IsEnforced = true;
     }

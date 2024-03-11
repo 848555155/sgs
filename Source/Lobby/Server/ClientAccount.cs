@@ -1,7 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Sanguosha.Lobby.Core;
-using System.ServiceModel;
 using System.Threading.Channels;
 
 namespace Sanguosha.Lobby.Server;

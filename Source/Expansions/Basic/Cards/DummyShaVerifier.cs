@@ -1,11 +1,8 @@
-﻿using Sanguosha.Core.UI;
-using System.Collections.Generic;
-using System.Linq;
-
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 

@@ -12,7 +12,7 @@ public partial class ExcitingSkillAnimation : AnimationBase
     private class ExcitingSkillAnimationViewModel : Sanguosha.UI.Controls.ViewModelBase
     {
         private string _skillName;
-        public string SkillName 
+        public string SkillName
         {
             get
             {
@@ -46,7 +46,7 @@ public partial class ExcitingSkillAnimation : AnimationBase
     {
         this.InitializeComponent();
         mainAnimation = Resources["mainAnimation"] as Storyboard;
-        _model = new ExcitingSkillAnimationViewModel();	        
+        _model = new ExcitingSkillAnimationViewModel();
         DataContext = _model;
     }
 
@@ -58,7 +58,7 @@ public partial class ExcitingSkillAnimation : AnimationBase
         }
         set
         {
-            _model.HeroName = value;               
+            _model.HeroName = value;
         }
     }
 

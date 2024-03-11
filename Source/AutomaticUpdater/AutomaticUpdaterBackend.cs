@@ -94,7 +94,7 @@ public class AutomaticUpdaterBackend : IDisposable
                 return changes;
 
             // convert the RTF text to plaintext
-            using (RichTextBox r = new RichTextBox {Rtf = changes})
+            using (RichTextBox r = new RichTextBox { Rtf = changes })
             {
                 return r.Text;
             }
@@ -313,7 +313,7 @@ public class AutomaticUpdaterBackend : IDisposable
 
         if (UpdateStepOn == UpdateStepOn.Nothing)
             throw new Exception("There must be an update available before you can install it.");
-        
+
         if (UpdateStepOn == UpdateStepOn.Checking)
             throw new Exception("The AutomaticUpdater must finish checking for updates before they can be installed.");
 
@@ -742,7 +742,7 @@ public class AutomaticUpdaterBackend : IDisposable
 
     private static UpdateStepOn UpdateStepToUpdateStepOn(UpdateStep us)
     {
-        switch(us)
+        switch (us)
         {
             case UpdateStep.BeginExtraction:
                 return UpdateStepOn.ExtractingUpdate;

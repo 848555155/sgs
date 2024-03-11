@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using Sanguosha.Core.Cards;
-using System.Windows.Input;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Skills;
+using System;
+using System.Collections.ObjectModel;
+using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -51,7 +51,7 @@ public class GuHuoSkillCommand : SkillCommand
 
     public CardHandler GuHuoChoice
     {
-        get 
+        get
         {
             var skill = Skill as IAdditionalTypedSkill;
             if (skill != null)

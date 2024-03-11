@@ -1,15 +1,14 @@
-﻿using System;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.ComponentModel;
 using System.Windows.Media.Animation;
-using System.Diagnostics;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.UI.Animations;
 
 namespace Sanguosha.UI.Controls;
 
@@ -31,8 +30,8 @@ public partial class CardView : UserControl
 
     public CardView()
     {
-        InitializeComponent();            
-        
+        InitializeComponent();
+
         this.IsEnabledChanged += CardView_IsEnabledChanged;
         this.DataContextChanged += CardView_DataContextChanged;
         this.MouseMove += CardView_MouseMove;
@@ -59,7 +58,7 @@ public partial class CardView : UserControl
             SetValue(Canvas.LeftProperty, double.NaN);
             SetValue(Canvas.TopProperty, double.NaN);
             Trace.Assert(Parent == null);
-            
+
             if (_doDestroy)
             {
                 Trace.Assert(!_cardViewPool.Contains(this));
@@ -82,8 +81,8 @@ public partial class CardView : UserControl
     }
 
     public CardView(CardViewModel card) : this()
-    {            
-        this.DataContext = card;            
+    {
+        this.DataContext = card;
     }
 
     private void CardView_MouseLeave(object sender, MouseEventArgs e)
@@ -106,7 +105,7 @@ public partial class CardView : UserControl
     {
         if (!(bool)e.NewValue)
         {
-            (Resources["sbUnHighlight"] as Storyboard).Begin();                
+            (Resources["sbUnHighlight"] as Storyboard).Begin();
         }
         else if (IsMouseOver)
         {
@@ -157,7 +156,7 @@ public partial class CardView : UserControl
 
             if (card.Card.Rank > 0 && card.Card.Rank <= 13)
             {
-                imgRankString.Source = Resources[string.Format("Card.Rank.{0}.Image.Normal", card.ColoredRankString)] as ImageSource;                    
+                imgRankString.Source = Resources[string.Format("Card.Rank.{0}.Image.Normal", card.ColoredRankString)] as ImageSource;
             }
             else
             {
@@ -247,7 +246,7 @@ public partial class CardView : UserControl
         }
     }
 
-    public static double WidthHeightRatio = 0.7154;        
+    public static double WidthHeightRatio = 0.7154;
 
     /// <summary>
     /// Set position without showing card movement animation.
@@ -322,7 +321,7 @@ public partial class CardView : UserControl
 
     public void Disappear(double duration, bool destroy = false)
     {
-        this.IsHitTestVisible = false;            
+        this.IsHitTestVisible = false;
         Panel panel = this.Parent as Panel;
         if (panel == null) return;
         else if (duration == 0) { panel.Children.Remove(this); }
@@ -374,7 +373,7 @@ public partial class CardView : UserControl
         return (Math.Abs(delta.X) >= 15 || Math.Abs(delta.Y) >= 15);
     }
 
-    private DragState  _dragState;
+    private DragState _dragState;
     private Point _startCardPosition;
     private void CardView_MouseMove(object sender, MouseEventArgs e)
     {
@@ -417,7 +416,7 @@ public partial class CardView : UserControl
     private void CardView_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
     {
         if (DragDirection != DragDirection.None)
-        {               
+        {
             if (_dragState == DragState.None)
             {
                 Window wnd = Window.GetWindow(this);
@@ -434,7 +433,7 @@ public partial class CardView : UserControl
     private void _ReleaseMouseCapture()
     {
         this.ReleaseMouseCapture();
-        
+
         if (DragDirection != DragDirection.None && _dragState == DragState.Dragging)
         {
             Opacity = 1.0d;
@@ -448,11 +447,11 @@ public partial class CardView : UserControl
     }
 
     private void CardView_MouseLeftButtonUp(object sender, MouseButtonEventArgs e)
-    {           
+    {
         CardViewModel model = DataContext as CardViewModel;
         if (model != null && _dragState == DragState.MouseDown && model.IsEnabled)
         {
-            model.IsSelected = !model.IsSelected;                
+            model.IsSelected = !model.IsSelected;
         }
         _ReleaseMouseCapture();
         e.Handled = true;
@@ -463,13 +462,13 @@ public partial class CardView : UserControl
         var card = d as CardView;
         if (card != null)
         {
-            card._ReleaseMouseCapture();   
+            card._ReleaseMouseCapture();
         }
     }
     #endregion
 
     #region Dependency Properties
-   
+
     public Point Position
     {
         get { return (Point)GetValue(PositionProperty); }
@@ -478,8 +477,8 @@ public partial class CardView : UserControl
 
     // Using a DependencyProperty as the backing store for Position.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty PositionProperty =
-        DependencyProperty.Register("Position", typeof(Point), typeof(CardView), new UIPropertyMetadata(new Point(0,0)));
-    
+        DependencyProperty.Register("Position", typeof(Point), typeof(CardView), new UIPropertyMetadata(new Point(0, 0)));
+
     public DragDirection DragDirection
     {
         get { return (DragDirection)GetValue(DragDirectionProperty); }
@@ -536,7 +535,7 @@ public partial class CardView : UserControl
 
     public static IList<CardView> CreateCards(IList<Card> cards, Panel parent = null)
     {
-        List<CardView> cardViews = new List<CardView>();            
+        List<CardView> cardViews = new List<CardView>();
         foreach (Card card in cards)
         {
             cardViews.Add(CreateCard(card, parent));
@@ -557,7 +556,7 @@ public partial class CardView : UserControl
         set;
     }
     #endregion
-    
+
     #region Animations
     public void PlayAnimation(AnimationBase animation, Point offset)
     {

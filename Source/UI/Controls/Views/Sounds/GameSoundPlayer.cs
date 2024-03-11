@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Media;
-using System.Windows;
 using System.Threading;
+using System.Windows;
+using System.Windows.Media;
 
 namespace Sanguosha.UI.Controls;
 
@@ -42,7 +42,7 @@ public class GameSoundPlayer
         set
         {
             if (_isMute == value) return;
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 if (value)
                 {
@@ -95,7 +95,7 @@ public class GameSoundPlayer
 
     public static void PlaySoundEffect(Uri uri)
     {
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             if (uri == null || _isMute) return;
             if (_effectPlayers == null)

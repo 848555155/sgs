@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -49,12 +47,14 @@ public class JuXiang : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard.Type is NanManRuQin; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { Type = TriggerType.Skill };
+        )
+        { Type = TriggerType.Skill };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             Run,
             TriggerCondition.Global
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.CardUsageTargetValidating, trigger);
         Triggers.Add(GameEvent.CardsEnteringDiscardDeck, trigger2);
         IsEnforced = true;

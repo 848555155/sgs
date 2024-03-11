@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
@@ -67,7 +65,8 @@ public class QingLongYanYueDao : Weapon
                 this,
                 Run,
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false, AskForConfirmation = false };
+            )
+            { IsAutoNotify = false, AskForConfirmation = false };
             Triggers.Add(ShaCancelling.PlayerShaTargetDodged, trigger);
 
             var notify = new AutoNotifyPassiveSkillTrigger(
@@ -75,7 +74,8 @@ public class QingLongYanYueDao : Weapon
                 (p, e, a) => { return a.ReadonlyCard[QingLongSha] == 1; },
                 (p, e, a) => { },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false };
+            )
+            { AskForConfirmation = false };
             Triggers.Add(GameEvent.PlayerUsedCard, notify);
         }
 

@@ -7,7 +7,7 @@ public class SelectableItem : ViewModelBase
 
     #region Constructors
     public SelectableItem()
-    {            
+    {
     }
     #endregion
 
@@ -46,7 +46,7 @@ public class SelectableItem : ViewModelBase
             }
         }
     }
-    
+
     private void _EnsureSelectionInvariant()
     {
         var handler = OnSelectedChanged;
@@ -154,7 +154,7 @@ public class SelectableItem : ViewModelBase
     }
 
     private bool _isSelectionRepeatable;
-    public bool IsSelectionRepeatable 
+    public bool IsSelectionRepeatable
     {
         get
         {
@@ -169,7 +169,7 @@ public class SelectableItem : ViewModelBase
     }
 
     private int _selectedTimes;
-    public int SelectedTimes 
+    public int SelectedTimes
     {
         get
         {

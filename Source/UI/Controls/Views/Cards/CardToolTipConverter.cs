@@ -1,7 +1,7 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
-using System.Diagnostics;
 
 namespace Sanguosha.UI.Controls;
 
@@ -25,11 +25,11 @@ public class CardToolTipConverter : IValueConverter
         else if (convertType == "Usage")
         {
             string usage = Application.Current.TryFindResource(string.Format("Card.{0}.Usage", value.ToString())) as string;
-            return usage;  
+            return usage;
         }
         else if (convertType == "Suit")
         {
-            return Application.Current.TryFindResource(string.Format("Card.Suit.{0}.SuitText", value.ToString(), convertType)) as string;               
+            return Application.Current.TryFindResource(string.Format("Card.Suit.{0}.SuitText", value.ToString(), convertType)) as string;
         }
         else if (convertType == "SuitColor")
         {

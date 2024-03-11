@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Sanguosha.Core.Games;
+using System;
 using System.IO;
 using System.Linq;
 using System.Windows;
-using Sanguosha.Core.Games;
 
 namespace Tests;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.IO;
+using System.Linq;
 
 namespace Sanguosha.UI.Controls;
 
@@ -58,7 +58,7 @@ public class GameSoundLocator
         _ParseDirectory("Cards.Male", "./Resources/Sounds/Cards/Male");
         _ParseDirectory("Cards.Female", "./Resources/Sounds/Cards/Female");
         _ParseDirectory("Cards.Common", "./Resources/Sounds/Cards/Common");
-        _ParseDirectory("Skills", "./Resources/Sounds/Skills");            
+        _ParseDirectory("Skills", "./Resources/Sounds/Skills");
     }
 
     public static string _RemoveTrailingDigits(string s)
@@ -79,12 +79,12 @@ public class GameSoundLocator
         if (uri == null) uri = GetUriFromKey("Cards.Common." + cardName);
         return uri;
     }
-    
+
     public static Uri GetSkillSound(string skillName, int skillTag = 0)
     {
         skillName = _RemoveTrailingDigits(skillName);
         string appendix = skillTag == 0 ? string.Empty : "_" + skillTag;
-        return GetUriFromKey("Skills." + skillName + appendix);            
+        return GetUriFromKey("Skills." + skillName + appendix);
     }
 
     public static Uri GetSystemSound(string key)
@@ -106,16 +106,16 @@ public class GameSoundLocator
     {
         key = key.ToLower();
         if (!_soundsCount.ContainsKey(key)) return null;
-        int usable = _soundsCount[key];           
+        int usable = _soundsCount[key];
         int i = _soundsRotation[key];
-        
+
         string filePath;
         if (i == 0)
             filePath = string.Format("{0}.mp3", _soundsPath[key], _soundsRotation[key]);
         else
             filePath = string.Format("{0}.{1}.mp3", _soundsPath[key], _soundsRotation[key]);
         if (!File.Exists(filePath)) return null;
-        
+
         _soundsRotation[key]++;
         if (_soundsRotation[key] >= usable)
         {

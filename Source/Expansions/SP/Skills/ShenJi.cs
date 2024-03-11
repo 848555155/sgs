@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Games;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -38,7 +38,8 @@ public class ShenJi : TriggerSkill
                 }
             },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false, Priority = SkillPriority.ShenJi };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false, Priority = SkillPriority.ShenJi };
         Triggers.Add(Sha.PlayerShaTargetValidation, trigger);
         IsAutoInvoked = null;
     }

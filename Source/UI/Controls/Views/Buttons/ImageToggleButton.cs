@@ -1,5 +1,5 @@
-﻿using System.Windows.Controls.Primitives;
-using System.Windows;
+﻿using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace Sanguosha.UI.Controls;
 
@@ -40,7 +40,7 @@ public class ImageToggleButton : ToggleButton
     #endregion
 
     #region dependency properties
-            
+
     public static readonly DependencyProperty HoverImageProperty =
         DependencyProperty.Register(
             "HoverImage", typeof(string), typeof(ImageToggleButton));

@@ -1,7 +1,7 @@
-﻿using System;
-using System.Windows.Input;
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
+using System;
 using System.Diagnostics;
+using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -25,12 +25,12 @@ public class EquipCommand : CardViewModel, ICommand
 
     public override Card Card
     {
-	        get 
-	        { 
-		         return base.Card;
-	        }
-	        set 
-	        {
+        get
+        {
+            return base.Card;
+        }
+        set
+        {
             if (base.Card == value) return;
             Equipment equip = value.Type as Equipment;
             if (equip == null)
@@ -38,8 +38,8 @@ public class EquipCommand : CardViewModel, ICommand
                 Trace.TraceWarning("Installing non-equipment in equipment area.");
             }
             _skillCommand = new SkillCommand() { Skill = equip.EquipmentSkill };
-		        base.Card = value;
-	        }
+            base.Card = value;
+        }
     }
 
     private SkillCommand _skillCommand;

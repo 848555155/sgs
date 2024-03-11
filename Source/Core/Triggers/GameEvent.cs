@@ -1,5 +1,5 @@
-﻿using Sanguosha.Core.Games;
-using Sanguosha.Core.Exceptions;
+﻿using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Games;
 
 namespace Sanguosha.Core.Triggers;
 
@@ -49,7 +49,7 @@ public class GameEvent
         PlayerCanDiscardCard = new GameEvent("PlayerCanDiscardCard");
     }
 
-    
+
     public class DuplicateGameEventException : SgsException { }
 
     public List<GameEvent> DefinedGameEvents
@@ -164,7 +164,7 @@ public class GameEvent
     ///              进行回合的角色会改为【放权】的目标。此时机过后，便是下一名角色的“回合开始前”。
     /// </remarks>
     public static readonly Dictionary<TurnPhase, GameEvent> PhaseEndEvents;
-    
+
     /// <summary>
     /// Inter-phase events.
     /// </summary>

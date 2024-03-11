@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Battle.Cards;
 
 namespace Sanguosha.Expansions.Woods.Skills;
@@ -34,7 +34,8 @@ public class DuanLiang : OneToOneCardTransformSkill
                 (p, e, a) => { return a.Card.Type is BingLiangCunDuan; },
                 (p, e, a) => { (a as AdjustmentEventArgs).AdjustmentAmount += 1; },
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false };
+            )
+            { IsAutoNotify = false };
             Triggers.Add(GameEvent.CardRangeModifier, trigger);
             IsEnforced = true;
         }

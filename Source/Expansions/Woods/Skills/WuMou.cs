@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -42,7 +40,8 @@ public class WuMou : TriggerSkill
                 }
             },
             TriggerCondition.OwnerIsSource
-        ) { Type = TriggerType.Skill };
+        )
+        { Type = TriggerType.Skill };
         Triggers.Add(GameEvent.PlayerUsedCard, trigger);
         IsEnforced = true;
     }

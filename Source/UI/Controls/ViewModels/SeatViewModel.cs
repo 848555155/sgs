@@ -19,7 +19,7 @@ public class SeatViewModel : ViewModelBase
     public Seat Seat
     {
         get { return _seat; }
-        set 
+        set
         {
             if (_seat == value) return;
             _seat = value;
@@ -49,7 +49,7 @@ public class SeatViewModel : ViewModelBase
     public bool IsCurrentSeat
     {
         get { return _isCurrentSeat; }
-        set 
+        set
         {
             if (_isCurrentSeat == value) return;
             _isCurrentSeat = value;
@@ -59,7 +59,7 @@ public class SeatViewModel : ViewModelBase
 
     private SeatState _state;
 
-    public SeatState State 
+    public SeatState State
     {
         get
         {
@@ -111,9 +111,9 @@ public class SeatViewModel : ViewModelBase
     public double WinRatePercent
     {
         get
-        {                
+        {
             if (Account == null || Account.TotalGames == 0) return 0;
-            return Account.Wins * 100 / Account.TotalGames;                
+            return Account.Wins * 100 / Account.TotalGames;
         }
     }
 
@@ -122,22 +122,22 @@ public class SeatViewModel : ViewModelBase
         get
         {
             if (Account == null || Account.TotalGames == 0) return 0;
-            return Account.Quits * 100 / Account.TotalGames;                
+            return Account.Quits * 100 / Account.TotalGames;
         }
     }
 
-    public string WinRate 
+    public string WinRate
     {
-        get 
+        get
         {
             double result;
-            if (Account == null || Account.TotalGames == 0) result = 0; 
+            if (Account == null || Account.TotalGames == 0) result = 0;
             else result = (double)Account.Wins / Account.TotalGames;
             return result.ToString("P1");
         }
     }
 
-    public string QuitRate 
+    public string QuitRate
     {
         get
         {
@@ -175,7 +175,7 @@ public class SeatViewModel : ViewModelBase
         get;
         set;
     }
-    
+
     public ICommand JoinCommand
     {
         get;

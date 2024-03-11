@@ -1,9 +1,9 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -19,7 +19,7 @@ public class DanLao : TriggerSkill
         Game.CurrentGame.DrawCards(owner, 1);
         eventArgs.ReadonlyCard[DanLaoEffect[owner]] = 1;
     }
-    
+
     public DanLao()
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
@@ -33,7 +33,8 @@ public class DanLao : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard != null && a.ReadonlyCard[DanLaoEffect[p]] == 1; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.CardUsageTargetValidating, trigger2);
         Triggers.Add(GameEvent.CardUsageTargetConfirming, trigger);
         IsAutoInvoked = null;

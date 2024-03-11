@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Heroes;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -41,7 +38,7 @@ public class ShiChou : TriggerSkill
             DamageEventArgs damageArgs = eventArgs as DamageEventArgs;
             ReadOnlyCard rCard = new ReadOnlyCard(damageArgs.ReadonlyCard);
             rCard[ShiChouDamage] = 1;
-            target[ShiChouTarget[Owner]] ++;
+            target[ShiChouTarget[Owner]]++;
             Game.CurrentGame.DoDamage(damageArgs.Source, target, Owner, damageArgs.Magnitude, damageArgs.Element, damageArgs.Card, rCard);
             throw new TriggerResultException(TriggerResult.End);
         }
@@ -78,7 +75,7 @@ public class ShiChou : TriggerSkill
     {
         public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
         {
-            if (!eventArgs.Targets.Contains(Owner)) return ;
+            if (!eventArgs.Targets.Contains(Owner)) return;
             Owner[ShiChouSource[source]] = 0;
             Owner[ShiChouStatus] = 0;
             Game.CurrentGame.UnregisterTrigger(GameEvent.DamageInflicted, protectTrigger);
@@ -132,7 +129,8 @@ public class ShiChou : TriggerSkill
                   CanTriggerShiChou,
                   Run,
                   TriggerCondition.OwnerIsSource
-              ) { AskForConfirmation = false, IsAutoNotify = false};
+              )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.Start], trigger);
 
         IsRulerOnly = true;

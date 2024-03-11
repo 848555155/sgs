@@ -1,5 +1,5 @@
-﻿using System.Windows.Input;
-using Sanguosha.Core.Utils;
+﻿using Sanguosha.Core.Utils;
+using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -15,7 +15,8 @@ public class ReplayControllerViewModel : ViewModelBase
             else speed -= 1.0d;
             Controller.Speed = speed;
             OnPropertyChanged("SpeedString");
-        }) { CanExecuteStatus = true };
+        })
+        { CanExecuteStatus = true };
         SpeedUpCommand = new SimpleRelayCommand((o) =>
         {
             double speed = Controller.Speed;
@@ -24,12 +25,13 @@ public class ReplayControllerViewModel : ViewModelBase
             else speed += 1.0d;
             Controller.Speed = speed;
             OnPropertyChanged("SpeedString");
-        }) { CanExecuteStatus = true };
+        })
+        { CanExecuteStatus = true };
     }
 
     public ReplayControllerViewModel(ReplayController controller) : this()
     {
-        Controller = controller;            
+        Controller = controller;
     }
 
     public ReplayController Controller
@@ -37,8 +39,8 @@ public class ReplayControllerViewModel : ViewModelBase
         get;
         set;
     }
-            
-    public bool IsPaused 
+
+    public bool IsPaused
     {
         get
         {
@@ -67,7 +69,7 @@ public class ReplayControllerViewModel : ViewModelBase
     {
         get
         {
-            return Controller.Speed.ToString("F1");    
+            return Controller.Speed.ToString("F1");
         }
     }
 
@@ -75,7 +77,7 @@ public class ReplayControllerViewModel : ViewModelBase
 
     public ICommand SlowDownCommand { get; set; }
 
-    public bool EvenDelays 
+    public bool EvenDelays
     {
         get
         {

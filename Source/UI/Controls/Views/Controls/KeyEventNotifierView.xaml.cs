@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Media;
-using System.Windows.Media.Effects;
-using System.Diagnostics;
 using System.Windows.Media.Animation;
+using System.Windows.Media.Effects;
 using System.Windows.Threading;
 
 namespace Sanguosha.UI.Controls;
@@ -59,7 +59,7 @@ public partial class KeyEventNotifierView : UserControl
     }
 
     private void _cleanUpCounter_Elapsed(object sender, EventArgs e)
-    {                        
+    {
         _currentTime++;
         Trace.Assert(_timeStamps.Count == _disappearing.Count);
         Trace.Assert(_timeStamps.Count == spLogs.Children.Count);
@@ -79,37 +79,37 @@ public partial class KeyEventNotifierView : UserControl
             _timeStamps.RemoveRange(0, pivot + 1);
             _disappearing.RemoveRange(0, pivot + 1);
             spLogs.Children.RemoveRange(0, pivot + 1);
-        }            
+        }
     }
 
     private UIElement _BuildLogBlock(FlowDocument log)
     {
         log.FontFamily = new FontFamily("SimSun");
-        log.FontSize = 15;            
+        log.FontSize = 15;
         double width = log.GetFormattedText().WidthIncludingTrailingWhitespace + 20;
         RichTextBox rtb = new RichTextBox()
         {
             Document = log,
             Foreground = new SolidColorBrush(Color.FromArgb(0xFF, 0xFF, 0xEE, 0x99)),
             Background = new SolidColorBrush(Colors.Transparent),
-            BorderThickness = new Thickness(0d),                
+            BorderThickness = new Thickness(0d),
             Width = width,
             Effect = new DropShadowEffect() { Color = Colors.Black, BlurRadius = 3, ShadowDepth = 0 },
             HorizontalAlignment = HorizontalAlignment.Center,
             Margin = new Thickness(5, 3, 5, 3)
         };
-        
+
         Border border = new Border()
         {
             CornerRadius = new CornerRadius(6d),
             Child = rtb,
-            Width = width,                
+            Width = width,
             Background = new SolidColorBrush(Color.FromArgb(0xFF, 0x30, 0x2F, 0x1A)),
             BorderThickness = new Thickness(1d),
             Opacity = 0d,
             HorizontalAlignment = HorizontalAlignment.Center
         };
-       
+
         return border;
     }
 
@@ -119,7 +119,7 @@ public partial class KeyEventNotifierView : UserControl
     public void AddLog(FlowDocument log)
     {
         var logEntry = _BuildLogBlock(log);
-        
+
         _timeStamps.Add(_currentTime);
         _disappearing.Add(false);
         spLogs.Children.Add(logEntry);

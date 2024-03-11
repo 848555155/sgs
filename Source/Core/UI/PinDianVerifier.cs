@@ -1,5 +1,5 @@
-﻿using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
 
 namespace Sanguosha.Core.UI;
 

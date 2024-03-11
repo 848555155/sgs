@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Diagnostics;
-
-using Sanguosha.UI.Animations;
 
 namespace Sanguosha.UI.Controls;
 
@@ -25,7 +24,7 @@ public partial class HealthBar : UserControl
     {
         HealthBar bar = (HealthBar)d;
         int oldHealth = (int)e.OldValue;
-        int newHealth = (int)e.NewValue;            
+        int newHealth = (int)e.NewValue;
         bar.Repaint();
 
         if (newHealth < oldHealth)
@@ -55,7 +54,7 @@ public partial class HealthBar : UserControl
                 LoseHealthAnimation animation = new LoseHealthAnimation();
                 AlignLoseHealthAnimation(animation, wpSmallHealth.Children[i] as Image);
                 animations.Add(animation);
-            }            
+            }
         }
 
         foreach (var animation in animations)
@@ -70,16 +69,16 @@ public partial class HealthBar : UserControl
     {
         canvasRoot.Children.Remove(sender as UIElement);
     }
-    
 
-    private void AlignLoseHealthAnimation(LoseHealthAnimation animation,Image bloodDrop)
+
+    private void AlignLoseHealthAnimation(LoseHealthAnimation animation, Image bloodDrop)
     {
         UpdateLayout();
         Point leftBottom = bloodDrop.TranslatePoint(new Point(0, bloodDrop.ActualHeight), canvasRoot);
         animation.Width = 50;
         animation.Height = 120;
         animation.SetValue(Canvas.LeftProperty, leftBottom.X - 8);
-        animation.SetValue(Canvas.BottomProperty, leftBottom.Y - 18);            
+        animation.SetValue(Canvas.BottomProperty, leftBottom.Y - 18);
     }
 
     private static void OnMaxHealthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -102,15 +101,15 @@ public partial class HealthBar : UserControl
         if (healthRange == 2) strColor = "Yellow";
         else if (healthRange == 3) strColor = "Green";
         ImageSource source = Resources[string.Format("HealthBar.Digit.Small.{0}.{1}", strColor, strDigit)] as ImageSource;
-        Image image = new Image(){Source = source};
+        Image image = new Image() { Source = source };
         return image;
     }
-    
+
     private void Repaint()
     {
         int health = Health;
         int maxHealth = MaxHealth;
-        
+
         int healthRange;
         if (health == 0)
         {
@@ -150,18 +149,18 @@ public partial class HealthBar : UserControl
                 int digit = quotient % 10;
                 quotient /= 10;
                 wpLargeHealth.Children.Insert(0, DigitToImage(digit, healthRange));
-            } while (quotient > 0);                               
+            } while (quotient > 0);
             wpLargeHealth.Children.Insert(0, imgBloodDrop);
         }
         else
         {
             wpLargeHealth.Visibility = Visibility.Hidden;
             wpSmallHealth.Visibility = Visibility.Visible;
-            wpSmallHealth.Children.Clear();                
+            wpSmallHealth.Children.Clear();
             int i = 0;
             for (i = 0; i < health; i++)
             {
-                Image bloodDrop = new Image() { Source = image, Height = this.Height };                   
+                Image bloodDrop = new Image() { Source = image, Height = this.Height };
                 wpSmallHealth.Children.Add(bloodDrop);
             }
             image = Resources["HealthBar.0.Small"] as ImageSource;
@@ -197,6 +196,6 @@ public partial class HealthBar : UserControl
     public static readonly DependencyProperty MaxHealthProperty =
         DependencyProperty.Register("MaxHealth", typeof(int), typeof(HealthBar), new UIPropertyMetadata(
                                     new PropertyChangedCallback(OnMaxHealthChanged)));
-    
+
     #endregion
 }

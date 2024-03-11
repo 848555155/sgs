@@ -33,6 +33,6 @@ public class GlobalDummyProxy : IGlobalUiProxy
     }
 
     public void Abort()
-    {            
+    {
     }
 }

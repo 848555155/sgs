@@ -1,20 +1,20 @@
 ﻿#define NETWORKING
+using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Network;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.UI;
+using Sanguosha.Lobby.Core;
 using System;
-using System.Linq;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
-using Sanguosha.Core.Heroes;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.UI;
-using System.Threading;
-using Sanguosha.Core.Network;
-using System.Diagnostics;
 using System.Windows.Navigation;
-using System.Collections.ObjectModel;
-using Sanguosha.Core.Cards;
-using Sanguosha.Lobby.Core;
 
 namespace Sanguosha.UI.Controls;
 
@@ -102,7 +102,7 @@ public partial class MainGame : Page
             Trace.Assert(pkt is ConnectionResponse);
             if ((pkt as ConnectionResponse).Settings.GameType == GameType.Pk1V1) _game = new Pk1v1Game();
             if ((pkt as ConnectionResponse).Settings.GameType == GameType.RoleGame) _game = new RoleGame();
-            
+
             if (pkt is ConnectionResponse)
             {
                 _game.Settings = ((ConnectionResponse)pkt).Settings;
@@ -207,7 +207,7 @@ public partial class MainGame : Page
             _game.GlobalProxy = new GlobalClientProxy(_game, activeClientProxy, inactive);
             _game.UpdateUiAttachStatus();
         }
-        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             gameView.DataContext = gameModel;
             if (BackwardNavigationService != null && !ViewModelBase.IsDetached)

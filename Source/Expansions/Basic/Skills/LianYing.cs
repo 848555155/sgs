@@ -1,9 +1,7 @@
-﻿using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -19,7 +17,8 @@ public class LianYing : TriggerSkill
             (p, e, a) => { return a.Cards.Any(c => c[Card.IsLastHandCard] == 1); },
             (p, e, a) => { Game.CurrentGame.DrawCards(Owner, 1); },
             TriggerCondition.OwnerIsSource
-        ) { Priority = SkillPriority.LianYing };
+        )
+        { Priority = SkillPriority.LianYing };
         Triggers.Add(GameEvent.CardsLost, trigger);
         IsAutoInvoked = true;
     }

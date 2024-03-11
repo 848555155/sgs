@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.SP.Skills;
@@ -51,7 +48,8 @@ public class XingWu : TriggerSkill
             this,
             (p, e, a) => { p[CardSuitUsed] = 0; },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseBeforeStart, tagClear);
 
         var cardUsed = new AutoNotifyPassiveSkillTrigger(
@@ -62,13 +60,14 @@ public class XingWu : TriggerSkill
                 p[CardSuitUsed] |= 1 << (int)card.SuitColor;
             },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PlayerUsedCard, cardUsed);
 
         var trigger = new AutoNotifyUsagePassiveSkillTrigger(
             this,
             (p, e, a) => { return p.HandCards().Count > 0; },
-            (p, e, a, cards, players) => 
+            (p, e, a, cards, players) =>
             {
                 NotifySkillUse();
                 Game.CurrentGame.HandleCardTransfer(p, p, XingWuDeck, cards, HeroTag);
@@ -97,7 +96,8 @@ public class XingWu : TriggerSkill
             },
             TriggerCondition.OwnerIsSource,
             new XingWuVerifier()
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.Discard], trigger);
         IsAutoInvoked = null;
         DeckCleanup.Add(XingWuDeck);

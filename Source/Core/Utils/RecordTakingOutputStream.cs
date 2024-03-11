@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
 namespace Sanguosha.Core.Utils;
@@ -125,7 +124,7 @@ public class RecordTakingOutputStream : Stream
                 Buffer.BlockCopy(buffer, offset, add, 0, count);
                 Trace.TraceInformation("Write() : add chunk for {0}", RuntimeHelpers.GetHashCode(this));
                 internalBuffer.Add(add);
-            }                
+            }
             List<Stream> streamsBroken = new List<Stream>();
             foreach (var stream in OutputStreams)
             {
@@ -145,7 +144,7 @@ public class RecordTakingOutputStream : Stream
                 OutputStreams.Remove(stream);
                 Trace.TraceInformation("AddStream() : Remove stream for {0}", RuntimeHelpers.GetHashCode(this));
             }
-        }            
+        }
     }
 
     private readonly List<byte[]> internalBuffer;

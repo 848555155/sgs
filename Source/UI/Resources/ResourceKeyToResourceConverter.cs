@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Windows.Data;
-using System.Windows;
 using System.Diagnostics;
+using System.Windows;
+using System.Windows.Data;
 
 namespace Sanguosha.UI.Resources;
 
@@ -22,7 +22,7 @@ public class ResourceKeyToResourceConverter : IMultiValueConverter
         {
             return null;
         }
-        
+
         if (StringFormat != null)
         {
             resourceKey = string.Format(StringFormat, resourceKey);
@@ -32,7 +32,7 @@ public class ResourceKeyToResourceConverter : IMultiValueConverter
         {
             resourceKey = ResourceKeyConverter.Convert(resourceKey, targetType, ConverterParameter, culture);
         }
-        
+
         if (resourceKey == null) return null;
 
         var resource = element.TryFindResource(resourceKey);
@@ -52,7 +52,7 @@ public class ResourceKeyToResourceConverter : IMultiValueConverter
 
     public IValueConverter ResourceKeyConverter { get; set; }
 
-    public object ConverterParameter { get;set;}
+    public object ConverterParameter { get; set; }
 
     public string StringFormat { get; set; }
 }

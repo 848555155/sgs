@@ -1,5 +1,5 @@
-﻿using Sanguosha.Core.UI;
-using Sanguosha.Core.Heroes;
+﻿using Sanguosha.Core.Heroes;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Core.Skills;
 

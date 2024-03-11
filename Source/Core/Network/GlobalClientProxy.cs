@@ -1,9 +1,9 @@
 ﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
-using System.Diagnostics;
 using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Network;
 
@@ -65,7 +65,7 @@ public class GlobalClientProxy : IGlobalUiProxy
             {
                 inactiveProxy.TryAskForMultipleChoice(prompt, questions);
             }
-        }            
+        }
         if (players.Contains(proxy.HostPlayer))
         {
             pendingUiThread = new Thread(AskMCQUiThread) { IsBackground = true };
@@ -183,7 +183,7 @@ public class GlobalClientProxy : IGlobalUiProxy
         pendingUiThread = null;
         foreach (var otherProxy in inactiveProxies)
         {
-           otherProxy.Freeze();
+            otherProxy.Freeze();
         }
         proxy.Freeze();
         proxy.NextQuestion();
@@ -236,8 +236,8 @@ public class GlobalClientProxy : IGlobalUiProxy
                 }
             }
             var commonResult2 = from type1 in verifier.AcceptableCardTypes
-                               where proxy.HostPlayer.HandCards().Any(ci => type1.GetType().IsAssignableFrom(ci.Type.GetType()))
-                               select type1;
+                                where proxy.HostPlayer.HandCards().Any(ci => type1.GetType().IsAssignableFrom(ci.Type.GetType()))
+                                select type1;
             if (commonResult2.Count() != 0)
             {
                 found = true;

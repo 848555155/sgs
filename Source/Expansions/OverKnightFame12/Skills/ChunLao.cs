@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Expansions.Battle.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using Sanguosha.Expansions.Battle.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame12.Skills;
 
@@ -96,7 +93,8 @@ public class ChunLao : SaveLifeSkill
                     StoreChun,
                     TriggerCondition.OwnerIsSource,
                     new ChunLaoStoreChunVerifier()
-                ) { AskForConfirmation = false, IsAutoNotify = false };
+                )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.End], trigger1);
         }
     }

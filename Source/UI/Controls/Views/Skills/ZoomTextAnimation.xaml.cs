@@ -6,11 +6,11 @@ namespace Sanguosha.UI.Animations;
 /// Interaction logic for SkillNameTextAnimation.xaml
 /// </summary>
 public partial class RegularSkillAnimation : AnimationBase
-	{
-		public RegularSkillAnimation()
-		{
-			this.InitializeComponent();
-		}
+{
+    public RegularSkillAnimation()
+    {
+        this.InitializeComponent();
+    }
 
     public string Text
     {
@@ -27,4 +27,4 @@ public partial class RegularSkillAnimation : AnimationBase
         var control = d as RegularSkillAnimation;
         if (d != null) control.mainText.Text = e.NewValue as string;
     }
-	}
+}

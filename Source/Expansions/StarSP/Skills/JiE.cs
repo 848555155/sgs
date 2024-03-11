@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.StarSP.Skills;

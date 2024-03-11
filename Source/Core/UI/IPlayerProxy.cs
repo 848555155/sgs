@@ -34,7 +34,7 @@ public class AdditionalCardChoiceOptions
     /// <summary>
     /// Gets/sets if the choice is for initial hero pick for 1v1 or 3v3 game.
     /// </summary>
-    public bool IsTwoSidesCardChoice { get; set; }        
+    public bool IsTwoSidesCardChoice { get; set; }
     public List<bool> Rearrangeable { get; set; }
     public List<OptionPrompt> Options { get; set; }
     public List<List<Card>> DefaultResult { get; set; }
@@ -62,7 +62,7 @@ public interface IPlayerProxy
 {
     Player HostPlayer { get; set; }
     int TimeOutSeconds { get; set; }
-    
+
     /// <summary>
     /// Gets/sets whether this UiProxy can make input to the game.
     /// A UiProxy is not playable if it is not associated with 
@@ -91,13 +91,13 @@ public interface IPlayerProxy
     /// <param name="verifier"></param>
     /// <param name="answer">用户选择结果。对应resultDeckNames，每个选出的牌堆占用一个list。</param>
     /// <returns>False if user cannot provide an answer.</returns>
-    bool AskForCardChoice(Prompt prompt, 
+    bool AskForCardChoice(Prompt prompt,
                           List<DeckPlace> sourceDecks,
                           List<string> resultDeckNames,
                           List<int> resultDeckMaximums,
                           ICardChoiceVerifier verifier,
                           out List<List<Card>> answer,
-                          AdditionalCardChoiceOptions helper = null,                  
+                          AdditionalCardChoiceOptions helper = null,
                           CardChoiceRearrangeCallback callback = null);
 
     /// <summary>

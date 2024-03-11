@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
-using System.Windows;
-using System.Diagnostics;
 
 
 namespace Sanguosha.UI.Controls;
@@ -375,7 +375,7 @@ public class CardStack : Canvas
     private List<CardView> _cards;
     public IList<CardView> Cards
     {
-        get { return _cards; }           
+        get { return _cards; }
     }
 
     public Rect BoundingBox

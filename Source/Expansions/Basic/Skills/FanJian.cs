@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -68,7 +66,7 @@ public class FanJian : ActiveSkill
         else
         {
             theCard = answer[0][0];
-        }           
+        }
 
         Game.CurrentGame.SyncCardAll(ref theCard);
         List<Card> clist = new List<Card>();

@@ -1,14 +1,13 @@
-﻿using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Heroes;
-using Sanguosha.Core.Utils;
 using Sanguosha.Core.Network;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Core.Utils;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Games;
 
@@ -471,8 +470,8 @@ public class RoleGame : Game
     {
         private readonly List<Card> usedRoleCards = [];
         private static readonly List<Card> allRoleCards = new List<Card>(from c in GameEngine.CardSet
-                                          where c.Type is RoleCardHandler
-                                          select c);
+                                                                         where c.Type is RoleCardHandler
+                                                                         select c);
 
         private Card _FindARoleCard(Role role)
         {
@@ -512,7 +511,7 @@ public class RoleGame : Game
             int numberOfDefectors = game.Players.Count > 2 ? game.Settings.NumberOfDefectors : 1;
 
             // Put the whole deck in the dealing deck
-            
+
             foreach (Card card in game.CardSet)
             {
                 // We don't want hero cards
@@ -1032,10 +1031,10 @@ public class RoleGame : Game
         private void ReleaseIntoLobby(Player p)
         {
             if (CurrentGame.GameServer == null) return;
-            if (CurrentGame.Settings == null) return;                
+            if (CurrentGame.Settings == null) return;
             var idx = CurrentGame.Players.IndexOf(p);
-            var account = CurrentGame.Settings.Accounts[idx];                
-            account.IsDead= true;
+            var account = CurrentGame.Settings.Accounts[idx];
+            account.IsDead = true;
         }
 
         public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
@@ -1056,7 +1055,7 @@ public class RoleGame : Game
             CurrentGame.SyncImmutableCardAll(CurrentGame.Decks[p, role][0]);
             Trace.TraceInformation("Player {0} is {1}", p.Id, (CurrentGame.Decks[p, role][0].Type as RoleCardHandler).Role);
             p.Role = (CurrentGame.Decks[p, role][0].Type as RoleCardHandler).Role;
-            CurrentGame.NotificationProxy.NotifyDeath(p, source);                
+            CurrentGame.NotificationProxy.NotifyDeath(p, source);
 
             if (p.Role == Role.Ruler)
             {
@@ -1080,9 +1079,9 @@ public class RoleGame : Game
                 }
                 RevealAllPlayersRoles();
                 var winners = from pl in CurrentGame.Players where pl.Role == winRole select pl;
-                p.IsDead = true;                    
+                p.IsDead = true;
                 throw new GameOverException(false, winners);
-            } 
+            }
             else
             {
                 int deadRebel = 0;

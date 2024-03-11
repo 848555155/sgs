@@ -1,13 +1,12 @@
-﻿using System.Diagnostics;
-using System.ComponentModel;
-
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Heroes;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using System.Collections.ObjectModel;
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Heroes;
 using Sanguosha.Core.Network;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Players;
 
@@ -69,7 +68,7 @@ public class Player : INotifyPropertyChanged
     public bool IsDead
     {
         get { return isDead; }
-        set 
+        set
         {
             if (isDead == value) return;
             isDead = value;
@@ -98,7 +97,7 @@ public class Player : INotifyPropertyChanged
     public int MaxHealth
     {
         get { return maxHealth; }
-        set 
+        set
         {
             if (maxHealth == value)
             {
@@ -130,7 +129,7 @@ public class Player : INotifyPropertyChanged
     public int Health
     {
         get { return health; }
-        set 
+        set
         {
             if (health == value)
             {
@@ -179,7 +178,7 @@ public class Player : INotifyPropertyChanged
                 skill.Owner = this;
             }
             Trace.Assert(hero.Owner == null);
-            hero.Owner = this;          
+            hero.Owner = this;
             hero.PropertyChanged += PropertyChanged;
         }
         OnPropertyChanged("Skills");
@@ -190,7 +189,7 @@ public class Player : INotifyPropertyChanged
     public Hero Hero
     {
         get { return hero; }
-        set 
+        set
         {
             if (hero == value) return;
             SetHero(ref hero, value);
@@ -268,7 +267,7 @@ public class Player : INotifyPropertyChanged
         OnPropertyChanged("Skills");
     }
 
-    
+
     private readonly List<ISkill> equipmentSkills;
 
     public IList<ISkill> EquipmentSkills => new ReadOnlyCollection<ISkill>(equipmentSkills);

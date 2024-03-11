@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Hills.Skills;
@@ -22,7 +22,8 @@ public class JueJing : TriggerSkill
             this,
             Run,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return p.LostHealth > 0; },

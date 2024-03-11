@@ -37,9 +37,9 @@ public class MonochromeEffect : ShaderEffect
     public static readonly DependencyProperty InputProperty = RegisterPixelShaderSamplerProperty("Input", typeof(MonochromeEffect), 0);
 
     #endregion
-            
+
     #region Constructors
-    
+
     /// <summary>
     /// Creates an instance and updates the shader's variables to the default values.
     /// </summary>
@@ -47,8 +47,8 @@ public class MonochromeEffect : ShaderEffect
     {
         var pixelShader = new PixelShader();
         pixelShader.UriSource = Global.MakePackUri("ShaderSource/Monochrome.ps");
-        this.PixelShader = pixelShader;            
-        
+        this.PixelShader = pixelShader;
+
         UpdateShaderValue(InputProperty);
         UpdateShaderValue(FilterColorProperty);
         UpdateShaderValue(StrengthProperty);

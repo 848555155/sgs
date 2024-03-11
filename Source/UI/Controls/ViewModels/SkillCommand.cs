@@ -1,6 +1,5 @@
-﻿using System;
-
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Skills;
+using System;
 using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
@@ -60,7 +59,7 @@ public class SkillCommand : ViewModelBase, ICommand
                     IsAutoInvokeSkill = true;
                     IsEnabled = true;
                     IsSelected = (ts.IsAutoInvoked == true);
-                }                   
+                }
                 _skillType = SkillType.Trigger;
             }
             else
@@ -80,7 +79,7 @@ public class SkillCommand : ViewModelBase, ICommand
     public bool IsAutoInvokeSkill
     {
         get { return _isAutoInvokeSkill; }
-        set 
+        set
         {
             if (_isAutoInvokeSkill == value) return;
             _isAutoInvokeSkill = value;

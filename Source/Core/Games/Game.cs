@@ -1,16 +1,15 @@
-﻿using System.Diagnostics;
-using System.ComponentModel;
-
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Lobby.Core;
-using Sanguosha.Core.Utils;
-using Sanguosha.Core.Network;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Network;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Core.Utils;
+using Sanguosha.Lobby.Core;
+using System.ComponentModel;
+using System.Diagnostics;
 
 
 namespace Sanguosha.Core.Games;
@@ -121,7 +120,7 @@ public abstract partial class Game : INotifyPropertyChanged
             {
                 if (card.Type is HeroCardHandler hero)
                 {
-                    if (hero.Hero.Allegiance == Allegiance.God) 
+                    if (hero.Hero.Allegiance == Allegiance.God)
                         continue;
                 }
                 OriginalCardSet.Add(card);
@@ -557,7 +556,7 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <summary>
     /// Speed up current game access for client process
     /// </summary>
-    public static Game CurrentGameOverride{get;set;}
+    public static Game CurrentGameOverride { get; set; }
 
     public static Game CurrentGame
     {
@@ -749,7 +748,7 @@ public abstract partial class Game : INotifyPropertyChanged
         {
             foreach (var pair in UiProxies)
             {
-                if (pair.Value is ClientNetworkProxy proxy) 
+                if (pair.Value is ClientNetworkProxy proxy)
                     proxy.IsUiDetached = false;
             }
             NotificationProxy.NotifyUiAttached();
@@ -758,7 +757,7 @@ public abstract partial class Game : INotifyPropertyChanged
         {
             foreach (var pair in UiProxies)
             {
-                if (pair.Value is ClientNetworkProxy proxy) 
+                if (pair.Value is ClientNetworkProxy proxy)
                     proxy.IsUiDetached = true;
             }
             NotificationProxy.NotifyUiDetached();

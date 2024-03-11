@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -35,7 +32,7 @@ public class XuanHuo : TriggerSkill
                 var pl = Game.CurrentGame.AlivePlayers;
                 if (pl.Any(test => test != players[0] && Game.CurrentGame.DistanceTo(players[0], test) <= players[0][Player.AttackRange] + 1 &&
                     Game.CurrentGame.PlayerCanBeTargeted(players[0], new List<Player>() { test }, new CompositeCard() { Type = new Sha() })))
-                { 
+                {
                     return null;
                 }
             }
@@ -87,7 +84,7 @@ public class XuanHuo : TriggerSkill
                     }
                 }
             }
-            
+
             if (!xuanhuoShaUsed)
             {
                 int cardCount = players[0].HandCards().Count + players[0].Equipments().Count;
@@ -134,7 +131,8 @@ public class XuanHuo : TriggerSkill
             Run,
             TriggerCondition.OwnerIsSource,
             new XuanHuoVerifier()
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.Draw], trigger);
         IsAutoInvoked = null;
     }

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Skills;
 
 namespace Sanguosha.Expansions.Woods.Skills;
@@ -95,7 +93,7 @@ public class WuQian : ActiveSkill
         arg.Targets[0][WuQianTarget]++;
         return true;
     }
-    
+
     private static readonly ISkill WqWuShuang = new WuShuang();
     private static readonly PlayerAttribute WuQianUsed = PlayerAttribute.Register("WuQianUsed", true);
     private static readonly PlayerAttribute WuQianTarget = PlayerAttribute.Register("WuQianTarget");

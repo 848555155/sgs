@@ -45,7 +45,8 @@ public class RulerGivenSkillContainerSkill : TriggerSkill
             this,
             DistributeSkills,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) =>
@@ -62,7 +63,8 @@ public class RulerGivenSkillContainerSkill : TriggerSkill
                 }
             },
             TriggerCondition.Global
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.PlayerGameStartAction, trigger);
         Triggers.Add(GameEvent.PlayerChangedAllegiance, trigger2);
         IsAutoInvoked = null;

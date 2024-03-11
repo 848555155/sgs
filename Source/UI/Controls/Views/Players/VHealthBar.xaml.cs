@@ -1,11 +1,10 @@
-﻿using System;
+﻿using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Diagnostics;
-
-using Sanguosha.UI.Animations;
 
 namespace Sanguosha.UI.Controls;
 
@@ -26,7 +25,7 @@ public partial class VHealthBar : UserControl
     {
         VHealthBar bar = (VHealthBar)d;
         int oldHealth = (int)e.OldValue;
-        int newHealth = (int)e.NewValue;            
+        int newHealth = (int)e.NewValue;
         bar.Repaint();
 
         if (newHealth < oldHealth)
@@ -56,8 +55,8 @@ public partial class VHealthBar : UserControl
                 Trace.Assert(i < 5);
                 LoseHealthAnimation animation = new LoseHealthAnimation();
                 AlignLoseHealthAnimation(animation, spSmallHealth.Children[i] as Image);
-                animations.Add(animation);                    
-            }            
+                animations.Add(animation);
+            }
         }
 
         foreach (var animation in animations)
@@ -74,7 +73,7 @@ public partial class VHealthBar : UserControl
         anim.Stop();
         canvasRoot.Children.Remove(anim);
     }
-    
+
 
     private void AlignLoseHealthAnimation(LoseHealthAnimation animation, Image bloodDrop)
     {
@@ -83,7 +82,7 @@ public partial class VHealthBar : UserControl
         animation.Width = 50;
         animation.Height = 120;
         animation.SetValue(Canvas.LeftProperty, leftTop.X - 10);
-        animation.SetValue(Canvas.TopProperty, leftTop.Y -100);            
+        animation.SetValue(Canvas.TopProperty, leftTop.Y - 100);
     }
 
     private static void OnMaxHealthChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -171,7 +170,7 @@ public partial class VHealthBar : UserControl
             spLargeHealth.Children.Insert(0, spHealthText);
             imgBloodDrop.Margin = margin;
             imgBloodDrop.HorizontalAlignment = HorizontalAlignment.Center;
-            spLargeHealth.Children.Insert(0, imgBloodDrop);                
+            spLargeHealth.Children.Insert(0, imgBloodDrop);
         }
         else
         {
@@ -190,7 +189,7 @@ public partial class VHealthBar : UserControl
             {
                 Image bloodDrop = new Image() { Source = image };
                 spSmallHealth.Children.Add(bloodDrop);
-            }                
+            }
         }
     }
 
@@ -218,6 +217,6 @@ public partial class VHealthBar : UserControl
     public static readonly DependencyProperty MaxHealthProperty =
         DependencyProperty.Register("MaxHealth", typeof(int), typeof(VHealthBar), new UIPropertyMetadata(
                                     new PropertyChangedCallback(OnMaxHealthChanged)));
-    
+
     #endregion
 }

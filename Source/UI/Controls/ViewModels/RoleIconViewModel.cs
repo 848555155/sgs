@@ -14,7 +14,7 @@ public class RoleIconViewModel : ViewModelBase
     public Role Role
     {
         get { return _role; }
-        set 
+        set
         {
             if (_role == value) return;
             _role = value;
@@ -27,7 +27,7 @@ public class RoleIconViewModel : ViewModelBase
     public bool IsAlive
     {
         get { return _isAlive; }
-        set 
+        set
         {
             if (_isAlive == value) return;
             _isAlive = value;
@@ -40,7 +40,7 @@ public class RoleIconViewModel : ViewModelBase
     public string RoleString
     {
         get { return _roleString; }
-        private set 
+        private set
         {
             if (_roleString == value) return;
             _roleString = value;

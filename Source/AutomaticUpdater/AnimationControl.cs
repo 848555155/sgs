@@ -1,9 +1,9 @@
 using System;
-using System.Windows.Controls;
+using System.Diagnostics;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Diagnostics;
 
 namespace wyDay.Controls;
 
@@ -16,11 +16,11 @@ public class AnimationControl : Image
 
     //for static images
     private bool staticImage;
-    private readonly float[][] ptsArray ={ 
+    private readonly float[][] ptsArray ={
         new float[] {1, 0, 0, 0, 0},
         new float[] {0, 1, 0, 0, 0},
         new float[] {0, 0, 1, 0, 0},
-        new float[] {0, 0, 0, 0, 0}, 
+        new float[] {0, 0, 0, 0, 0},
         new float[] {0, 0, 0, 0, 1}};
 
     #region Properties
@@ -161,7 +161,7 @@ public class AnimationControl : Image
             currentFrame = 0;
             LastRenderTime = DateTime.Now.TimeOfDay;
             CompositionTarget.Rendering += CompositionTarget_Rendering;
-        }            
+        }
     }
 
     public void StopAnimation()

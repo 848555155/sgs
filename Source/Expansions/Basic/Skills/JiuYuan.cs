@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Players;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 

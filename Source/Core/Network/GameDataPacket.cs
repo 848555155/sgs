@@ -1,11 +1,11 @@
-﻿using System.Diagnostics;
-using ProtoBuf;
+﻿using ProtoBuf;
 using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
 using Sanguosha.Core.UI;
 using Sanguosha.Lobby.Core;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Network;
 
@@ -34,7 +34,7 @@ public class PlayerItem
 
 [ProtoContract]
 [ProtoInclude(21, typeof(AdditionalTypedSkillItem))]
-[ProtoInclude(22, typeof(CheatSkillItem))]    
+[ProtoInclude(22, typeof(CheatSkillItem))]
 public class SkillItem
 {
     [ProtoMember(1)]
@@ -69,9 +69,9 @@ public class SkillItem
 
         result.PlayerItem = PlayerItem.Parse(skill.Owner);
         if (skill.Owner != null)
-        {              
+        {
             result.SkillId = (byte)skill.Owner.ActionableSkills.IndexOf(skill);
-        }            
+        }
         return result;
     }
 
@@ -134,7 +134,7 @@ public class DeckPlaceItem
     public PlayerItem PlayerItem { get; set; }
     [ProtoMember(2)]
     public string DeckName { get; set; }
-    
+
     public static DeckPlaceItem Parse(DeckPlace dp)
     {
         DeckPlaceItem dpi = new DeckPlaceItem();
@@ -149,7 +149,7 @@ public class DeckPlaceItem
     }
 }
 
-[ProtoContract] 
+[ProtoContract]
 public class CardItem
 {
     [ProtoMember(1)]
@@ -162,7 +162,7 @@ public class CardItem
     public int CardId { get; set; }
 
     public Card ToCard(int wrtPlayerId)
-    {            
+    {
         if (DeckPlaceItem == null) return null;
         var cardDeck = Game.CurrentGame.Decks[DeckPlaceItem.ToDeckPlace()];
         if (cardDeck == null || cardDeck.Count <= PlaceInDeck) return null;
@@ -188,7 +188,7 @@ public class CardItem
         }
         return cardDeck[PlaceInDeck];
     }
-    
+
     public static CardItem Parse(Card card, int wrtPlayerId)
     {
         if (card == null) return null;
@@ -197,7 +197,7 @@ public class CardItem
             DeckPlaceItem = DeckPlaceItem.Parse(card.Place),
             PlaceInDeck = Game.CurrentGame.Decks[card.Place].IndexOf(card)
         };
-        if (card.Place.Player != null && card.Place.DeckType == DeckType.Hand && 
+        if (card.Place.Player != null && card.Place.DeckType == DeckType.Hand &&
             wrtPlayerId >= 0 && wrtPlayerId < Game.CurrentGame.Players.Count &&
             Game.CurrentGame.HandCardVisibility[Game.CurrentGame.Players[wrtPlayerId]].Contains(card.Place.Player))
         {
@@ -224,7 +224,7 @@ public class NestedCardList
     public List<int> ListSizes { get; set; }
     [ProtoMember(2)]
     public List<CardItem> AllCardItems { get; set; }
-    
+
     public NestedCardList()
     {
     }
@@ -291,7 +291,7 @@ public class GameUpdate : GameDataPacket
 [ProtoInclude(1101, typeof(AskForCardUsageResponse))]
 [ProtoInclude(1102, typeof(AskForCardChoiceResponse))]
 [ProtoInclude(1103, typeof(AskForMultipleChoiceResponse))]
-[ProtoInclude(1104, typeof(ConnectionRequest))]    
+[ProtoInclude(1104, typeof(ConnectionRequest))]
 public class GameResponse : GameDataPacket
 {
     [ProtoMember(1)]
@@ -309,7 +309,7 @@ public class AskForCardUsageResponse : GameResponse
     private List<PlayerItem> PlayerItems { get; set; }
 
     public static AskForCardUsageResponse Parse(int id, ISkill skill, List<Card> cards, List<Player> players, int wrtPlayerId)
-    {            
+    {
         AskForCardUsageResponse response = new AskForCardUsageResponse();
         response.Id = id;
         response.SkillItem = SkillItem.Parse(skill);
@@ -465,7 +465,7 @@ public class HandCardMovementNotification : GameUpdate
     public int From { get; set; }
     [ProtoMember(3)]
     public int To { get; set; }
-}  
+}
 
 [ProtoContract]
 public class UIStatusHint : GameUpdate

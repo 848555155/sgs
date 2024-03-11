@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -126,18 +124,21 @@ public class ZuiXiang : TriggerSkill
             this,
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             CardUseStopper,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.ReadonlyCard != null; },
             CardEffectStopper,
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseBeginEvents[TurnPhase.Start], trigger);
         Triggers.Add(GameEvent.PlayerCanUseCard, trigger2);
         Triggers.Add(GameEvent.PlayerCanPlayCard, trigger2);

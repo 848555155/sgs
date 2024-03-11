@@ -1,9 +1,9 @@
-﻿using System;
-using System.Linq;
+﻿using Google.Protobuf.WellKnownTypes;
 using Sanguosha.Lobby.Core;
+using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using Google.Protobuf.WellKnownTypes;
+using System.Linq;
 
 namespace Sanguosha.UI.Controls;
 
@@ -52,7 +52,7 @@ public class RoomViewModel : ViewModelBase
 
     private RoomSettings _settings;
 
-    public RoomSettings Settings 
+    public RoomSettings Settings
     {
         get
         {
@@ -84,7 +84,7 @@ public class RoomViewModel : ViewModelBase
             else if (Settings.GameType == GameType.Pk1V1)
             {
                 if (Settings.IsDualHeroMode) return "DualHero1v1";
-                else return "SingleHero1v1";                    
+                else return "SingleHero1v1";
             }
             else
             {

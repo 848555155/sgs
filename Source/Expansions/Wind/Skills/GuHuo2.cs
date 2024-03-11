@@ -1,14 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using System.Diagnostics;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Battle.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -208,7 +205,8 @@ public class GuHuo : CardTransformSkill, IAdditionalTypedSkill
                     p[ChengHuoStatus] = 1;
                 },
                 TriggerCondition.OwnerIsTarget
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(GameEvent.AfterHealthChanged, trigger);
             IsAutoInvoked = null;
         }

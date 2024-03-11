@@ -1,6 +1,6 @@
-﻿using System.Collections.ObjectModel;
+﻿using Sanguosha.Core.Cards;
+using System.Collections.ObjectModel;
 using System.Windows;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.UI.Controls;
 
@@ -12,9 +12,9 @@ public class SpecialDeckViewModel : ViewModelBase
         Cards.CollectionChanged += new System.Collections.Specialized.NotifyCollectionChangedEventHandler(Cards_CollectionChanged);
     }
 
-    private void  Cards_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
+    private void Cards_CollectionChanged(object sender, System.Collections.Specialized.NotifyCollectionChangedEventArgs e)
     {
-	        OnPropertyChanged("DisplayText");
+        OnPropertyChanged("DisplayText");
     }
 
     /// <summary>
@@ -23,8 +23,8 @@ public class SpecialDeckViewModel : ViewModelBase
     public string DisplayText
     {
         get
-        {                
-            return string.Format("{0}[{1}]", TranslatedName, Cards.Count);             
+        {
+            return string.Format("{0}[{1}]", TranslatedName, Cards.Count);
         }
     }
 
@@ -36,17 +36,17 @@ public class SpecialDeckViewModel : ViewModelBase
         get
         {
             string s = Application.Current.TryFindResource(string.Format("Deck.{0}.Name", Name)) as string;
-            return s??string.Empty;                
+            return s ?? string.Empty;
         }
     }
-            
+
     public string Name
     {
         get
         {
             if (DeckPlace == null || DeckPlace.DeckType == null) return string.Empty;
             return DeckPlace.DeckType.Name;
-        }            
+        }
     }
 
     private DeckPlace _deckPlace;
@@ -73,7 +73,7 @@ public class SpecialDeckViewModel : ViewModelBase
         get;
         set;
     }
-    
+
 
     public ObservableCollection<CardViewModel> Cards
     {

@@ -1,11 +1,11 @@
 ﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
-using Sanguosha.Expansions.SP.Skills;
-using Sanguosha.Expansions.Fire.Skills;
-using Sanguosha.Expansions.Woods.Skills;
-using Sanguosha.Expansions.Hills.Skills;
 using Sanguosha.Expansions.Basic.Skills;
+using Sanguosha.Expansions.Fire.Skills;
+using Sanguosha.Expansions.Hills.Skills;
+using Sanguosha.Expansions.SP.Skills;
+using Sanguosha.Expansions.Woods.Skills;
 
 namespace Sanguosha.Expansions;
 
@@ -28,7 +28,7 @@ public class SpExpansion : Expansion
         CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("CaoHong", true, Allegiance.Wei, 4, new YuanHu()))));
         CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("GuanYinping", false, Allegiance.Shu, 3, new XueJi(), new HuXiao(), new WuJi()))));
         CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("ChenLin", true, Allegiance.Wei, 3, new BiFa(), new SongCi()))));
-        CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("XiahouBa", true, Allegiance.Shu, 4, new BaoBian()))));            
+        CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("XiahouBa", true, Allegiance.Shu, 4, new BaoBian()))));
         CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("DaQiaoXiaoQiao", false, Allegiance.Wu, 3, new XingWu(), new LuoYan()))));
         CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("ZhugeKe", true, Allegiance.Wu, 3, new DuWu(), new AoCai()))));
     }

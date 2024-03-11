@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -36,7 +34,7 @@ public class TianXiang : TriggerSkill
         {
             return card.Suit == SuitType.Heart && card.Place.DeckType == DeckType.Hand;
         }
-   }
+    }
 
     private void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
     {
@@ -66,13 +64,15 @@ public class TianXiang : TriggerSkill
             this,
             Run,
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, IsAutoNotify = false, Type = TriggerType.Skill };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false, Type = TriggerType.Skill };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.ReadonlyCard != null && a.ReadonlyCard[TianXiangDamage] != 0 && !a.Targets[0].IsDead && a.Targets[0][TianXiangTarget] > 0; },
             (p, e, a) => { Game.CurrentGame.DrawCards(a.Targets[0], a.Targets[0].LostHealth); a.Targets[0][TianXiangTarget]--; },
             TriggerCondition.Global
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.DamageInflicted, trigger);
         Triggers.Add(GameEvent.DamageComputingFinished, trigger2);
         IsAutoInvoked = null;

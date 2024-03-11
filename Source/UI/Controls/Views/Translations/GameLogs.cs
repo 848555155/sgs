@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Sanguosha.Core.Players;
-using System.Windows.Documents;
-using Sanguosha.Core.UI;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.UI;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Windows.Shapes;
+using System.Linq;
+using System.Windows.Documents;
 using System.Windows.Media;
+using System.Windows.Shapes;
 
 namespace Sanguosha.UI.Controls;
 
@@ -68,7 +68,7 @@ public class GameLogs
     public void AppendPickHeroLog(Player player, bool isPrimaryHero)
     {
         if (!Logs.ContainsKey(player)) return;
-        
+
         if (isPrimaryHero && player.Hero == null) return;
         else if (!isPrimaryHero && player.Hero2 == null) return;
 

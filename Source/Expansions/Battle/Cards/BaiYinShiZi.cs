@@ -1,15 +1,15 @@
-﻿using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.Expansions.Battle.Cards;
 
 
 public class BaiYinShiZi : Armor
 {
-    
+
     public class BaiYinShiZiSkill : ArmorTriggerSkill
     {
         private void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
@@ -22,7 +22,7 @@ public class BaiYinShiZi : Armor
         {
             var trigger = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) => 
+                (p, e, a) =>
                 {
                     var args = a as DamageEventArgs;
                     return (args.Magnitude > 1)

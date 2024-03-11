@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -29,7 +27,8 @@ public class FenYong : TriggerSkill
             (p, e, a) => { return Owner[FenYongStatus] == 1; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false, Priority = int.MaxValue };
+        )
+        { AskForConfirmation = false, Priority = int.MaxValue };
         IsAutoInvoked = true;
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
         Triggers.Add(GameEvent.DamageComputingStarted, trigger2);

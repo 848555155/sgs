@@ -80,7 +80,7 @@ internal class UpdateHelper : IDisposable
         Dispose(false);
     }
 
-        /// <summary>
+    /// <summary>
     /// Releases unmanaged and - optionally - managed resources.
     /// </summary>
     /// <param name="disposing">Result: <c>true</c> to release both managed and unmanaged resources; <c>false</c> to release only unmanaged resources.</param>
@@ -196,8 +196,8 @@ internal class UpdateHelper : IDisposable
         }
 
         ClientProcess = new Process
-                            {
-                                StartInfo =
+        {
+            StartInfo =
                                     {
                                         FileName = m_CompleteWULoc,
 
@@ -206,7 +206,7 @@ internal class UpdateHelper : IDisposable
 
                                         WindowStyle = ProcessWindowStyle.Hidden
                                     }
-                            };
+        };
 
         if (!string.IsNullOrEmpty(ExtraArguments))
             ClientProcess.StartInfo.Arguments += " " + ExtraArguments;

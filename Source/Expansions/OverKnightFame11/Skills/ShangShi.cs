@@ -1,9 +1,8 @@
-﻿using System.Linq;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -41,7 +40,8 @@ public class ShangShi : TriggerSkill
             canTrigger,
             Run,
             TriggerCondition.OwnerIsTarget
-        ) { Priority = int.MinValue };
+        )
+        { Priority = int.MinValue };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             canTrigger,

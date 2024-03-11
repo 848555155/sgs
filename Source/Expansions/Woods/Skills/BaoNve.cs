@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -30,13 +28,15 @@ public class BaoNveGivenSkill : TriggerSkill, IRulerGivenSkill
                 }
             },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.AfterDamageCaused, trigger);
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { a.ReadonlyCard[BaoNveUsable] = 1; },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false, AskForConfirmation = false, Priority = int.MinValue };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false, Priority = int.MinValue };
         Triggers.Add(GameEvent.DamageInflicted, trigger2);
         IsAutoInvoked = false;
     }

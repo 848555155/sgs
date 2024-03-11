@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Expansions.Battle.Cards;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
+using Sanguosha.Expansions.Battle.Cards;
 
 namespace Sanguosha.Expansions;
 

@@ -1,9 +1,8 @@
-﻿using System.IO;
-using ProtoBuf;
+﻿using ProtoBuf;
 using Sanguosha.Core.Games;
-using System.Diagnostics;
 using Sanguosha.Core.Utils;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Network;
 
@@ -72,7 +71,7 @@ public class ServerGamer
     public void StartSender()
     {
         lock (this)
-        {                
+        {
             if (sendThread == null)
             {
                 sendThread = new Thread(SendLoop) { IsBackground = true };
@@ -147,7 +146,7 @@ public class ServerGamer
                     if (handler != null)
                     {
                         OnDisconnected(this);
-                    }             
+                    }
                     return null;
                 }
                 catch (Exception e)
@@ -158,7 +157,7 @@ public class ServerGamer
         }
         return packet;
     }
-            
+
 
     private void ReceiveLoop()
     {
@@ -235,7 +234,7 @@ public class ServerGamer
             }
         }
     }
-    
+
     public void SendAsync(GameDataPacket packet)
     {
         sendQueue.Add(packet);
@@ -280,7 +279,7 @@ public class ServerGamer
         lock (receiverLock)
         {
             lock (senderLock)
-            {                    
+            {
                 try
                 {
                     var uiDetach = new UIStatusHint() { IsDetached = true };
@@ -295,5 +294,5 @@ public class ServerGamer
                 }
             }
         }
-    }        
+    }
 }

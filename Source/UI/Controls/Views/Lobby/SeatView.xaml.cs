@@ -1,8 +1,8 @@
-﻿using System;
+﻿using Sanguosha.Lobby.Core;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-using Sanguosha.Lobby.Core;
 
 namespace Sanguosha.UI.Controls;
 
@@ -14,7 +14,7 @@ public partial class SeatView : UserControl
     public SeatView()
     {
         this.InitializeComponent();
-        
+
         // Insert code required on object creation below this point.
     }
 
@@ -27,7 +27,7 @@ public partial class SeatView : UserControl
     // Using a DependencyProperty as the backing store for IsControllable.  This enables animation, styling, binding, etc...
     public static readonly DependencyProperty IsControllableProperty =
         DependencyProperty.Register("IsControllable", typeof(bool), typeof(SeatView), new UIPropertyMetadata(OnControllableChanged));
-    
+
     private static void OnControllableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
         var seat = d as SeatView;
@@ -43,7 +43,7 @@ public partial class SeatView : UserControl
             seat.btnKick.Visibility = Visibility.Collapsed;
         }
     }
-    
+
 }
 
 public class SeatStateToControlStatusConverter : IValueConverter

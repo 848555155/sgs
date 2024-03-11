@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -128,7 +126,8 @@ public class HuaShen : TriggerSkill
                 Run(p, e, a);
             },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return Game.CurrentGame.Decks[Owner, HuaShenDeck].Count > 0; },

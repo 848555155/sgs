@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
@@ -21,12 +21,12 @@ public partial class FrameBasedAnimation : Image, IAnimation
     public static readonly DependencyProperty WrapAroundProperty =
         DependencyProperty.Register("WrapAround", typeof(bool), typeof(FrameBasedAnimation));
 
-    public ImageSource ActiveFrame 
-    { 
-        get 
+    public ImageSource ActiveFrame
+    {
+        get
         {
             return Frames[ActiveFrameIndex];
-        } 
+        }
     }
 
     public int ActiveFrameIndex
@@ -54,7 +54,7 @@ public partial class FrameBasedAnimation : Image, IAnimation
             image.BeginInit();
             image.UriSource = new Uri(string.Format("{0}/{1}.png", folderPath, i));
             image.EndInit();
-            
+
             result.Add(image);
         }
         return result;
@@ -121,7 +121,7 @@ public partial class FrameBasedAnimation : Image, IAnimation
 
     private void FrameBasedAnimation_Unloaded(object sender, RoutedEventArgs e)
     {
-        CompositionTarget.Rendering -= CompositionTarget_Rendering;            
+        CompositionTarget.Rendering -= CompositionTarget_Rendering;
     }
 
     private void CompositionTarget_Rendering(object sender, System.EventArgs e)

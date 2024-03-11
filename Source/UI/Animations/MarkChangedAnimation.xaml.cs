@@ -17,7 +17,7 @@ public partial class MarkChangedAnimation : FrameBasedAnimation
 
     public MarkChangedAnimation()
     {
-        
+
     }
 
     public override List<ImageSource> Frames

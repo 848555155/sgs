@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Fire.Skills;
 

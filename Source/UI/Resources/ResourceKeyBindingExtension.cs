@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Windows.Markup;
-using System.Windows.Data;
-using System.Windows;
-using System.Globalization;
 using System.ComponentModel;
+using System.Globalization;
+using System.Windows;
+using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace Sanguosha.UI.Resources;
 
@@ -44,7 +44,7 @@ public class ResourceKeyBindingExtension : MarkupExtension
         var multiBinding = new MultiBinding();
         multiBinding.Bindings.Add(targetElementBinding);
         multiBinding.Bindings.Add(resourceKeyBinding);
-        
+
         // If we set the Converter on resourceKeyBinding then, for some reason,
         // MultiBinding wants it to produce a value matching the Target Type of the MultiBinding
         // When it doesn't, it throws a wobbly and passes DependencyProperty.UnsetValue through
@@ -62,7 +62,7 @@ public class ResourceKeyBindingExtension : MarkupExtension
 
     [DefaultValue("")]
     public object AsyncState { get; set; }
-    
+
     [DefaultValue(false)]
     public bool BindsDirectlyToSource { get; set; }
 

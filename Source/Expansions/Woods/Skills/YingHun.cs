@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Woods.Skills;
@@ -19,7 +17,7 @@ public class YingHun : TriggerSkill
     {
         Trace.Assert(Owner != null && Owner.Hero != null);
         if (Owner == null || Owner.Hero == null) return 0;
-        else if (Owner.Hero.Name == "SunCe" || (Owner.Hero2 != null && Owner.Hero2.Name == "SunCe")) return 1;            
+        else if (Owner.Hero.Name == "SunCe" || (Owner.Hero2 != null && Owner.Hero2.Name == "SunCe")) return 1;
         return 0;
     }
 

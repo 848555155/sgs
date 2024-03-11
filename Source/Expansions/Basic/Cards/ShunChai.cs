@@ -1,20 +1,18 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
 
 public abstract class ShunChai : CardHandler
 {
-    protected abstract string ResultDeckName {get;}
+    protected abstract string ResultDeckName { get; }
 
-    protected abstract string ChoicePrompt {get;}
+    protected abstract string ChoicePrompt { get; }
 
     protected abstract DeckPlace ShunChaiDest(Player source, Player dest);
 

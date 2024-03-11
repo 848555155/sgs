@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -45,7 +43,7 @@ public class ManJuan : TriggerSkill
                 IPlayerProxy ui = Game.CurrentGame.UiProxies[Owner];
                 List<List<Card>> answer;
 
-                if (!ui.AskForCardChoice(new CardChoicePrompt("ManJuan", Owner), new List<DeckPlace>() {new DeckPlace(null, mjDeck)}, new List<string>() {"ZuiXiang"}, new List<int>() {1}, new RequireOneCardChoiceVerifier(), out answer))
+                if (!ui.AskForCardChoice(new CardChoicePrompt("ManJuan", Owner), new List<DeckPlace>() { new DeckPlace(null, mjDeck) }, new List<string>() { "ZuiXiang" }, new List<int>() { 1 }, new RequireOneCardChoiceVerifier(), out answer))
                 {
                     Trace.TraceInformation("Player {0} Invalid answer", Owner);
                     answer = new List<List<Card>>();

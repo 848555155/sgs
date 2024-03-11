@@ -12,14 +12,14 @@ public class SimpleRelayCommand : ViewModelBase, ICommand
     public Action<object> Executor
     {
         get { return _execute; }
-    } 
+    }
 
 
     private bool _canExecute;
 
-    public bool CanExecuteStatus 
-    { 
-        get {return _canExecute;}
+    public bool CanExecuteStatus
+    {
+        get { return _canExecute; }
         set
         {
             if (_canExecute == value) return;

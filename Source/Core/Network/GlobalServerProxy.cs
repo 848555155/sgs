@@ -1,9 +1,9 @@
 ﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
-using System.Diagnostics;
 using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.Network;
 
@@ -53,7 +53,7 @@ public class GlobalServerProxy : IGlobalUiProxy
         semAccess = new Semaphore(1, 1);
         semWake = new Semaphore(0, 2);
         semDone = new Semaphore(players.Count - 1, players.Count - 1);
-        manswerMCQ = new Dictionary<Player,int>();
+        manswerMCQ = new Dictionary<Player, int>();
         foreach (var player in players)
         {
             if (!proxy.ContainsKey(player))
@@ -69,7 +69,8 @@ public class GlobalServerProxy : IGlobalUiProxy
                 ((p) =>
                 {
                     MultiMCQProxyListenerThread((MCQListenerThreadParameters)p);
-                })) { IsBackground = true };
+                }))
+            { IsBackground = true };
             t.Start(para);
             proxyListener.Add(player, t);
         }
@@ -144,9 +145,9 @@ public class GlobalServerProxy : IGlobalUiProxy
         semAccess = new Semaphore(1, 1);
         semWake = new Semaphore(0, 2);
         semDone = new Semaphore(players.Count - 1, players.Count - 1);
-        manswerSkill = new Dictionary<Player,ISkill>();
-        manswerCards = new Dictionary<Player,List<Card>>();
-        manswerPlayers = new Dictionary<Player,List<Player>>();
+        manswerSkill = new Dictionary<Player, ISkill>();
+        manswerCards = new Dictionary<Player, List<Card>>();
+        manswerPlayers = new Dictionary<Player, List<Player>>();
         foreach (var player in players)
         {
             if (!proxy.ContainsKey(player))
@@ -163,7 +164,8 @@ public class GlobalServerProxy : IGlobalUiProxy
                 ((p) =>
                 {
                     MultiUsageProxyListenerThread((UsageListenerThreadParameters)p);
-                })) { IsBackground = true };
+                }))
+            { IsBackground = true };
             t.Start(para);
             proxyListener.Add(player, t);
         }
@@ -269,9 +271,11 @@ public class GlobalServerProxy : IGlobalUiProxy
             para.verifier = verifier;
             Thread t = new Thread(
                 (ParameterizedThreadStart)
-                ((p) => { 
+                ((p) =>
+                {
                     UsageProxyListenerThread((UsageListenerThreadParameters)p);
-                })) { IsBackground = true };
+                }))
+            { IsBackground = true };
             t.Start(para);
             proxyListener.Add(player, t);
         }
@@ -398,7 +402,8 @@ public class GlobalServerProxy : IGlobalUiProxy
                 ((p) =>
                 {
                     ChoiceProxyListenerThread((ChoiceListenerThreadParameters)p);
-                })) { IsBackground = true };
+                }))
+            { IsBackground = true };
             t.Start(para);
             proxyListener.Add(player, t);
         }

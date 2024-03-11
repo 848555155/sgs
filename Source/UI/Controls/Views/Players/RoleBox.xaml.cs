@@ -1,13 +1,12 @@
-﻿using System;
+﻿using Sanguosha.Core.Games;
+using Sanguosha.UI.Animations;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
-
-using Sanguosha.Core.Games;
-using System.Collections.ObjectModel;
-using System.Collections.Specialized;
-using Sanguosha.UI.Animations;
 
 namespace Sanguosha.UI.Controls;
 
@@ -63,7 +62,7 @@ public partial class RoleBox : UserControl
                 }
             }
             doReveal = true;
-            
+
         }
         else if (roles.Contains(Role.Unknown))
         {
@@ -102,7 +101,7 @@ public partial class RoleBox : UserControl
             _UpdateRoles();
         }
     }
-     
+
     private void cbRoles_DropDownOpened(object sender, EventArgs e)
     {
         IList<Role> roles = DataContext as IList<Role>;
@@ -120,7 +119,7 @@ public partial class RoleBox : UserControl
                 }
                 return;
             }
-            
+
         }
         cbRoles.SelectedItem = Role.Unknown;
     }
@@ -131,6 +130,6 @@ public partial class RoleBox : UserControl
         {
             cbRoles.SelectedIndex = 0;
         }
-    } 
+    }
 
 }

@@ -1,12 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Expansions.Battle.Cards;
 using System.Diagnostics;
-using Sanguosha.Core.Players;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -22,7 +20,7 @@ public class LongHun : CardTransformSkill
 
     public override List<CardHandler> PossibleResults
     {
-        get { return new List<CardHandler>() { new Tao(), new HuoSha(), new Shan(), new WuXieKeJi()}; }
+        get { return new List<CardHandler>() { new Tao(), new HuoSha(), new Shan(), new WuXieKeJi() }; }
     }
 
     public override VerifierResult TryTransform(List<Card> cards, List<Player> arg, out CompositeCard card, bool isPlay)

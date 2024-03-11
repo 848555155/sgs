@@ -1,8 +1,8 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Core.Skills;

@@ -1,9 +1,8 @@
-﻿using System.Diagnostics;
-
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+using System.Diagnostics;
 
 namespace Sanguosha.Core.UI;
 
@@ -69,7 +68,7 @@ public class ActionLog : IGameLog
     }
     public GameAction GameAction { get; set; }
     public ISkill SkillAction { get; set; }
-    
+
     public ICard CardAction { get; set; }
     public Player Source { get; set; }
     public List<Player> Targets { get; set; }

@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Windows.Data;
-using System.Windows;
 using System.Diagnostics;
+using System.IO;
+using System.Windows;
+using System.Windows.Data;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.IO;
 
 namespace Sanguosha.UI.Resources;
 
@@ -41,7 +41,7 @@ public class FileNameToImageSourceConverter : IMultiValueConverter
         var resource = element.TryFindResource(resourceKey);
 
         if (resource != null)
-        {             
+        {
             if (CropRect == null) return resource;
             else if (resource is BitmapSource)
             {
@@ -58,7 +58,7 @@ public class FileNameToImageSourceConverter : IMultiValueConverter
         if (StringFormat != null)
         {
             fileName = string.Format(StringFormat, resourceKey);
-        }           
+        }
 
         if (ResourceKeyConverter != null)
         {

@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -16,7 +16,8 @@ public class QiCai : TriggerSkill
             (p, e, a) => { return CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.Tool); },
             (p, e, a) => { (a as AdjustmentEventArgs).AdjustmentAmount += 500; },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.CardRangeModifier, trigger);
         IsEnforced = true;
     }

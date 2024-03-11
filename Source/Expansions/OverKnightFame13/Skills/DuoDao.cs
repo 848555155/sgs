@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -40,7 +38,8 @@ public class DuoDao : TriggerSkill
             },
             TriggerCondition.OwnerIsTarget,
             new DuoDaoVerifier()
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
 
         IsAutoInvoked = null;

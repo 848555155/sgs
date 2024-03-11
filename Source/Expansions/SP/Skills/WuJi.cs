@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -24,7 +22,8 @@ public class WuJi : TriggerSkill
             (p, e, a) => { return p[WuJiAwaken] == 0; },
             (p, e, a) => { p[WuJiCount] += (a as DamageEventArgs).Magnitude; },
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.AfterDamageCaused, trigger1);
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(

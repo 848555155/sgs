@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -40,7 +38,8 @@ public class TieJi : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard.Type is Sha; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
         Triggers.Add(GameEvent.CardUsageTargetConfirmed, trigger);
         IsAutoInvoked = false;

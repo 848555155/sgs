@@ -1,10 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -50,7 +48,8 @@ public class BuQu2 : TriggerSkill
             this,
             Run2,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerHandCardCapacityAdjustment, trigger2);
         Triggers.Add(GameEvent.PlayerIsAboutToDie, trigger);
         IsEnforced = true;

@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Sanguosha.Core.Cards;
+using System;
 using System.Windows.Data;
-using Sanguosha.Core.Cards;
 using System.Windows.Media;
 
 namespace Sanguosha.UI.Controls;

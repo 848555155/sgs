@@ -28,7 +28,7 @@ public enum SeatState
     /// </summary>
     [EnumMember]
     GuestReady,
-    
+
     /// <summary>
     /// Seat is taken by the host.
     /// </summary>

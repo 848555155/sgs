@@ -358,11 +358,11 @@ internal class AutoUpdaterInfo
                             break;
 
                         case 0x02: // update step on
-                            UpdateStepOn = (UpdateStepOn) ReadFiles.ReadInt(fs);
+                            UpdateStepOn = (UpdateStepOn)ReadFiles.ReadInt(fs);
                             break;
 
                         case 0x03:
-                            AutoUpdaterStatus = (AutoUpdaterStatus) ReadFiles.ReadInt(fs);
+                            AutoUpdaterStatus = (AutoUpdaterStatus)ReadFiles.ReadInt(fs);
                             break;
 
                         case 0x04: // update succeeded

@@ -1,10 +1,10 @@
 ﻿using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
 using Sanguosha.Core.Games;
-using Sanguosha.Expansions.Basic.Cards;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame13.Skills;
 
@@ -40,7 +40,8 @@ public class LongYin : TriggerSkill
             },
             TriggerCondition.Global,
             new LongYinVerifier()
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
 
         Triggers.Add(GameEvent.PlayerUsedCard, trigger);
         IsAutoInvoked = null;

@@ -1,8 +1,8 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -23,7 +23,8 @@ public class QianXun : TriggerSkill
             (p, e, a) => { return (a.Card.Type is ShunShouQianYang) || (a.Card.Type is LeBuSiShu); },
             OnPlayerCanBeTargeted,
             TriggerCondition.OwnerIsTarget
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerCanBeTargeted, trigger);
         IsEnforced = true;
     }

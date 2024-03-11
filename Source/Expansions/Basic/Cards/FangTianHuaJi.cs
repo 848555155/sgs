@@ -1,12 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
@@ -93,12 +90,14 @@ public class FangTianHuaJi : Weapon
                 },
                 (p, e, a) => { },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false };
+            )
+            { AskForConfirmation = false };
             var trigger2 = new AutoNotifyPassiveSkillTrigger(
                 this,
                 Run,
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false, AskForConfirmation = false, Type = TriggerType.Card};
+            )
+            { IsAutoNotify = false, AskForConfirmation = false, Type = TriggerType.Card };
             Triggers.Add(GameEvent.PlayerUsedCard, trigger);
             Triggers.Add(Sha.PlayerShaTargetValidation, trigger2);
         }

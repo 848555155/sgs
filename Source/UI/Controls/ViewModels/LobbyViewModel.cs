@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Collections.ObjectModel;
+﻿using Google.Protobuf.WellKnownTypes;
 using Sanguosha.Lobby.Core;
-using System.Windows.Input;
-using System.Windows;
-using System.Threading;
-using System.Diagnostics;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
-using Google.Protobuf.WellKnownTypes;
+using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Windows;
+using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -24,7 +24,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         StartGameCommand = new SimpleRelayCommand(o => StartGame()) { CanExecuteStatus = false };
         SpectateCommand = new SimpleRelayCommand(o => SpectateGame()) { CanExecuteStatus = true };
         ReadyCommand = new SimpleRelayCommand(o => PlayerReady()) { CanExecuteStatus = true };
-        CancelReadyCommand = new SimpleRelayCommand(o => PlayerCancelReady()) { CanExecuteStatus = true};
+        CancelReadyCommand = new SimpleRelayCommand(o => PlayerCancelReady()) { CanExecuteStatus = true };
     }
 
     public event PropertyChangedEventHandler PropertyChanged;
@@ -39,7 +39,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         }
     }
 
-    private void PlayerCancelReady()        
+    private void PlayerCancelReady()
     {
         var result = Connection.CancelReady(new Empty());
         if (result.RoomOperationResult == RoomOperationResult.Success)
@@ -51,7 +51,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     {
         var result = Connection.Ready(new Empty());
         if (result.RoomOperationResult == RoomOperationResult.Success)
-        {                
+        {
         }
     }
 
@@ -88,7 +88,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
 
     private RoomViewModel _currentRoom;
-            
+
 
     /// <summary>
     /// Gets/sets the currrent room that the user is viewing, has entered or is gaming in.
@@ -194,7 +194,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     public SimpleRelayCommand StartGameCommand { get; set; }
     public SimpleRelayCommand SpectateCommand { get; set; }
     public SimpleRelayCommand ReadyCommand { get; set; }
-    public SimpleRelayCommand CancelReadyCommand { get; set; }        
+    public SimpleRelayCommand CancelReadyCommand { get; set; }
     #endregion
 
     #endregion
@@ -204,7 +204,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public event ChatEventHandler OnChat
     {
-        add 
+        add
         {
             chatEventHandler = value;
             if (value != null)
@@ -216,7 +216,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
                 _chatCache.Clear();
             }
         }
-        remove 
+        remove
         {
             if (chatEventHandler == value)
                 chatEventHandler = null;
@@ -285,7 +285,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         room = reply.Room;
         if (_IsSuccess(reply.RoomOperationResult))
         {
-            CurrentRoom = new RoomViewModel() { Room = room };                
+            CurrentRoom = new RoomViewModel() { Room = room };
             Trace.Assert(CurrentSeat != null, "Successfully joined a room, but do not find myself in the room");
             return true;
         }
@@ -317,7 +317,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public bool SpectateGame()
     {
-        if (_IsSuccess(Connection.Spectate(new Int32Value() { Value = _currentRoom.Id } ).RoomOperationResult))
+        if (_IsSuccess(Connection.Spectate(new Int32Value() { Value = _currentRoom.Id }).RoomOperationResult))
         {
             return true;
         }
@@ -329,7 +329,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     {
         LobbyView.Instance.NotifyKeyEvent(Application.Current.TryFindResource("Lobby.Event.SelfKicked") as string);
         CurrentRoom = null;
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             UpdateRooms();
         });
@@ -339,7 +339,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     {
         GameServerConnectionString = connectionString;
         _loginToken = token;
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             LobbyView.Instance.StartGame();
         });
@@ -347,7 +347,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public void NotifyRoomUpdate(int id, Room room)
     {
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             var result = Rooms.FirstOrDefault(r => r.Id == id);
             if (result != null)
@@ -360,7 +360,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
             }
             if (CurrentRoom != null && CurrentRoom.Id == id)
             {
-                CurrentRoom = new RoomViewModel() { Room = room };                    
+                CurrentRoom = new RoomViewModel() { Room = room };
             }
         });
     }
@@ -371,10 +371,10 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public void NotifyChat(Account act, string message)
     {
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate()
+        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             if (_chatCache.Count > 100) _chatCache.RemoveRange(0, 50);
-            _chatCache.Add(new KeyValuePair<string, string>(act.UserName, message));                
+            _chatCache.Add(new KeyValuePair<string, string>(act.UserName, message));
             var handler = chatEventHandler;
             if (handler != null)
             {

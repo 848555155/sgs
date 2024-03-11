@@ -1,8 +1,6 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -15,7 +13,7 @@ public class YiCong : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 if (p.Health > 2)
                     return p == a.Source;
@@ -23,10 +21,11 @@ public class YiCong : TriggerSkill
             },
             (p, e, a) => { var args = a as AdjustmentEventArgs; args.AdjustmentAmount = p.Health > 2 ? -1 : 1; },
             TriggerCondition.Global
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         var effect = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => 
+            (p, e, a) =>
             {
                 if (p[YiCongEffect] == 0 && p.Health <= 2)
                 {
@@ -40,7 +39,8 @@ public class YiCong : TriggerSkill
                 }
             },
             TriggerCondition.OwnerIsTarget
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerDistanceAdjustment, trigger);
         Triggers.Add(GameEvent.AfterHealthChanged, effect);
         IsEnforced = true;

@@ -1,5 +1,5 @@
-﻿using System.Collections.ObjectModel;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Players;
+using System.Collections.ObjectModel;
 
 namespace Sanguosha.UI.Controls;
 
@@ -84,7 +84,7 @@ public class MarkViewModel : ViewModelBase
     {
         get
         {
-           return _digits; 
+            return _digits;
         }
     }
 }

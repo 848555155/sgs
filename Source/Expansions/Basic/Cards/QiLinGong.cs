@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.UI;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
@@ -20,7 +16,7 @@ public class QiLinGong : Weapon
         EquipmentSkill = new QiLinGongSkill() { ParentEquipment = this };
     }
 
-    
+
     public class QiLinGongSkill : TriggerSkill, IEquipmentSkill
     {
         public Equipment ParentEquipment { get; set; }

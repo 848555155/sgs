@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using Sanguosha.Core.Players;
 using Sanguosha.Core.Heroes;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -45,7 +43,7 @@ public class HuangTianGivenSkill : ActiveSkill, IRulerGivenSkill
     public static readonly PlayerAttribute HuangTianUsed = PlayerAttribute.Register("HuangTianUsed", true);
 
     public override bool Commit(GameEventArgs arg)
-    {            
+    {
         Owner[HuangTianUsed[Master]] = 1;
         Game.CurrentGame.HandleCardTransferToHand(Owner, Master, arg.Cards);
         return true;

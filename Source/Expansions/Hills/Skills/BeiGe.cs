@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Hills.Skills;
@@ -101,7 +99,8 @@ public class BeiGe : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha) && !a.Targets[0].IsDead; },
             OnAfterDamageInflicted,
             TriggerCondition.Global
-        ) { IsAutoNotify = false, AskForConfirmation = false };
+        )
+        { IsAutoNotify = false, AskForConfirmation = false };
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
         IsAutoInvoked = null;
     }

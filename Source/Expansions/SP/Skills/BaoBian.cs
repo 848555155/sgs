@@ -1,9 +1,9 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Expansions.Hills.Skills;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Skills;
+using Sanguosha.Expansions.Hills.Skills;
 using Sanguosha.Expansions.Wind.Skills;
 
 namespace Sanguosha.Expansions.SP.Skills;
@@ -99,14 +99,16 @@ public class BaoBian : TriggerSkill
             this,
                 (p, e, a) => { Refresh(p); },
                 TriggerCondition.OwnerIsTarget
-            ) { IsAutoNotify = false };
+            )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.AfterHealthChanged, trigger);
         IsEnforced = true;
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
                 (p, e, a) => { Refresh(p); },
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false };
+            )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerGameStartAction, trigger2);
-     }
+    }
 }

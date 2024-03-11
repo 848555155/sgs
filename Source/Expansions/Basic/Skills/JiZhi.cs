@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -16,7 +16,8 @@ public class JiZhi : TriggerSkill
             (p, e, a) => { return CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.ImmediateTool); },
             (p, e, a) => { Game.CurrentGame.DrawCards(p, 1); },
             TriggerCondition.OwnerIsSource
-        ) { Type = TriggerType.Skill });
+        )
+        { Type = TriggerType.Skill });
         IsAutoInvoked = true;
     }
 }

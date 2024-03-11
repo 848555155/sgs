@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -13,7 +11,7 @@ namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 public class HuiLei : TriggerSkill
 {
     public HuiLei()
-    { 
+    {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.Source != null; },

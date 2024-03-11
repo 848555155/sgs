@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -69,13 +66,15 @@ public class QuanJi : TriggerSkill
                 args.AdjustmentAmount += Game.CurrentGame.Decks[p, QuanDeck].Count;
             },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             Run,
             TriggerCondition.OwnerIsTarget
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
 
         Triggers.Add(GameEvent.PlayerHandCardCapacityAdjustment, trigger);
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger2);

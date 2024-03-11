@@ -1,19 +1,17 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
 
 public class BaGuaZhen : Armor
 {
-    
+
     public class BaGuaZhenSkill : ArmorTriggerSkill
     {
         protected void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
@@ -22,7 +20,7 @@ public class BaGuaZhen : Armor
             ReadOnlyCard c = Game.CurrentGame.Judge(Owner, null, new Card() { Type = new BaGuaZhen() }, (judgeResultCard) => { return judgeResultCard.SuitColor == SuitColorType.Red; });
             ParentEquipment.InUse = false;
             if (c.SuitColor == SuitColorType.Red)
-            {                    
+            {
                 eventArgs.Cards = new List<Card>();
                 eventArgs.Skill = new CardWrapper(Owner, new Shan(), false);
                 ActionLog log = new ActionLog();
@@ -40,7 +38,8 @@ public class BaGuaZhen : Armor
                 (p, e, a) => { return a.Card.Type is Shan && ArmorIsValid(Owner, a.Targets[0], a.ReadonlyCard); },
                 Run,
                 TriggerCondition.OwnerIsSource
-            ) { IsAutoNotify = false };
+            )
+            { IsAutoNotify = false };
             Triggers.Add(GameEvent.PlayerRequireCard, trigger);
         }
     }

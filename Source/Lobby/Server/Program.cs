@@ -4,7 +4,7 @@ using Sanguosha.Lobby.Server;
 var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddDbContext<AccountContext>(
-    options=>
+    options =>
     {
         options.UseInMemoryDatabase("InMemory");
     });

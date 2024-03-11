@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Windows.Controls;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace Sanguosha.UI.Controls;
 
@@ -27,7 +27,7 @@ public class SkillButtonTemplateSelector : DataTemplateSelector
         else
         {
             template = dict["SkillButtonTemplate"] as DataTemplate;
-        }           
+        }
         return template;
     }
 }

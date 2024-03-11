@@ -1,7 +1,9 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Drawing.Design;
+using System.Drawing.Imaging;
 using System.Globalization;
+using System.IO;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
@@ -9,8 +11,6 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Threading;
-using System.Drawing.Imaging;
-using System.IO;
 
 namespace wyDay.Controls;
 
@@ -319,7 +319,7 @@ public class AutomaticUpdater : Canvas, ISupportInitialize
         set
         {
             formattedText = new FormattedText(value, CultureInfo.GetCultureInfo("en-us"), FlowDirection.LeftToRight, new Typeface("Segoe UI"), 12, Foreground);
-            
+
             expandedWidth = (int)formattedText.Width + 22;
 
             if (isFullExpanded && Width != expandedWidth)

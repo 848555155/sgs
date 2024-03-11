@@ -13,7 +13,7 @@ public class SkillButtonDock : WrapPanel
 
     private static readonly int buttonHeight = 26;
     private static readonly int dockWidth = 122;
-    
+
     public int ButtonsPerRow
     {
         get;
@@ -28,7 +28,7 @@ public class SkillButtonDock : WrapPanel
         {
             return new Size(dockWidth, 0);
         }
-        
+
         int rows = (numButtons - 1) / ButtonsPerRow + 1;
         double rowH = (int)Math.Min(buttonHeight, constraint.Height / rows);
         double rowW = constraint.Width;
@@ -60,7 +60,7 @@ public class SkillButtonDock : WrapPanel
             btnNum[1] = 1;
             rows = 2;
         }
-        
+
         return new Size(rowW, rows * rowH);
     }
 

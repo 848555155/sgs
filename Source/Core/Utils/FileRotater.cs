@@ -1,5 +1,4 @@
-﻿using System.IO;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace Sanguosha.Core.Utils;
 
@@ -9,7 +8,7 @@ namespace Sanguosha.Core.Utils;
 /// </summary>
 /// <remarks>Not thread-safe.</remarks>
 public class FileRotator
-{       
+{
     /// <summary>
     /// 
     /// </summary>
@@ -31,7 +30,7 @@ public class FileRotator
                              filePath.ToLower().EndsWith(extension.ToLower())
                        orderby File.GetCreationTime(filePath)
                        select filePath;
-         
+
         int total = suspects.Count();
         if (total > maxAllowance)
         {
@@ -45,7 +44,7 @@ public class FileRotator
                 {
                 }
             }
-        }            
+        }
         DateTime dt = DateTime.Now;
         FileStream fs = null;
         try
@@ -55,7 +54,7 @@ public class FileRotator
             fs = new FileStream(newFile, FileMode.Create);
         }
         catch (IOException)
-        {                   
+        {
         }
 
         return fs;

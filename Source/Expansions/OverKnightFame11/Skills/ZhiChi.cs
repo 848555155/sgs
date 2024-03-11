@@ -1,10 +1,10 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -54,7 +54,7 @@ public class ZhiChi : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => {return Game.CurrentGame.PhasesOwner != Owner;},
+            (p, e, a) => { return Game.CurrentGame.PhasesOwner != Owner; },
             (p, e, a) =>
             {
                 Owner[ZhiChiStatus] = 1;

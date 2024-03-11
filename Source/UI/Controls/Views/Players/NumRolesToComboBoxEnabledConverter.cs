@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Sanguosha.Core.Games;
+using System;
 using System.Collections.Generic;
 using System.Windows.Data;
-using Sanguosha.Core.Games;
 
 namespace Sanguosha.UI.Controls;
 

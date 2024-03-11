@@ -1,10 +1,9 @@
 ﻿using Sanguosha.Core.Games;
-using System.Diagnostics;
-using System.IO;
 using Sanguosha.Core.Network;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.UI;
 using Sanguosha.Lobby.Core;
+using System.Diagnostics;
 using System.Net;
 
 namespace Sanguosha.Lobby.Server;
@@ -54,27 +53,28 @@ public class GameService
         game.NotificationProxy = new DummyNotificationProxy();
 
         game.GameServer = server;
-        var thread = new Thread(() => 
+        var thread = new Thread(() =>
         {
 #if !DEBUG
             try
             {
 #endif
-                game.Run();
+            game.Run();
 #if !DEBUG
             }
             catch (Exception)
             {
             }
 #endif
-                try
-                {
-                    callback(roomId);
-                }
-                catch (Exception)
-                {
-                }
-        }) { IsBackground = true };
+            try
+            {
+                callback(roomId);
+            }
+            catch (Exception)
+            {
+            }
+        })
+        { IsBackground = true };
         thread.Start();
     }
 

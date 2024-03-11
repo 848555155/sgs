@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.StarSP.Skills;
 
@@ -60,7 +58,7 @@ public class DaHe : AutoVerifiedActiveSkill
         Game.CurrentGame.ExitAtomicContext();
         if (ret != true && Owner.HandCards().Count > 0)
         {
-            Game.CurrentGame.ForcePlayerDiscard(Owner,(p, i) => { return 1 - i; }, false);
+            Game.CurrentGame.ForcePlayerDiscard(Owner, (p, i) => { return 1 - i; }, false);
             Game.CurrentGame.SyncImmutableCardsAll(Owner.HandCards());
             Game.CurrentGame.ShowHandCards(Owner, Owner.HandCards());
         }
@@ -110,7 +108,8 @@ public class DaHe : AutoVerifiedActiveSkill
                 this,
                 (p, e, a) => { DaHePlayer = null; },
                 TriggerCondition.Global
-            ) { IsAutoNotify = false };
+            )
+            { IsAutoNotify = false };
             Triggers.Add(GameEvent.CardUsageTargetValidating, trigger);
             Triggers.Add(GameEvent.PhasePostEnd, trigger2);
             IsEnforced = true;

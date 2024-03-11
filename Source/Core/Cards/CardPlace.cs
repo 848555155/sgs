@@ -2,7 +2,7 @@
 
 internal class CardPlace
 {
-    public DeckPlace Deck {get; set;}
+    public DeckPlace Deck { get; set; }
 
-    public int Position {get; set;}
+    public int Position { get; set; }
 }

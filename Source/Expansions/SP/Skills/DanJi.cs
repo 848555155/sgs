@@ -1,10 +1,8 @@
-﻿using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Skills;
 
 namespace Sanguosha.Expansions.SP.Skills;
@@ -18,7 +16,8 @@ public class DanJi : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => {
+            (p, e, a) =>
+            {
                 bool rulerIsCaoCao = Game.CurrentGame.AlivePlayers.Any(pl => pl.Role == Role.Ruler && (pl.Hero.Name.Contains("CaoCao") || pl.Hero2 != null && pl.Hero2.Name.Contains("CaoCao")));
                 return rulerIsCaoCao && p[DanJiAwaken] == 0 && Game.CurrentGame.Decks[p, DeckType.Hand].Count > p.Health;
             },

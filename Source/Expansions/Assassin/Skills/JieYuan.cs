@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Assassin.Skills;
 
@@ -54,7 +52,8 @@ public class JieYuan : TriggerSkill
             },
             TriggerCondition.OwnerIsTarget,
             new JieYuanVerifier(true)
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.DamageInflicted, trigger);
 
         var trigger2 = new AutoNotifyUsagePassiveSkillTrigger(
@@ -70,7 +69,8 @@ public class JieYuan : TriggerSkill
             },
             TriggerCondition.OwnerIsSource,
             new JieYuanVerifier(false)
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.DamageCaused, trigger2);
         IsAutoInvoked = null;
     }

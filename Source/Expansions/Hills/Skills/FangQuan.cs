@@ -1,9 +1,9 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -58,7 +58,8 @@ public class FangQuan : TriggerSkill
             },
             TriggerCondition.OwnerIsSource,
             new FangQuanVerifier()
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseOutEvents[TurnPhase.Draw], trigger);
         Triggers.Add(GameEvent.PhaseProceedEvents[TurnPhase.End], trigger2);
     }

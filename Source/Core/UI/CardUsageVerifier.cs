@@ -1,7 +1,7 @@
 ﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
 
 namespace Sanguosha.Core.UI;
 
@@ -115,7 +115,7 @@ public class UiHelper
 public interface ICardUsageVerifier
 {
     VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players);
-    
+
     /// <summary>
     /// Gets/sets card types that can possibly be accepted by the verifier. 
     /// If value is null, any card type may be accepted. If value is empty,

@@ -1,5 +1,5 @@
-﻿using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using System.ComponentModel;
 
 namespace Sanguosha.Core.Heroes;
@@ -21,7 +21,7 @@ public class Hero : ICloneable
     public Allegiance Allegiance
     {
         get { return allegiance; }
-        set 
+        set
         {
             if (allegiance == value) return;
             allegiance = value;
@@ -33,8 +33,8 @@ public class Hero : ICloneable
     public List<ISkill> Skills
     {
         get { return _skills; }
-        set 
-        { 
+        set
+        {
             _skills = value;
             OnPropertyChanged("Skills");
         }
@@ -42,7 +42,7 @@ public class Hero : ICloneable
 
     public Player Owner { get; set; }
 
-    public bool IsMale { get; set; }                
+    public bool IsMale { get; set; }
 
     public int MaxHealth { get; set; }
 

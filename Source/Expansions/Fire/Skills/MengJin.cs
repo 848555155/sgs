@@ -1,12 +1,11 @@
-﻿using System.Collections.Generic;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using System.Diagnostics;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Fire.Skills;
 
@@ -47,7 +46,8 @@ public class MengJin : TriggerSkill
             (p, e, a) => { return a.Targets[0].HandCards().Count + a.Targets[0].Equipments().Count > 0; },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { };
+        )
+        { };
         Triggers.Add(ShaCancelling.PlayerShaTargetDodged, trigger);
     }
 }

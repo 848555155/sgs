@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
+using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -125,7 +122,7 @@ public class LuanWu : ActiveSkill
 
         public override IList<CardHandler> AcceptableCardTypes
         {
-            get { return new List<CardHandler>() {new Sha()}; }
+            get { return new List<CardHandler>() { new Sha() }; }
         }
     }
 }

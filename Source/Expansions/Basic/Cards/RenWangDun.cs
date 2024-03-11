@@ -1,14 +1,14 @@
-﻿using Sanguosha.Core.Skills;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
 
 public class RenWangDun : Armor
 {
-    
+
     public class RenWangDunSkill : ArmorTriggerSkill
     {
         public RenWangDunSkill()
@@ -16,7 +16,7 @@ public class RenWangDun : Armor
             var trigger = new AutoNotifyPassiveSkillTrigger(
                 this,
                 (p, e, a) => { return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Black && ArmorIsValid(Owner, a.Source, a.ReadonlyCard); },
-                (p, e, a) => { throw new TriggerResultException(TriggerResult.End);},
+                (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
                 TriggerCondition.OwnerIsTarget
             );
             Triggers.Add(GameEvent.CardUsageTargetValidating, trigger);

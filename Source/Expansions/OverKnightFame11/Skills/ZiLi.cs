@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.OverKnightFame11.Skills;
 
@@ -22,8 +18,8 @@ public class ZiLi : TriggerSkill
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return p[ZiLiAwakened] == 0 && Game.CurrentGame.Decks[p, QuanJi.QuanDeck].Count >= 3; },
-            (p, e, a) => 
-            { 
+            (p, e, a) =>
+            {
                 p[ZiLiAwakened] = 1;
                 Game.CurrentGame.LoseMaxHealth(p, 1);
                 int answer = 0;
@@ -39,7 +35,7 @@ public class ZiLi : TriggerSkill
                 {
                     Game.CurrentGame.DrawCards(Owner, 2);
                 }
-                Game.CurrentGame.PlayerAcquireAdditionalSkill(Owner, new PaiYi(), HeroTag); 
+                Game.CurrentGame.PlayerAcquireAdditionalSkill(Owner, new PaiYi(), HeroTag);
             },
             TriggerCondition.OwnerIsSource
         );

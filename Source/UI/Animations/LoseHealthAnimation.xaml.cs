@@ -17,7 +17,7 @@ public partial class LoseHealthAnimation : FrameBasedAnimation
 
     public LoseHealthAnimation()
     {
-        
+
     }
 
     public override List<ImageSource> Frames

@@ -1,9 +1,7 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -13,9 +11,9 @@ namespace Sanguosha.Expansions.Hills.Skills;
 public class DuanChang : TriggerSkill
 {
     private static readonly PlayerAttribute DuanChangStatus = PlayerAttribute.Register("DuanChang", false, false, true);
- 
+
     public DuanChang()
-    {            
+    {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.Source != null; },

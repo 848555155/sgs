@@ -1,10 +1,10 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Woods.Skills;
 
@@ -63,7 +63,8 @@ public class HuoShou : TriggerSkill
             (p, e, a) => { return a.ReadonlyCard.Type is NanManRuQin; },
             (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
             TriggerCondition.OwnerIsTarget
-        ) { Type = TriggerType.Skill };
+        )
+        { Type = TriggerType.Skill };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
             (p, e, a) => { return a.ReadonlyCard.Type is NanManRuQin && a.Source != p; },

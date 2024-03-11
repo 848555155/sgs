@@ -1,9 +1,9 @@
-﻿using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Triggers;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
-using Sanguosha.Core.Cards;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Battle.Cards;
@@ -11,9 +11,9 @@ namespace Sanguosha.Expansions.Battle.Cards;
 
 public class TengJia : Armor
 {
-    
+
     public class TengJiaSkill : ArmorTriggerSkill
-    {            
+    {
         public TengJiaSkill()
         {
             var trigger = new AutoNotifyPassiveSkillTrigger(
@@ -21,7 +21,8 @@ public class TengJia : Armor
                 (p, e, a) => { return a.ReadonlyCard != null && ((a.ReadonlyCard.Type is Aoe) || (a.ReadonlyCard.Type is RegularSha)) && ArmorIsValid(Owner, a.Source, a.ReadonlyCard); },
                 (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
                 TriggerCondition.OwnerIsTarget
-            ) { Type = TriggerType.Card };
+            )
+            { Type = TriggerType.Card };
             Triggers.Add(GameEvent.CardUsageTargetValidating, trigger);
             IsEnforced = true;
         }
@@ -44,7 +45,8 @@ public class TengJia : Armor
                     args.Magnitude++;
                 },
                 TriggerCondition.OwnerIsTarget
-            ) { Type = TriggerType.Card };
+            )
+            { Type = TriggerType.Card };
             Triggers.Add(GameEvent.DamageInflicted, trigger);
             IsEnforced = true;
         }

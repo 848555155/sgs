@@ -1,8 +1,8 @@
 ﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
-using Sanguosha.Expansions.Fire.Skills;
 using Sanguosha.Expansions.Basic.Skills;
+using Sanguosha.Expansions.Fire.Skills;
 
 namespace Sanguosha.Expansions;
 

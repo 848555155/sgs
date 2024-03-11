@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 
 namespace Sanguosha.Expansions.Hills.Skills;
 
@@ -276,7 +273,8 @@ public class QiaoBian : TriggerSkill
                 }
             },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
         Triggers.Add(GameEvent.PhaseOutEvents[TurnPhase.Judge], trigger);
         Triggers.Add(GameEvent.PhaseOutEvents[TurnPhase.Draw], trigger);
         Triggers.Add(GameEvent.PhaseOutEvents[TurnPhase.Start], trigger);

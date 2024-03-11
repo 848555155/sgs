@@ -1,24 +1,24 @@
-﻿using System;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Net.Client;
+using Microsoft.Win32;
+using Sanguosha.Core.Games;
+using Sanguosha.Core.Network;
+using Sanguosha.Core.Utils;
+using Sanguosha.Lobby.Core;
+using Sanguosha.Lobby.Server;
+using Sanguosha.UI.Controls;
+using System;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
-using System.Threading;
-using System.IO;
-using Sanguosha.Core.Games;
-using Sanguosha.Core.Network;
-using Microsoft.Win32;
-using System.ComponentModel;
-using Sanguosha.UI.Controls;
-using Sanguosha.Lobby.Core;
-using Sanguosha.Lobby.Server;
-using System.Net.NetworkInformation;
-using System.Net;
-using Sanguosha.Core.Utils;
-using System.Diagnostics;
-using Grpc.Net.Client;
-using Google.Protobuf.WellKnownTypes;
 
 namespace Sanguosha.UI.Main;
 
@@ -84,7 +84,7 @@ public partial class Login : Page, IDisposable
         }
         else
         {
-            Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
             {
                 startButton.IsEnabled = _startButtonEnabled && PreloadCompleted;
             });
@@ -260,7 +260,7 @@ public partial class Login : Page, IDisposable
 
                     if (reconnect != null)
                     {
-                        Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
+                        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
                         {
                             MainGame.BackwardNavigationService = this.NavigationService;
                             busyIndicator.BusyContent = Resources["Busy.Reconnecting"];
@@ -396,7 +396,7 @@ public partial class Login : Page, IDisposable
                 var server = new Lobby.Core.Lobby.LobbyClient(channel);
                 var stat = server.CreateAccount(new()
                 {
-                    UserName = userName, 
+                    UserName = userName,
                     P = passwd
                 });
                 ea.Result = stat.LoginStatus;
@@ -487,7 +487,7 @@ public partial class Login : Page, IDisposable
                 // todo move to new project
                 //host.AddServiceEndpoint(typeof(ILobbyService), binding, string.Format("net.tcp://{0}:{1}/GameService", serverIp, portNumber));
                 //host.Open();
-                
+
                 ea.Result = true;
             }
             catch (Exception)

@@ -8,7 +8,7 @@ public class DefensiveHorse(string name) : Equipment
 {
     public override object Clone()
     {
-        return Activator.CreateInstance(GetType(), HorseName);            
+        return Activator.CreateInstance(GetType(), HorseName);
     }
 
     protected override void RegisterEquipmentTriggers(Player p) => p[Player.RangePlus]++;

@@ -1,11 +1,9 @@
-﻿using System.Collections.Generic;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 using Sanguosha.Expansions.Battle.Cards;
 using System.Diagnostics;
@@ -43,7 +41,7 @@ public class LiHuo : CardTransformSkill
         return VerifierResult.Fail;
     }
 
-    public override List<CardHandler> PossibleResults { get { return new List<CardHandler>() { new HuoSha()}; } }
+    public override List<CardHandler> PossibleResults { get { return new List<CardHandler>() { new HuoSha() }; } }
 
     public class LiHuoPassive : TriggerSkill
     {
@@ -70,7 +68,8 @@ public class LiHuo : CardTransformSkill
                     }
                 },
                 TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false, IsAutoNotify = false, Priority = SkillPriority.LiHuo };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false, Priority = SkillPriority.LiHuo };
 
             Triggers.Add(Sha.PlayerShaTargetValidation, trigger);
         }

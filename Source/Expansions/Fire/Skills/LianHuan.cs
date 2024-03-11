@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using Sanguosha.Core.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Skills;
 using Sanguosha.Expansions.Battle.Cards;
 

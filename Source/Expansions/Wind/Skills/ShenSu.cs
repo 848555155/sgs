@@ -1,13 +1,11 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Expansions.Basic.Cards;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using Sanguosha.Expansions.Basic.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -141,7 +139,8 @@ public class ShenSu : TriggerSkill
             },
             Run,
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
@@ -152,7 +151,8 @@ public class ShenSu : TriggerSkill
                 args.RangeApproval[0] = true;
             },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false, IsAutoNotify = false };
+        )
+        { AskForConfirmation = false, IsAutoNotify = false };
 
         Triggers.Add(GameEvent.PhaseOutEvents[TurnPhase.Start], trigger);
         Triggers.Add(GameEvent.PhaseOutEvents[TurnPhase.Draw], trigger);

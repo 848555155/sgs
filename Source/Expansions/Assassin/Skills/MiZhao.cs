@@ -1,12 +1,9 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Basic.Cards;
 
 namespace Sanguosha.Expansions.Assassin.Skills;
@@ -107,7 +104,8 @@ public class MiZhao : AutoVerifiedActiveSkill
                     args.RangeApproval[0] = true;
                 },
                 TriggerCondition.Global
-            ) { AskForConfirmation = false, IsAutoNotify = false };
+            )
+            { AskForConfirmation = false, IsAutoNotify = false };
             Triggers.Add(Sha.PlayerShaTargetValidation, trigger);
         }
     }

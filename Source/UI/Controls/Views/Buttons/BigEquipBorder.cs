@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using Sanguosha.UI.Animations;
+using System.Collections.Generic;
 using System.Windows.Media;
-using Sanguosha.UI.Animations;
 
 namespace Sanguosha.UI.Controls;
 
@@ -17,7 +17,7 @@ public class BigEquipBorder : FrameBasedAnimation
     }
 
     public BigEquipBorder()
-    {            
+    {
     }
 
     protected override void OnPropertyChanged(System.Windows.DependencyPropertyChangedEventArgs e)

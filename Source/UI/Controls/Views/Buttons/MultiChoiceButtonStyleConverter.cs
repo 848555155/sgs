@@ -1,7 +1,7 @@
-﻿using System;
+﻿using Sanguosha.Core.UI;
+using System;
 using System.Windows;
 using System.Windows.Data;
-using Sanguosha.Core.UI;
 
 namespace Sanguosha.UI.Controls;
 

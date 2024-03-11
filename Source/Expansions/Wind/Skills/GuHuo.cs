@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Linq;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
-using System.Diagnostics;
+using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.UI;
 using Sanguosha.Expansions.Battle.Cards;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Wind.Skills;
 
@@ -42,7 +40,7 @@ public class GuHuo2 : CardTransformSkill, IAdditionalTypedSkill
         {
             return VerifierResult.Fail;
         }
-                    
+
         card.Subcards.Add(cards[0]);
         return VerifierResult.Success;
     }
@@ -86,7 +84,7 @@ public class GuHuo2 : CardTransformSkill, IAdditionalTypedSkill
         var toProcess = new List<Player>(from p in Game.CurrentGame.AlivePlayers where p.Health > 0 select p);
         toProcess.Remove(Owner);
         Game.CurrentGame.SortByOrderOfComputation(Game.CurrentGame.CurrentPlayer, toProcess);
-        Dictionary<Player, int> believe = new Dictionary<Player,int>();
+        Dictionary<Player, int> believe = new Dictionary<Player, int>();
         foreach (var player in toProcess)
         {
             int answer = 0;

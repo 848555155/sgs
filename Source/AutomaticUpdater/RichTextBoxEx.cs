@@ -4,13 +4,13 @@ namespace wyDay.Controls;
 
 internal delegate void LinkHandler(object sender, string linkTarget);
 
-	internal class RichTextBoxEx : RichTextBox
-	{
-		public RichTextBoxEx()
-		{
+internal class RichTextBoxEx : RichTextBox
+{
+    public RichTextBoxEx()
+    {
         DetectUrls = false;
         BorderStyle = BorderStyle.None;
-		}
+    }
 
     //create the RichTextBox with a thin border
     protected override CreateParams CreateParams
@@ -153,4 +153,4 @@ internal delegate void LinkHandler(object sender, string linkTarget);
         return sb.ToString();
     }
 #endif
-	}
+}

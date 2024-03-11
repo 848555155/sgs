@@ -1,7 +1,7 @@
-﻿using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.SP.Skills;
 
@@ -26,7 +26,8 @@ public class ShenWei : TriggerSkill
                  args.AdjustmentAmount += 2;
              },
              TriggerCondition.OwnerIsSource
-         ) { IsAutoNotify = false};
+         )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerHandCardCapacityAdjustment, trigger2);
         IsEnforced = true;
     }

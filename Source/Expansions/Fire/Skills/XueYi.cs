@@ -1,6 +1,6 @@
-﻿using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Expansions.Fire.Skills;
@@ -28,7 +28,8 @@ public class XueYi : TriggerSkill
             this,
             Run,
             TriggerCondition.OwnerIsSource
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.PlayerHandCardCapacityAdjustment, trigger);
         IsEnforced = true;
         IsRulerOnly = true;

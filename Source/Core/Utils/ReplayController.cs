@@ -27,7 +27,7 @@ public class ReplayController
         IsPaused = true;
         pauseResume.WaitOne();
     }
-    
+
     public void Resume()
     {
         if (!IsPaused) return;

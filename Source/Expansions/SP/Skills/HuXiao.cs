@@ -1,5 +1,5 @@
-using Sanguosha.Core.Skills;
 using Sanguosha.Core.Games;
+using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 using Sanguosha.Expansions.Basic.Cards;
 
@@ -17,7 +17,8 @@ public class HuXiao : TriggerSkill
             (p, e, a) => { return Game.CurrentGame.CurrentPhase == TurnPhase.Play && Game.CurrentGame.CurrentPlayer == p; },
             (p, e, a) => { p[Sha.AdditionalShaUsable]++; },
             TriggerCondition.OwnerIsSource
-            ) { AskForConfirmation = false };
+            )
+        { AskForConfirmation = false };
         Triggers.Add(ShaCancelling.PlayerShaTargetDodged, trigger);
         IsAutoInvoked = null;
     }

@@ -1,11 +1,9 @@
-﻿using System;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Exceptions;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.OverKnightFame12.Skills;
 
@@ -29,7 +27,7 @@ public class DangXian : TriggerSkill
                 do
                 {
                     Player currentPlayer = Game.CurrentGame.CurrentPlayer;
-                    GameEventArgs args = new GameEventArgs() { Source = currentPlayer};
+                    GameEventArgs args = new GameEventArgs() { Source = currentPlayer };
                     Trace.TraceInformation("Main game loop running {0}:{1}", currentPlayer.Id, Game.CurrentGame.CurrentPhase);
                     try
                     {
@@ -58,13 +56,14 @@ public class DangXian : TriggerSkill
                     }
                 } while (Game.CurrentGame.CurrentPhaseEventIndex < 3 && Game.CurrentGame.CurrentPhase == TurnPhase.Play);
 
-                
+
                 Game.CurrentGame.CurrentPlayer = saveP;
                 Game.CurrentGame.CurrentPhase = savePh;
                 Game.CurrentGame.CurrentPhaseEventIndex = savePhI;
             },
             TriggerCondition.OwnerIsSource
-        ) { AskForConfirmation = false };
+        )
+        { AskForConfirmation = false };
         Triggers.Add(GameEvent.PhaseProceedEvents[TurnPhase.BeforeStart], trigger);
         IsEnforced = true;
     }

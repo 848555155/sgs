@@ -1,7 +1,7 @@
-﻿using System.Windows;
+﻿using System.Collections.ObjectModel;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
-using System.Collections.ObjectModel;
 
 namespace Sanguosha.UI.Controls;
 
@@ -9,12 +9,12 @@ namespace Sanguosha.UI.Controls;
 /// Interaction logic for ChatWidget.xaml
 /// </summary>
 public partial class ChatWidget : UserControl
-	{
-		public ChatWidget()
-		{
-			this.InitializeComponent();
+{
+    public ChatWidget()
+    {
+        this.InitializeComponent();
         _LoadFacials();
-		}
+    }
 
     private void _LoadFacials()
     {
@@ -23,7 +23,7 @@ public partial class ChatWidget : UserControl
         {
             string key = string.Format("Facial.{0}.Image", i);
             if (!Resources.Contains(key)) break;
-            items.Add(i); 
+            items.Add(i);
         }
         gridFacials.DataContext = items;
     }
@@ -56,4 +56,4 @@ public partial class ChatWidget : UserControl
             txtMessage.Text = string.Empty;
         }
     }
-	}
+}

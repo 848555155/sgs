@@ -1,12 +1,10 @@
-﻿using System.Collections.Generic;
-using System.Diagnostics;
-
-using Sanguosha.Core.Triggers;
-using Sanguosha.Core.Cards;
-using Sanguosha.Core.UI;
-using Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
+using Sanguosha.Core.Skills;
+using Sanguosha.Core.Triggers;
+using Sanguosha.Core.UI;
+using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Skills;
 
@@ -23,7 +21,7 @@ public class FanKui : TriggerSkill
         deck.Add(new DeckPlace(eventArgs.Source, DeckType.Equipment));
         List<int> max = new List<int>() { 1 };
         List<List<Card>> result;
-        List<string> deckname = new List<string>() {"FanKui choice"};
+        List<string> deckname = new List<string>() { "FanKui choice" };
 
         if (!Game.CurrentGame.UiProxies[Owner].AskForCardChoice(new CardChoicePrompt("FanKui", eventArgs.Source), deck, deckname, max, new RequireOneCardChoiceVerifier(true), out result))
         {
@@ -40,7 +38,8 @@ public class FanKui : TriggerSkill
             this,
             OnAfterDamageInflicted,
             TriggerCondition.OwnerIsTarget | TriggerCondition.SourceHasCards
-        ) { IsAutoNotify = false };
+        )
+        { IsAutoNotify = false };
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);
         IsAutoInvoked = false;
     }
