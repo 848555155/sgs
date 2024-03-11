@@ -11,11 +11,6 @@ public abstract class ActiveSkill : ISkill
 {
     public UiHelper Helper { get; protected set; } = new();
 
-    public ActiveSkill()
-    {
-        LinkedPassiveSkill = null;
-    }
-
     /// <summary>
     /// 检查主动技的合法性。
     /// </summary>
@@ -38,7 +33,7 @@ public abstract class ActiveSkill : ISkill
         return Commit(arg);
     }
 
-    public PassiveSkill LinkedPassiveSkill { get; protected set; }
+    public PassiveSkill LinkedPassiveSkill { get; protected set; } = null;
 
     private Player owner;
     public virtual Player Owner
@@ -65,20 +60,19 @@ public abstract class ActiveSkill : ISkill
 
     public virtual void NotifyAction(Player source, List<Player> targets, List<Card> cards)
     {
-        var log = new ActionLog();
-        log.GameAction = GameAction.None;
-        log.CardAction = null;
-        log.SkillAction = this;
-        log.Source = source;
+        var log = new ActionLog
+        {
+            GameAction = GameAction.None,
+            CardAction = null,
+            SkillAction = this,
+            Source = source
+        };
         TargetsSplit(targets, out var ft, out var st);
         log.Targets = ft;
         log.SecondaryTargets = st;
-        foreach (Card c in cards)
+        foreach (var c in cards)
         {
-            if (c.Log == null)
-            {
-                c.Log = new ActionLog();
-            }
+            c.Log ??= new ActionLog();
             c.Log.SkillAction = this;
         }
         log.SpecialEffectHint = GenerateSpecialEffectHintIndex(source, targets, cards);

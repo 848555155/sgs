@@ -40,7 +40,7 @@ public class RulerGivenSkillContainerSkill : TriggerSkill
     {
         innerSkillType = InnerSkill.GetType();
         QualifiedAllegiance = al;
-        masterList = new Dictionary<Player, IRulerGivenSkill>();
+        masterList = [];
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
             DistributeSkills,

@@ -200,10 +200,9 @@ public abstract class CardHandler : ICloneable
         ICard card;
         if (skill is not null)
         {
-            CompositeCard c;
             if (skill is CardTransformSkill s)
             {
-                VerifierResult r = s.TryTransform(cards, targets, out c);
+                var r = s.TryTransform(cards, targets, out var c);
                 if (c is not null && c.Type is not null && !GetType().IsAssignableFrom(c.Type.GetType()))
                 {
                     return VerifierResult.Fail;
@@ -234,7 +233,7 @@ public abstract class CardHandler : ICloneable
                 return VerifierResult.Fail;
             }
             card = cards[0];
-            if (!(GetType().IsAssignableFrom(card.Type.GetType())))
+            if (!GetType().IsAssignableFrom(card.Type.GetType()))
             {
                 return VerifierResult.Fail;
             }

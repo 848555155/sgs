@@ -32,30 +32,27 @@ public class DeckContainer
         get
         {
             player ??= GameAsPlayer.Instance;
-            if (!GameDecks.ContainsKey(player))
+            if (!GameDecks.TryGetValue(player, out var decks))
             {
-                GameDecks[player] = [];
+                GameDecks[player] = decks = [];
             }
-            if (!GameDecks[player].ContainsKey(type))
+            if (!decks.TryGetValue(type, out var cards))
             {
-                GameDecks[player][type] = [];
+                decks[type] = cards = [];
             }
-            return GameDecks[player][type];
+            return cards;
         }
 
         set
         {
-            if (player == null)
+            player ??= GameAsPlayer.Instance;
+            if (!GameDecks.TryGetValue(player, out Dictionary<DeckType, List<Card>> decks))
             {
-                player = GameAsPlayer.Instance;
+                GameDecks[player] = decks = [];
             }
-            if (!GameDecks.ContainsKey(player))
+            if (!decks.ContainsKey(type))
             {
-                GameDecks[player] = [];
-            }
-            if (!GameDecks[player].ContainsKey(type))
-            {
-                GameDecks[player][type] = value;
+                decks[type] = value;
             }
         }
     }
@@ -72,11 +69,9 @@ public class DeckContainer
     {
         List<DeckType> list = [];
         Trace.Assert(player != null);
-        if (!GameDecks.Keys.Contains(player)) return list;
-        var result = GameDecks[player]
-            .Where(kvp => kvp.Key is PrivateDeckType && GameDecks[player][kvp.Key].Count > 0)
-            .Select(kvp => kvp.Key);
-        list.AddRange(result);
+        if (!GameDecks.TryGetValue(player, out var decks)) return list;
+        list.AddRange(decks.Where(kvp => kvp.Key is PrivateDeckType && decks[kvp.Key].Count > 0)
+            .Select(kvp => kvp.Key));
         return list;
     }
 

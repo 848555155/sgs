@@ -29,7 +29,7 @@ public class GameOverException : SgsException
     public GameOverException(bool isDraw)
     {
         IsDraw = isDraw;
-        Winners = new List<Player>();
+        Winners = [];
     }
     public GameOverException(bool isDraw, IEnumerable<Player> winners)
     {
@@ -40,35 +40,11 @@ public class GameOverException : SgsException
 
 public class CardsMovement
 {
-    public CardsMovement()
-    {
-        cards = new List<Card>();
-        helper = new MovementHelper();
-    }
+    public List<Card> Cards { get; set; } = [];
 
-    private List<Card> cards;
+    public DeckPlace To { get; set; }
 
-    public List<Card> Cards
-    {
-        get { return cards; }
-        set { cards = value; }
-    }
-
-    private DeckPlace to;
-
-    public DeckPlace To
-    {
-        get { return to; }
-        set { to = value; }
-    }
-
-    private MovementHelper helper;
-
-    public MovementHelper Helper
-    {
-        get { return helper; }
-        set { helper = value; }
-    }
+    public MovementHelper Helper { get; set; } = new MovementHelper();
 
 }
 
@@ -105,40 +81,24 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public GameSettings Settings { get; set; }
 
-    static Game()
-    {
-        games = new Dictionary<Thread, Game>();
-    }
-
-    private List<CardHandler> availableCards;
-
-    public List<CardHandler> AvailableCards
-    {
-        get { return availableCards; }
-    }
+    public List<CardHandler> AvailableCards { get; private set; }
 
     private readonly List<DelayedTriggerRegistration> triggersToRegister;
 
-    private Dictionary<Player, List<Player>> handCardVisibility;
-
-    public Dictionary<Player, List<Player>> HandCardVisibility
-    {
-        get { return handCardVisibility; }
-        set { handCardVisibility = value; }
-    }
+    public Dictionary<Player, List<Player>> HandCardVisibility { get; set; }
 
     public Game()
     {
-        cardSet = new List<Card>();
-        originalCardSet = new List<Card>();
+        CardSet = new List<Card>();
+        OriginalCardSet = new List<Card>();
         triggers = new Dictionary<GameEvent, List<Trigger>>();
-        decks = new DeckContainer();
-        players = new List<Player>();
-        cardHandlers = new Dictionary<string, CardHandler>();
-        uiProxies = new Dictionary<Player, IPlayerProxy>();
+        Decks = new DeckContainer();
+        Players = new List<Player>();
+        CardHandlers = new Dictionary<string, CardHandler>();
+        UiProxies = new Dictionary<Player, IPlayerProxy>();
         triggersToRegister = new List<DelayedTriggerRegistration>();
-        isDying = new Stack<Player>();
-        handCardVisibility = new Dictionary<Player, List<Player>>();
+        DyingPlayers = new Stack<Player>();
+        HandCardVisibility = new Dictionary<Player, List<Player>>();
         Settings = new GameSettings();
         cleanupSquad = new CleanupSquad();
         cleanupSquad.Priority = -1;
@@ -147,11 +107,7 @@ public abstract partial class Game : INotifyPropertyChanged
         HandCardSwitcher = new HandCardSwitcher();
     }
 
-    internal HandCardSwitcher HandCardSwitcher
-    {
-        get;
-        private set;
-    }
+    internal HandCardSwitcher HandCardSwitcher { get; private set; }
 
     public void LoadExpansion(Expansion expansion)
     {
@@ -163,10 +119,10 @@ public abstract partial class Game : INotifyPropertyChanged
         {
             foreach (var card in expansion.CardSet)
             {
-                var hero = card.Type as HeroCardHandler;
-                if (hero != null)
+                if (card.Type is HeroCardHandler hero)
                 {
-                    if (hero.Hero.Allegiance == Allegiance.God) continue;
+                    if (hero.Hero.Allegiance == Allegiance.God) 
+                        continue;
                 }
                 OriginalCardSet.Add(card);
             }
@@ -188,8 +144,7 @@ public abstract partial class Game : INotifyPropertyChanged
     {
         get
         {
-            if (GameClient == null) return null;
-            return GameClient.ReplayController;
+            return GameClient?.ReplayController;
         }
     }
 
@@ -228,7 +183,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void SyncUnknownLocationCardAll(Card card)
     {
-        foreach (Player p in players)
+        foreach (Player p in Players)
         {
             SyncUnknownLocationCard(p, card);
         }
@@ -274,7 +229,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void SyncCardAll(ref Card card)
     {
-        foreach (Player p in players)
+        foreach (var p in Players)
         {
             SyncCard(p, ref card);
         }
@@ -283,7 +238,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     private void SyncCardsAll(List<Card> cards)
     {
-        foreach (Player p in players)
+        foreach (var p in Players)
         {
             SyncCards(p, cards);
         }
@@ -292,7 +247,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void SyncImmutableCard(Player player, Card card)
     {
-        SyncImmutableCards(player, new List<Card>() { card });
+        SyncImmutableCards(player, [card]);
     }
 
     public void SyncImmutableCards(Player player, List<Card> cards)
@@ -323,7 +278,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void SyncImmutableCardAll(Card card)
     {
-        foreach (Player p in players)
+        foreach (var p in Players)
         {
             SyncImmutableCard(p, card);
         }
@@ -332,7 +287,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void SyncImmutableCardsAll(List<Card> cards)
     {
-        foreach (Player p in players)
+        foreach (var p in Players)
         {
             SyncImmutableCards(p, cards);
         }
@@ -378,41 +333,30 @@ public abstract partial class Game : INotifyPropertyChanged
                 }
             }
         }
-        else if (GameClient != null)
+        else
         {
-            GameClient.Receive();
+            GameClient?.Receive();
         }
     }
 
-    public bool IsClient
-    {
-        get
-        {
-            return GameClient != null;
-        }
-    }
+    public bool IsClient => GameClient != null;
 
     public void Abort()
     {
-        if (mainThread == null) return;
-        Trace.Assert(mainThread != Thread.CurrentThread);
-        if (GlobalProxy != null) GlobalProxy.Abort();
+        if (MainThread == null) return;
+        Trace.Assert(MainThread != Thread.CurrentThread);
+        GlobalProxy?.Abort();
 #pragma warning disable SYSLIB0006 // 类型或成员已过时
-        mainThread.Abort();
+        MainThread.Abort();
 #pragma warning restore SYSLIB0006 // 类型或成员已过时
-        mainThread = null;
+        MainThread = null;
     }
 
-    private Thread mainThread;
-
-    public Thread MainThread
-    {
-        get { return mainThread; }
-    }
+    public Thread MainThread { get; private set; }
 
     public virtual void Run()
     {
-        mainThread = Thread.CurrentThread;
+        MainThread = Thread.CurrentThread;
         if (!games.ContainsKey(Thread.CurrentThread))
         {
             /*throw new GameAlreadyStartedException();
@@ -443,11 +387,11 @@ public abstract partial class Game : INotifyPropertyChanged
             LoadExpansion(GameEngine.Expansions[expansionName]);
         }
 
-        availableCards = new List<CardHandler>();
+        AvailableCards = [];
         foreach (Card c in OriginalCardSet)
         {
             bool typeCheck = false;
-            foreach (var type in availableCards)
+            foreach (var type in AvailableCards)
             {
                 if (type.GetType().Name.Equals(c.Type.GetType().Name))
                 {
@@ -457,7 +401,7 @@ public abstract partial class Game : INotifyPropertyChanged
             }
             if (!typeCheck)
             {
-                availableCards.Add(c.Type);
+                AvailableCards.Add(c.Type);
             }
         }
 
@@ -466,14 +410,16 @@ public abstract partial class Game : INotifyPropertyChanged
             //you are client. everything is unknown
             if (IsClient && !IsPanorama)
             {
-                unknownCard = new Card();
-                unknownCard.Id = Card.UnknownCardId;
-                unknownCard.Rank = 0;
-                unknownCard.Suit = SuitType.None;
-                if (card.Type is Heroes.HeroCardHandler)
+                unknownCard = new Card
                 {
-                    unknownCard.Type = new Heroes.UnknownHeroCardHandler();
-                    unknownCard.Id = (card.Type as Heroes.HeroCardHandler).Hero.IsSpecialHero ? Card.UnknownSPHeroId : Card.UnknownHeroId;
+                    Id = Card.UnknownCardId,
+                    Rank = 0,
+                    Suit = SuitType.None
+                };
+                if (card.Type is HeroCardHandler heroCardHandler)
+                {
+                    unknownCard.Type = new UnknownHeroCardHandler();
+                    unknownCard.Id = heroCardHandler.Hero.IsSpecialHero ? Card.UnknownSPHeroId : Card.UnknownHeroId;
                 }
                 else if (card.Type is RoleCardHandler)
                 {
@@ -492,10 +438,10 @@ public abstract partial class Game : INotifyPropertyChanged
                 unknownCard.CopyFrom(card);
                 if (unknownCard.Type is CardHandler)
                 {
-                    unknownCard.Type = (CardHandler)(unknownCard.Type as CardHandler).Clone();
+                    unknownCard.Type = (CardHandler)unknownCard.Type.Clone();
                 }
             }
-            cardSet.Add(unknownCard);
+            CardSet.Add(unknownCard);
         }
 
         foreach (var trig in triggersToRegister)
@@ -520,8 +466,8 @@ public abstract partial class Game : INotifyPropertyChanged
                 }
             }
 
-            this.NotificationProxy = null;
-            this.uiProxies = null;
+            NotificationProxy = null;
+            UiProxies = null;
         }
 #if !DEBUG
         catch (Exception e)
@@ -552,15 +498,15 @@ public abstract partial class Game : INotifyPropertyChanged
             }
         }
 #endif
-        mainThread = null;
+        MainThread = null;
 
         if (GameServer != null)
         {
             GameServer.Stop();
         }
-        else if (GameClient != null)
+        else
         {
-            GameClient.Stop();
+            GameClient?.Stop();
         }
         Trace.TraceInformation("Game exited normally");
     }
@@ -575,7 +521,7 @@ public abstract partial class Game : INotifyPropertyChanged
             account.TotalGames++;
             if (GameServer.IsDisconnected(idx))
             {
-                if (!(account.IsDead))
+                if (!account.IsDead)
                 {
                     account.Quits++;
                     continue;
@@ -611,11 +557,7 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <summary>
     /// Speed up current game access for client process
     /// </summary>
-    public static Game CurrentGameOverride
-    {
-        get;
-        set;
-    }
+    public static Game CurrentGameOverride{get;set;}
 
     public static Game CurrentGame
     {
@@ -631,16 +573,13 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <summary>
     /// Mapping from a thread to the game it hosts.
     /// </summary>
-    private static readonly Dictionary<Thread, Game> games;
+    private static readonly Dictionary<Thread, Game> games = [];
 
     public void RegisterCurrentThread()
     {
         lock (games)
         {
-            if (games.ContainsKey(Thread.CurrentThread))
-            {
-                games.Remove(Thread.CurrentThread);
-            }
+            games.Remove(Thread.CurrentThread);
             games.Add(Thread.CurrentThread, this);
         }
     }
@@ -653,26 +592,16 @@ public abstract partial class Game : INotifyPropertyChanged
         }
     }
 
-    private readonly List<Card> originalCardSet;
-
     /// <summary>
     /// All eligible card copied verbatim from the game engine. All cards in this set are known cards.
     /// </summary>
-    public List<Card> OriginalCardSet
-    {
-        get { return originalCardSet; }
-    }
-
-    private readonly List<Card> cardSet;
+    public List<Card> OriginalCardSet { get; }
 
     /// <summary>
     /// Current state of all cards used in the game. Some of the cards can be unknown in the client side.
     /// The collection is empty before Run() is called.
     /// </summary>
-    public List<Card> CardSet
-    {
-        get { return cardSet; }
-    }
+    public List<Card> CardSet { get; }
 
     private Card unknownCard;
     private readonly Dictionary<GameEvent, List<Trigger>> triggers;
@@ -683,11 +612,12 @@ public abstract partial class Game : INotifyPropertyChanged
         {
             return;
         }
-        if (!triggers.ContainsKey(gameEvent))
+        if (!triggers.TryGetValue(gameEvent, out List<Trigger> value))
         {
-            triggers[gameEvent] = new List<Trigger>();
+            triggers[gameEvent] = value = [];
         }
-        triggers[gameEvent].Add(trigger);
+
+        value.Add(trigger);
     }
 
     public void UnregisterTrigger(GameEvent gameEvent, Trigger trigger)
@@ -696,21 +626,16 @@ public abstract partial class Game : INotifyPropertyChanged
         {
             return;
         }
-        if (triggers.ContainsKey(gameEvent))
+        if (triggers.TryGetValue(gameEvent, out List<Trigger> value))
         {
-            Trace.Assert(triggers[gameEvent].Contains(trigger));
-            triggers[gameEvent].Remove(trigger);
+            Trace.Assert(value.Contains(trigger));
+            value.Remove(trigger);
         }
     }
 
-    private class TriggerComparer : IComparer<TriggerWithParam>
+    private class TriggerComparer(Game game) : IComparer<TriggerWithParam>
     {
-        public TriggerComparer(Game game)
-        {
-            this.game = game;
-        }
-
-        private readonly Game game;
+        private readonly Game game = game;
         public int Compare(TriggerWithParam a, TriggerWithParam b)
         {
             int result2 = a.trigger.Type.CompareTo(b.trigger.Type);
@@ -768,12 +693,12 @@ public abstract partial class Game : INotifyPropertyChanged
     public void Emit(GameEvent gameEvent, GameEventArgs eventParam, bool beforeMove = false)
     {
         if (!triggers.ContainsKey(gameEvent)) return;
-        List<Trigger> additionalTriggers = new List<Trigger>(triggers[gameEvent]);
-        List<Trigger> oldTriggers = new List<Trigger>(triggers[gameEvent]);
+        var additionalTriggers = new List<Trigger>(triggers[gameEvent]);
+        var oldTriggers = new List<Trigger>(triggers[gameEvent]);
         while (true)
         {
             if (additionalTriggers == null || additionalTriggers.Count == 0) return;
-            List<TriggerWithParam> triggersToRun = new List<TriggerWithParam>();
+            var triggersToRun = new List<TriggerWithParam>();
             foreach (var t in additionalTriggers)
             {
                 if (t.Enabled)
@@ -801,15 +726,7 @@ public abstract partial class Game : INotifyPropertyChanged
         }
     }
 
-    private Dictionary<Player, IPlayerProxy> uiProxies;
-
-    public Dictionary<Player, IPlayerProxy> UiProxies
-    {
-        get { return uiProxies; }
-        set { uiProxies = value; }
-    }
-
-    private Dictionary<string, CardHandler> cardHandlers;
+    public Dictionary<Player, IPlayerProxy> UiProxies { get; set; }
 
     public IGlobalUiProxy GlobalProxy { get; set; }
 
@@ -827,67 +744,45 @@ public abstract partial class Game : INotifyPropertyChanged
     public void UpdateUiAttachStatus()
     {
         if (ReplayController != null) return;
-        if (notificationProxy == null) return;
+        if (NotificationProxy == null) return;
         if (!isUiDetached)
         {
-            foreach (var pair in uiProxies)
+            foreach (var pair in UiProxies)
             {
-                ClientNetworkProxy proxy = pair.Value as ClientNetworkProxy;
-                if (proxy != null) proxy.IsUiDetached = false;
+                if (pair.Value is ClientNetworkProxy proxy) 
+                    proxy.IsUiDetached = false;
             }
-            notificationProxy.NotifyUiAttached();
+            NotificationProxy.NotifyUiAttached();
         }
         else
         {
-            foreach (var pair in uiProxies)
+            foreach (var pair in UiProxies)
             {
-                ClientNetworkProxy proxy = pair.Value as ClientNetworkProxy;
-                if (proxy != null) proxy.IsUiDetached = true;
+                if (pair.Value is ClientNetworkProxy proxy) 
+                    proxy.IsUiDetached = true;
             }
-            notificationProxy.NotifyUiDetached();
+            NotificationProxy.NotifyUiDetached();
         }
     }
 
-    private INotificationProxy notificationProxy;
-
-    public INotificationProxy NotificationProxy
-    {
-        get { return notificationProxy; }
-        set { notificationProxy = value; }
-    }
+    public INotificationProxy NotificationProxy { get; set; }
 
 
     /// <summary>
     /// Card usage handler for a given card's type name.
     /// </summary>
-    public Dictionary<string, CardHandler> CardHandlers
-    {
-        get { return cardHandlers; }
-        set { cardHandlers = value; }
-    }
+    public Dictionary<string, CardHandler> CardHandlers { get; set; }
 
-    private DeckContainer decks;
+    public DeckContainer Decks { get; set; }
 
-    public DeckContainer Decks
-    {
-        get { return decks; }
-        set { decks = value; }
-    }
-
-    private List<Player> players;
-
-    public List<Player> Players
-    {
-        get { return players; }
-        set { players = value; }
-    }
+    public List<Player> Players { get; set; }
 
     public List<Player> AlivePlayers
     {
         get
         {
             var list = new List<Player>();
-            foreach (Player p in players)
+            foreach (Player p in Players)
             {
                 if (!p.IsDead)
                 {
@@ -928,9 +823,9 @@ public abstract partial class Game : INotifyPropertyChanged
         atomic = true;
         if (atomicLevel == 0)
         {
-            atomicMoves = new List<CardsMovement>();
-            atomicTriggers = new List<TriggerWithParam>();
-            atomicTriggersBeforeMove = new List<TriggerWithParam>();
+            atomicMoves = [];
+            atomicTriggers = [];
+            atomicTriggersBeforeMove = [];
         }
         atomicLevel++;
     }
@@ -957,10 +852,12 @@ public abstract partial class Game : INotifyPropertyChanged
         int i = 0;
         foreach (var m in moves)
         {
-            CardsMovement newM = new CardsMovement();
-            newM.Cards = m.Cards;
-            newM.To = new DeckPlace(m.To.Player, m.To.DeckType);
-            newM.Helper = new MovementHelper(m.Helper);
+            var newM = new CardsMovement
+            {
+                Cards = m.Cards,
+                To = new DeckPlace(m.To.Player, m.To.DeckType),
+                Helper = new MovementHelper(m.Helper)
+            };
             atomicMoves.Add(newM);
             i++;
         }
@@ -979,8 +876,8 @@ public abstract partial class Game : INotifyPropertyChanged
         }
         foreach (CardsMovement move in moves)
         {
-            List<Card> cards = new List<Card>(move.Cards);
-            foreach (Card card in cards)
+            var cards = new List<Card>(move.Cards);
+            foreach (var card in cards)
             {
                 if (move.To.Player == null && move.To.DeckType == DeckType.Discard)
                 {
@@ -998,7 +895,7 @@ public abstract partial class Game : INotifyPropertyChanged
         int i = 0;
         foreach (CardsMovement move in moves)
         {
-            List<Card> cards = new List<Card>(move.Cards);
+            var cards = new List<Card>(move.Cards);
             // Update card's deck mapping
             foreach (Card card in cards)
             {
@@ -1016,15 +913,15 @@ public abstract partial class Game : INotifyPropertyChanged
                     Equipment e = card.Type as Equipment;
                     e.RegisterTriggers(move.To.Player);
                 }
-                decks[card.Place].Remove(card);
-                int isLastHandCard = (card.Place.DeckType == DeckType.Hand && decks[card.Place].Count == 0) ? 1 : 0;
+                Decks[card.Place].Remove(card);
+                int isLastHandCard = (card.Place.DeckType == DeckType.Hand && Decks[card.Place].Count == 0) ? 1 : 0;
                 if (insertBefore != null && insertBefore[i])
                 {
-                    decks[move.To].Insert(0, card);
+                    Decks[move.To].Insert(0, card);
                 }
                 else
                 {
-                    decks[move.To].Add(card);
+                    Decks[move.To].Add(card);
                 }
                 card.HistoryPlace2 = card.HistoryPlace1;
                 card.HistoryPlace1 = card.Place;
@@ -1047,7 +944,7 @@ public abstract partial class Game : INotifyPropertyChanged
                 {
                     card.Log = new ActionLog();
                     _ResetCard(card);
-                    if (card.Attributes != null) card.Attributes.Clear();
+                    card.Attributes?.Clear();
                 }
                 card[Card.IsLastHandCard] = isLastHandCard;
 
@@ -1070,14 +967,13 @@ public abstract partial class Game : INotifyPropertyChanged
     public void MoveCards(CardsMovement move, bool insertBefore = false, int delay = GameDelays.CardTransfer)
     {
         if (move.Cards.Count == 0) return;
-        List<CardsMovement> moves = new List<CardsMovement>();
-        moves.Add(move);
-        MoveCards(moves, new List<bool>() { insertBefore }, delay);
+        List<CardsMovement> moves = [move];
+        MoveCards(moves, [insertBefore], delay);
     }
 
     public Card PeekCard(int i)
     {
-        var drawDeck = decks[DeckType.Dealing];
+        var drawDeck = Decks[DeckType.Dealing];
         if (i >= drawDeck.Count)
         {
             Emit(GameEvent.Shuffle, new GameEventArgs());
@@ -1091,7 +987,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public Card DrawCard()
     {
-        var drawDeck = decks[DeckType.Dealing];
+        var drawDeck = Decks[DeckType.Dealing];
         if (drawDeck.Count == 0)
         {
             Emit(GameEvent.Shuffle, new GameEventArgs());
@@ -1167,17 +1063,11 @@ public abstract partial class Game : INotifyPropertyChanged
         }
     }
 
-    private int currentPhaseEventIndex;
+    public int CurrentPhaseEventIndex { get; set; }
 
-    public int CurrentPhaseEventIndex
-    {
-        get { return currentPhaseEventIndex; }
-        set { currentPhaseEventIndex = value; }
-    }
-
-    public static Dictionary<TurnPhase, GameEvent>[] PhaseEvents = new Dictionary<TurnPhase, GameEvent>[]
-                     { GameEvent.PhaseBeginEvents, GameEvent.PhaseProceedEvents,
-                       GameEvent.PhaseEndEvents, GameEvent.PhaseOutEvents };
+    public static readonly Dictionary<TurnPhase, GameEvent>[] PhaseEvents =
+                     [ GameEvent.PhaseBeginEvents, GameEvent.PhaseProceedEvents,
+                       GameEvent.PhaseEndEvents, GameEvent.PhaseOutEvents ];
 
     /// <summary>
     /// Get player next to the a player in counter-clock seat map. (must be alive)
@@ -1201,11 +1091,11 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <returns></returns>
     public virtual Player NextPlayer(Player p)
     {
-        int numPlayers = players.Count;
+        int numPlayers = Players.Count;
         int i;
         for (i = 0; i < numPlayers; i++)
         {
-            if (players[i] == p)
+            if (Players[i] == p)
             {
                 break;
             }
@@ -1214,7 +1104,7 @@ public abstract partial class Game : INotifyPropertyChanged
         // The next player to the last player is the first player.
         if (i == numPlayers - 1)
         {
-            return players[0];
+            return Players[0];
         }
         else if (i >= numPlayers)
         {
@@ -1223,17 +1113,17 @@ public abstract partial class Game : INotifyPropertyChanged
         }
         else
         {
-            return players[i + 1];
+            return Players[i + 1];
         }
     }
 
     public virtual int OrderOf(Player withRespectTo, Player target)
     {
-        int numPlayers = players.Count;
+        int numPlayers = Players.Count;
         int i;
         for (i = 0; i < numPlayers; i++)
         {
-            if (players[i] == withRespectTo)
+            if (Players[i] == withRespectTo)
             {
                 break;
             }
@@ -1241,7 +1131,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
         // The next player to the last player is the first player.
         int order = 0;
-        while (players[i] != target)
+        while (Players[i] != target)
         {
             if (i == numPlayers - 1)
             {
@@ -1249,7 +1139,7 @@ public abstract partial class Game : INotifyPropertyChanged
             }
             else
             {
-                i = i + 1;
+                i++;
             }
             order++;
         }
@@ -1260,10 +1150,7 @@ public abstract partial class Game : INotifyPropertyChanged
     public virtual void SortByOrderOfComputation(Player withRespectTo, List<Player> players)
     {
         if (withRespectTo == null) return;
-        players.Sort((a, b) =>
-            {
-                return OrderOf(withRespectTo, a).CompareTo(OrderOf(withRespectTo, b));
-            });
+        players.Sort((a, b) => OrderOf(withRespectTo, a).CompareTo(OrderOf(withRespectTo, b)));
     }
 
 
@@ -1289,11 +1176,11 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <returns></returns>
     public virtual Player PreviousPlayer(Player p)
     {
-        int numPlayers = players.Count;
+        int numPlayers = Players.Count;
         int i;
         for (i = 0; i < numPlayers; i++)
         {
-            if (players[i] == p)
+            if (Players[i] == p)
             {
                 break;
             }
@@ -1302,7 +1189,7 @@ public abstract partial class Game : INotifyPropertyChanged
         // The previous player to the first player is the last player
         if (i == 0)
         {
-            return players[numPlayers - 1];
+            return Players[numPlayers - 1];
         }
         else if (i >= numPlayers)
         {
@@ -1310,7 +1197,7 @@ public abstract partial class Game : INotifyPropertyChanged
         }
         else
         {
-            return players[i - 1];
+            return Players[i - 1];
         }
     }
 
@@ -1332,10 +1219,12 @@ public abstract partial class Game : INotifyPropertyChanged
         }
         distLeft += to[Player.RangePlus];
 
-        var args = new AdjustmentEventArgs();
-        args.Source = from;
-        args.Targets = new List<Player>() { to };
-        args.AdjustmentAmount = 0;
+        var args = new AdjustmentEventArgs
+        {
+            Source = from,
+            Targets = [to],
+            AdjustmentAmount = 0
+        };
         Emit(GameEvent.PlayerDistanceAdjustment, args);
         distLeft += args.AdjustmentAmount;
         distRight += args.AdjustmentAmount;
@@ -1348,10 +1237,12 @@ public abstract partial class Game : INotifyPropertyChanged
 
         // the minimum distance is 1 between any two. if distance is 0, it means this is the distance to heself or herself.
         // some skills took ignore distance, it means the distance between them is aways 1.
-        args = new AdjustmentEventArgs();
-        args.Source = from;
-        args.Targets = new List<Player>() { to };
-        args.AdjustmentAmount = ret;
+        args = new AdjustmentEventArgs
+        {
+            Source = from,
+            Targets = [to],
+            AdjustmentAmount = ret
+        };
         Emit(GameEvent.PlayerDistanceOverride, args);
         ret = args.AdjustmentAmount;
 
@@ -1360,10 +1251,11 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void _FilterCard(Player p, Card card)
     {
-        GameEventArgs args = new GameEventArgs();
-        args.Source = p;
-        args.Card = card;
-        Emit(GameEvent.EnforcedCardTransform, args);
+        Emit(GameEvent.EnforcedCardTransform, new GameEventArgs
+        {
+            Source = p,
+            Card = card
+        });
     }
 
     private void _ResetCard(Card card)
@@ -1378,7 +1270,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     private void _ResetCards(Player p)
     {
-        foreach (var card in decks[p, DeckType.Hand])
+        foreach (var card in Decks[p, DeckType.Hand])
         {
             if (card.Id > 0)
             {
@@ -1404,9 +1296,8 @@ public abstract partial class Game : INotifyPropertyChanged
     {
         if (skill != null)
         {
-            CompositeCard card;
             CardTransformSkill s = (CardTransformSkill)skill;
-            if (!s.Transform(cards, null, out card, targets))
+            if (!s.Transform(cards, null, out var card, targets))
             {
                 result = null;
                 return false;
@@ -1423,9 +1314,11 @@ public abstract partial class Game : INotifyPropertyChanged
     public bool PlayerCanDiscardCard(Player p, Card c)
     {
         if (c.Type is Equipment && (c.Type as Equipment).InUse) return false;
-        GameEventArgs arg = new GameEventArgs();
-        arg.Source = p;
-        arg.Card = c;
+        var arg = new GameEventArgs
+        {
+            Source = p,
+            Card = c
+        };
         try
         {
             Emit(GameEvent.PlayerCanDiscardCard, arg);
@@ -1493,13 +1386,7 @@ public abstract partial class Game : INotifyPropertyChanged
         return true;
     }
 
-    private Stack<Player> isDying;
-
-    public Stack<Player> DyingPlayers
-    {
-        get { return isDying; }
-        set { isDying = value; }
-    }
+    public Stack<Player> DyingPlayers { get; set; }
 
     public class PlayerHpChanged : Trigger
     {
@@ -1513,9 +1400,11 @@ public abstract partial class Game : INotifyPropertyChanged
             CurrentGame.DyingPlayers.Push(target);
             target[Player.IsDying] = 1;
             Trace.TraceInformation("Player {0} dying", target.Id);
-            GameEventArgs args = new GameEventArgs();
-            args.Source = eventArgs.Source;
-            args.Targets = new List<Player>() { target };
+            GameEventArgs args = new GameEventArgs
+            {
+                Source = eventArgs.Source,
+                Targets = [target]
+            };
             try
             {
                 CurrentGame.Emit(GameEvent.PlayerIsAboutToDie, args);
@@ -1545,9 +1434,9 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public delegate int NumberOfCardsToForcePlayerDiscard(Player p, int discarded);
 
-    private class PlayerForceDiscardVerifier : ICardUsageVerifier
+    private class PlayerForceDiscardVerifier(int n, bool equip, int min) : ICardUsageVerifier
     {
-        public UiHelper Helper { get { return new UiHelper(); } }
+        public UiHelper Helper => new();
 
         public VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
         {
@@ -1585,25 +1474,16 @@ public abstract partial class Game : INotifyPropertyChanged
             return VerifierResult.Success;
         }
 
-        public IList<CardHandler> AcceptableCardTypes
-        {
-            get { return null; }
-        }
+        public IList<CardHandler> AcceptableCardTypes => null;
 
         public VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
         {
             return FastVerify(source, skill, cards, players);
         }
 
-        private readonly int toDiscard;
-        private readonly bool canDiscardEquip;
-        private readonly int minimun;
-        public PlayerForceDiscardVerifier(int n, bool equip, int min)
-        {
-            toDiscard = n;
-            canDiscardEquip = equip;
-            minimun = min;
-        }
+        private readonly int toDiscard = n;
+        private readonly bool canDiscardEquip = equip;
+        private readonly int minimun = min;
     }
 
 
@@ -1630,20 +1510,14 @@ public abstract partial class Game : INotifyPropertyChanged
             return VerifierResult.Success;
         }
 
-        public IList<CardHandler> AcceptableCardTypes
-        {
-            get { return null; }
-        }
+        public IList<CardHandler> AcceptableCardTypes => null;
 
         public VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
         {
             return FastVerify(source, skill, cards, players);
         }
 
-        public UiHelper Helper
-        {
-            get { return new UiHelper(); }
-        }
+        public UiHelper Helper => new();
     }
 
     public void MoveHandCard(Player player, int from, int to)

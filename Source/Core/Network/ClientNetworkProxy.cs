@@ -16,11 +16,7 @@ public class ClientNetworkProxy : IPlayerProxy
         uiProxy.Freeze();
     }
 
-    public Player HostPlayer
-    {
-        get;
-        set;
-    }
+    public Player HostPlayer { get; set; }
 
     private readonly IPlayerProxy uiProxy;
     private readonly Client client;
@@ -83,7 +79,7 @@ public class ClientNetworkProxy : IPlayerProxy
         Trace.Assert(Game.CurrentGame.ReplayController == null);
         if (startTimeStamp == null) startTimeStamp = DateTime.Now;
         TimeSpan t = DateTime.Now - (DateTime)startTimeStamp;
-        Int64 msSinceEpoch = (Int64)t.TotalMilliseconds;
+        long msSinceEpoch = (long)t.TotalMilliseconds;
         client.RecordStream.Write(BitConverter.GetBytes(msSinceEpoch), 0, 8);
     }
 
@@ -102,7 +98,7 @@ public class ClientNetworkProxy : IPlayerProxy
             if (!controller.NoDelays)
             {
                 if (controller.EvenDelays) toSleep = ReplayController.EvenReplayBaseSpeedInMs;
-                if (controller.Speed != 0) toSleep = (Int64)(((double)toSleep) / controller.Speed);
+                if (controller.Speed != 0) toSleep = (long)(toSleep / controller.Speed);
                 controller.Lock();
                 controller.Unlock();
                 Thread.Sleep((int)toSleep);
@@ -232,8 +228,7 @@ public class ClientNetworkProxy : IPlayerProxy
     public bool TryAnswerForCardChoice(Prompt prompt, ICardChoiceVerifier verifier, out List<List<Card>> answer, AdditionalCardChoiceOptions options, CardChoiceRearrangeCallback callback)
     {
         object o = client.Receive();
-        int opt;
-        answer = (o as AskForCardChoiceResponse).ToAnswer(client.SelfId, out opt);
+        answer = (o as AskForCardChoiceResponse).ToAnswer(client.SelfId, out var opt);
         if (options != null) options.OptionResult = opt;
         return true;
     }
@@ -241,10 +236,7 @@ public class ClientNetworkProxy : IPlayerProxy
     private int timeOutSeconds;
     public int TimeOutSeconds
     {
-        get
-        {
-            return TimeOutSeconds;
-        }
+        get => TimeOutSeconds;
         set
         {
             uiProxy.TimeOutSeconds = value;
@@ -253,8 +245,5 @@ public class ClientNetworkProxy : IPlayerProxy
     }
 
 
-    public bool IsPlayable
-    {
-        get { return uiProxy.IsPlayable; }
-    }
+    public bool IsPlayable => uiProxy.IsPlayable;
 }

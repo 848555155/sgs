@@ -5,6 +5,4 @@
 /// e.g. 缔盟，甘露，突袭，巧变②
 /// </summary>
 [Serializable]
-public class StagingDeckType(string name) : DeckType(name, name)
-{
-}
+public class StagingDeckType(string name) : DeckType(name, name);

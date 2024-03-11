@@ -12,15 +12,9 @@ public class GameEngine
 
     public static Dictionary<string, Expansion> Expansions { get; set; } = [];
 
-    public static int Serialize(CardHandler handler)
-    {
-        return idOfCardHandler[handler.Name];
-    }
+    public static int Serialize(CardHandler handler) => idOfCardHandler[handler.Name];
 
-    public static CardHandler DeserializeCardHandler(int id)
-    {
-        return cardHandlers[id].Clone() as CardHandler;
-    }
+    public static CardHandler DeserializeCardHandler(int id) => cardHandlers[id].Clone() as CardHandler;
 
     // Used to serialize/deserialize card handlers.
     private static readonly Dictionary<int, CardHandler> cardHandlers = [];
@@ -59,8 +53,7 @@ public class GameEngine
                 {
                     if (type.IsSubclassOf(typeof(Expansion)))
                     {
-                        var exp = Activator.CreateInstance(type) as Expansion;
-                        if (exp != null)
+                        if (Activator.CreateInstance(type) is Expansion exp)
                         {
                             if (Expansions.ContainsKey(type.FullName))
                             {

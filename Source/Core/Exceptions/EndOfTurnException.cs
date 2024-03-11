@@ -1,5 +1,3 @@
 ﻿namespace Sanguosha.Core.Exceptions;
 
-public class EndOfTurnException : SgsException
-{
-}
+public class EndOfTurnException : SgsException;

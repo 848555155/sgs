@@ -63,9 +63,7 @@ public class ObjectInfo
 /// <summary>
 /// Raw serializer class.  Serializes value types and structs whose length can be determined by the marshaller.
 /// </summary>
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class RawSerializer
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     /// <summary>
     /// The binary writer instance to which value types are written.

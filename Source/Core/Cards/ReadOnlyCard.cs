@@ -3,42 +3,23 @@ using System.Diagnostics;
 
 namespace Sanguosha.Core.Cards;
 
-public class ReadOnlyCard : ICard
+public class ReadOnlyCard(ICard card) : ICard
 {
-    public ReadOnlyCard(ICard card)
-    {
-        type = card.Type;
-        place = card.Place;
-        rank = card.Rank;
-        suit = card.Suit;
-        Owner = card.Owner;
-        SuitColor = card.SuitColor;
-        if (card is Card c) Id = c.Id;
-        else Id = -1;
-        if (card.Attributes == null)
-        {
-            Attributes = [];
-        }
-        else
-        {
-            Attributes = new Dictionary<CardAttribute, int>(card.Attributes);
-        }
-    }
-    public int Id { get; protected set; }
-    public Player Owner { get; }
+    public int Id { get; protected set; } = card is Card c ? c.Id : -1;
+    public Player Owner { get; } = card.Owner;
 
-    private readonly DeckPlace place;
-    public DeckPlace Place { get => place; set { Trace.Assert(false); } }
-    private readonly int rank;
-    public int Rank { get => rank; set { Trace.Assert(false); } }
-    private readonly CardHandler type;
-    public CardHandler Type { get => type; set { Trace.Assert(false); } }
-    private readonly SuitType suit;
-    public SuitType Suit { get => suit; set { Trace.Assert(false); } }
+    private readonly DeckPlace place = card.Place;
+    public DeckPlace Place { get => place; set => Trace.Assert(false); }
+    private readonly int rank = card.Rank;
+    public int Rank { get => rank; set => Trace.Assert(false); }
+    private readonly CardHandler type = card.Type;
+    public CardHandler Type { get => type; set => Trace.Assert(false); }
+    private readonly SuitType suit = card.Suit;
+    public SuitType Suit { get => suit; set => Trace.Assert(false); }
 
-    public SuitColorType SuitColor { get; }
+    public SuitColorType SuitColor { get; } = card.SuitColor;
 
-    public Dictionary<CardAttribute, int> Attributes { get; }
+    public Dictionary<CardAttribute, int> Attributes { get; } = new Dictionary<CardAttribute, int>(card.Attributes ?? []);
 
     public int this[CardAttribute key]
     {

@@ -50,12 +50,9 @@ public class GlobalClientProxy : IGlobalUiProxy
 
     public void Abort()
     {
-        if (pendingUiThread != null)
-        {
 #pragma warning disable SYSLIB0006 // 类型或成员已过时
-            pendingUiThread.Abort();
-#pragma warning disable SYSLIB0006 // 类型或成员已过时
-        }
+        pendingUiThread?.Abort();
+#pragma warning restore SYSLIB0006 // 类型或成员已过时
     }
 
     public void AskForMultipleChoice(Prompt prompt, List<OptionPrompt> questions, List<Player> players, out Dictionary<Player, int> aanswer)

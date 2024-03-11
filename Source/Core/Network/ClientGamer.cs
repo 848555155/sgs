@@ -5,9 +5,7 @@ using System.Diagnostics;
 
 namespace Sanguosha.Core.Network;
 
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class ClientGamer
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     public ClientGamer()
     {
@@ -31,7 +29,7 @@ public class ClientGamer
         {
             isStopped = true;
             DataStream.Close();
-            if (TcpClient != null) TcpClient.Close();
+            TcpClient?.Close();
             return null;
         }
         Trace.TraceInformation("Packet type {0} received", packet.GetType().Name);

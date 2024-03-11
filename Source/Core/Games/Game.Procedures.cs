@@ -30,10 +30,7 @@ public abstract partial class Game
         HealthChangedEventArgs healthChangedArgs;
         int ironShackledDamage = 0;
         DamageElement ironShackledDamageElement = DamageElement.None;
-        if (readonlyCard == null)
-        {
-            readonlyCard = new ReadOnlyCard(new Card() { Place = new DeckPlace(null, null) });
-        }
+        readonlyCard ??= new ReadOnlyCard(new Card() { Place = new DeckPlace(null, null) });
         damageArgs.ReadonlyCard = readonlyCard;
         if (card is CompositeCard)
         {
@@ -44,11 +41,11 @@ public abstract partial class Game
         }
         else if (card is Card)
         {
-            damageArgs.Cards = new List<Card>() { card as Card };
+            damageArgs.Cards = [card as Card];
         }
         else
         {
-            damageArgs.Cards = new List<Card>();
+            damageArgs.Cards = [];
         }
         damageArgs.Targets.Add(dest);
         damageArgs.Card = card;
@@ -130,8 +127,8 @@ public abstract partial class Game
         }
     }
 
-    private static readonly CardAttribute IsIronShackleDamage = CardAttribute.Register("IsIronShackleDamage");
-    private static readonly CardAttribute SourceAndElementIsConfirmed = CardAttribute.Register("SourceAndElementIsConfirmed");
+    private static readonly CardAttribute IsIronShackleDamage = CardAttribute.Register(nameof(IsIronShackleDamage));
+    private static readonly CardAttribute SourceAndElementIsConfirmed = CardAttribute.Register(nameof(SourceAndElementIsConfirmed));
 
     public void DoDamage(Player source, Player dest, int magnitude, DamageElement elemental, ICard card, ReadOnlyCard readonlyCard)
     {
@@ -142,10 +139,12 @@ public abstract partial class Game
     {
         if (p.IsDead) return;
         p.AcquireAdditionalSkill(skill, tag, undeletable);
-        SkillSetChangedEventArgs args = new SkillSetChangedEventArgs();
-        args.Source = p;
-        args.Skills.Add(skill);
-        args.IsLosingSkill = false;
+        var args = new SkillSetChangedEventArgs
+        {
+            Source = p,
+            Skills = [skill],
+            IsLosingSkill = false
+        };
         Emit(GameEvent.PlayerSkillSetChanged, args);
         _ResetCards(p);
     }
@@ -154,10 +153,12 @@ public abstract partial class Game
     {
         if (!undeletable && !p.AdditionalSkills.Contains(skill)) return;
         p.LoseAdditionalSkill(skill, undeletable);
-        SkillSetChangedEventArgs args = new SkillSetChangedEventArgs();
-        args.Source = p;
-        args.Skills.Add(skill);
-        args.IsLosingSkill = true;
+        var args = new SkillSetChangedEventArgs
+        {
+            Source = p,
+            Skills = [skill],
+            IsLosingSkill = true
+        };
         Emit(GameEvent.PlayerSkillSetChanged, args);
         _ResetCards(p);
     }
@@ -166,44 +167,52 @@ public abstract partial class Game
     {
         if (p.Allegiance == Allegiance.God)
         {
-            int answer = 0;
-            UiProxies[p].AskForMultipleChoice(new MultipleChoicePrompt("ChooseAllegiance"), Prompt.AllegianceChoices, out answer);
-            if (answer == 0) p.Allegiance = Allegiance.Qun;
-            if (answer == 1) p.Allegiance = Allegiance.Shu;
-            if (answer == 2) p.Allegiance = Allegiance.Wei;
-            if (answer == 3) p.Allegiance = Allegiance.Wu;
+            UiProxies[p].AskForMultipleChoice(new MultipleChoicePrompt("ChooseAllegiance"), Prompt.AllegianceChoices, out var answer);
+            p.Allegiance = answer switch
+            {
+                0 => p.Allegiance = Allegiance.Qun,
+                1 => p.Allegiance = Allegiance.Shu,
+                2 => p.Allegiance = Allegiance.Wei,
+                3 => p.Allegiance = Allegiance.Wu,
+                _ => p.Allegiance = Allegiance.Unknown
+            };
         }
     }
 
 
     public ReadOnlyCard Judge(Player player, ISkill skill = null, ICard handler = null, JudgementResultSucceed del = null)
     {
-        ActionLog log = new ActionLog();
-        log.SkillAction = skill;
-        log.CardAction = handler;
-        log.Source = player;
-        log.GameAction = GameAction.Judge;
-        CardsMovement move = new CardsMovement();
+        var log = new ActionLog
+        {
+            SkillAction = skill,
+            CardAction = handler,
+            Source = player,
+            GameAction = GameAction.Judge
+        };
+        var move = new CardsMovement();
         Card c;
-        int initCount = decks[player, DeckType.JudgeResult].Count;
+        int initCount = Decks[player, DeckType.JudgeResult].Count;
         SyncImmutableCardAll(PeekCard(0));
         c = DrawCard();
         c.Log = log;
-        move = new CardsMovement();
-        move.Cards = new List<Card>();
-        move.Cards.Add(c);
-        move.To = new DeckPlace(player, DeckType.JudgeResult);
+        move = new CardsMovement
+        {
+            Cards = [c],
+            To = new DeckPlace(player, DeckType.JudgeResult)
+        };
         MoveCards(move, false, GameDelays.None);
-        GameEventArgs args = new GameEventArgs();
-        args.Source = player;
-        if (triggers.ContainsKey(GameEvent.PlayerJudgeBegin) && triggers[GameEvent.PlayerJudgeBegin].Count > 0)
+        var args = new GameEventArgs
+        {
+            Source = player
+        };
+        if (triggers.TryGetValue(GameEvent.PlayerJudgeBegin, out var value) && value.Count > 0)
         {
             NotifyIntermediateJudgeResults(player, log, del);
         }
         Emit(GameEvent.PlayerJudgeBegin, args);
         c = Decks[player, DeckType.JudgeResult].Last();
         args.ReadonlyCard = new ReadOnlyCard(c);
-        args.Cards = new List<Card>() { c };
+        args.Cards = [c];
         args.Skill = skill;
         args.Card = handler;
         bool? succeed = null;
@@ -212,25 +221,25 @@ public abstract partial class Game
             succeed = del(args.ReadonlyCard);
         }
 
-        Card uiCard = new Card(args.ReadonlyCard);
-        uiCard.Id = (args.ReadonlyCard as ReadOnlyCard).Id;
-        if (uiCard.Log == null)
+        var uiCard = new Card(args.ReadonlyCard)
         {
-            uiCard.Log = new ActionLog();
-        }
+            Id = args.ReadonlyCard.Id
+        };
+        uiCard.Log ??= new ActionLog();
         uiCard.Log = log;
         NotificationProxy.NotifyJudge(player, uiCard, log, succeed);
         Emit(GameEvent.PlayerJudgeDone, args);
         Trace.Assert(args.Source == player);
         Trace.Assert(args.ReadonlyCard is ReadOnlyCard);
 
-        if (decks[player, DeckType.JudgeResult].Count > initCount)
+        if (Decks[player, DeckType.JudgeResult].Count > initCount)
         {
-            c = decks[player, DeckType.JudgeResult].Last();
-            move = new CardsMovement();
-            move.Cards = new List<Card>();
-            move.Cards.Add(c);
-            List<Card> backup = new List<Card>(move.Cards);
+            c = Decks[player, DeckType.JudgeResult].Last();
+            move = new CardsMovement
+            {
+                Cards = [c]
+            };
+            var backup = new List<Card>(move.Cards);
             move.To = new DeckPlace(null, DeckType.Discard);
             move.Helper = new MovementHelper();
             PlayerAboutToDiscardCard(player, move.Cards, DiscardReason.Judge);
@@ -238,7 +247,7 @@ public abstract partial class Game
             PlayerDiscardedCard(player, backup, DiscardReason.Judge);
         }
         GameDelays.Delay(GameDelays.JudgeEnd);
-        return args.ReadonlyCard as ReadOnlyCard;
+        return args.ReadonlyCard;
     }
 
     public void RecoverHealth(Player source, Player target, int magnitude)
@@ -325,11 +334,13 @@ public abstract partial class Game
         Trace.Assert(c != null);
         try
         {
-            GameEventArgs arg = new GameEventArgs();
-            arg.Source = source;
-            arg.Targets = targets;
-            arg.Card = c;
-            arg.ReadonlyCard = new ReadOnlyCard(c);
+            var arg = new GameEventArgs
+            {
+                Source = source,
+                Targets = targets,
+                Card = c,
+                ReadonlyCard = new ReadOnlyCard(c)
+            };
 
             Emit(GameEvent.PlayerPlayedCard, arg);
         }
@@ -350,9 +361,8 @@ public abstract partial class Game
     public bool HandleCardPlay(Player p, ISkill skill, List<Card> cards, List<Player> targets)
     {
         Trace.Assert(cards != null);
-        CardsMovement m = new CardsMovement();
-        ICard result;
-        bool status = CommitCardTransform(p, skill, cards, out result, targets, true);
+        var m = new CardsMovement();
+        bool status = CommitCardTransform(p, skill, cards, out var result, targets, true);
         if (!status)
         {
             return false;
@@ -377,7 +387,7 @@ public abstract partial class Game
             }
         }
         result.Type.TagAndNotify(p, targets, result, GameAction.Play);
-        List<Card> backup = new List<Card>(m.Cards);
+        var backup = new List<Card>(m.Cards);
         if (isDoingAFavor != p)
         {
             PlayerAboutToDiscardCard(isDoingAFavor, m.Cards, DiscardReason.Play);
@@ -403,11 +413,13 @@ public abstract partial class Game
     {
         try
         {
-            var arg = new DiscardCardEventArgs();
-            arg.Source = p;
-            arg.Targets = null;
-            arg.Cards = cards;
-            arg.Reason = reason;
+            var arg = new DiscardCardEventArgs
+            {
+                Source = p,
+                Targets = null,
+                Cards = cards,
+                Reason = reason
+            };
             Emit(GameEvent.CardsEnteredDiscardDeck, arg);
         }
         catch (TriggerResultException)
@@ -421,11 +433,13 @@ public abstract partial class Game
         SyncCardsAll(cards);
         try
         {
-            var arg = new DiscardCardEventArgs();
-            arg.Source = p;
-            arg.Targets = null;
-            arg.Cards = cards;
-            arg.Reason = reason;
+            var arg = new DiscardCardEventArgs
+            {
+                Source = p,
+                Targets = null,
+                Cards = cards,
+                Reason = reason
+            };
             Emit(GameEvent.CardsEnteringDiscardDeck, arg, true);
         }
         catch (TriggerResultException)
@@ -438,10 +452,12 @@ public abstract partial class Game
     {
         try
         {
-            GameEventArgs arg = new GameEventArgs();
-            arg.Source = p;
-            arg.Targets = null;
-            arg.Cards = cards;
+            var arg = new GameEventArgs
+            {
+                Source = p,
+                Targets = null,
+                Cards = cards
+            };
             Emit(GameEvent.CardsLost, arg);
         }
         catch (TriggerResultException)
@@ -454,10 +470,12 @@ public abstract partial class Game
     {
         try
         {
-            GameEventArgs arg = new GameEventArgs();
-            arg.Source = p;
-            arg.Targets = null;
-            arg.Cards = cards;
+            var arg = new GameEventArgs
+            {
+                Source = p,
+                Targets = null,
+                Cards = cards
+            };
             Emit(GameEvent.CardsAcquired, arg);
         }
         catch (TriggerResultException)
@@ -469,9 +487,11 @@ public abstract partial class Game
     public void HandleCardDiscard(Player p, List<Card> cards, DiscardReason reason = DiscardReason.Discard)
     {
         cards = new List<Card>(cards);
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>(cards);
-        foreach (Card c in cards)
+        var move = new CardsMovement
+        {
+            Cards = new List<Card>(cards)
+        };
+        foreach (var c in cards)
         {
             c.Log.Source = p;
             if (reason == DiscardReason.Discard)
@@ -481,7 +501,7 @@ public abstract partial class Game
             else if (reason == DiscardReason.Use)
                 c.Log.GameAction = GameAction.Use;
         }
-        List<Card> backup = new List<Card>(move.Cards);
+        var backup = new List<Card>(move.Cards);
         move.To = new DeckPlace(null, DeckType.Discard);
         PlayerAboutToDiscardCard(p, move.Cards, reason);
         MoveCards(move, false, GameDelays.Discard);
@@ -499,17 +519,21 @@ public abstract partial class Game
         {
             if (cards.Any(cd => cd.Place.DeckType != DeckType.Hand && cd.Place.DeckType != DeckType.Equipment && cd.Place.DeckType != DeckType.DelayedTools))
             {
-                CardsMovement move1 = new CardsMovement();
-                move1.Cards = new List<Card>(cards);
-                move1.To = new DeckPlace(null, DeckType.Discard);
+                var move1 = new CardsMovement
+                {
+                    Cards = new List<Card>(cards),
+                    To = new DeckPlace(null, DeckType.Discard)
+                };
                 MoveCards(move1);
                 PlayerLostCard(from, cards);
             }
             return;
         }
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>(cards);
-        move.To = new DeckPlace(to, DeckType.Hand);
+        var move = new CardsMovement
+        {
+            Cards = new List<Card>(cards),
+            To = new DeckPlace(to, DeckType.Hand)
+        };
         if (helper != null)
         {
             move.Helper = helper;
@@ -528,18 +552,22 @@ public abstract partial class Game
         {
             if (cards.Any(cd => cd.Place.DeckType != DeckType.Hand && cd.Place.DeckType != DeckType.Equipment && cd.Place.DeckType != DeckType.DelayedTools))
             {
-                CardsMovement move1 = new CardsMovement();
-                move1.Cards = new List<Card>(cards);
-                move1.To = new DeckPlace(null, DeckType.Discard);
+                var move1 = new CardsMovement
+                {
+                    Cards = new List<Card>(cards),
+                    To = new DeckPlace(null, DeckType.Discard)
+                };
                 MoveCards(move1);
                 PlayerLostCard(from, cards);
             }
             return;
         }
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>(cards);
-        move.To = new DeckPlace(to, target);
-        move.Helper = new MovementHelper();
+        var move = new CardsMovement
+        {
+            Cards = new List<Card>(cards),
+            To = new DeckPlace(to, target),
+            Helper = new MovementHelper()
+        };
         move.Helper.PrivateDeckHeroTag = tag;
         MoveCards(move);
         bool triggerAcquiredCard = target == DeckType.Hand || target == DeckType.Equipment;
@@ -571,9 +599,7 @@ public abstract partial class Game
             }
             Trace.Assert(UiProxies.ContainsKey(player));
             IPlayerProxy proxy = UiProxies[player];
-            ISkill skill;
             List<Card> cards;
-            List<Player> players;
             cannotBeDiscarded = 0;
             foreach (Card c in Decks[player, DeckType.Hand])
             {
@@ -609,12 +635,12 @@ public abstract partial class Game
             if (!atOnce) minimum = 1;
             else minimum = numShouldDiscard;
             bool answered = false;
-            cards = new List<Card>();
+            cards = [];
             if (minimum < numCanBeDiscarded)
             {
                 var v = new PlayerForceDiscardVerifier(numShouldDiscard, canDiscardEquipment, minimum);
                 answered = proxy.AskForCardUsage(new Prompt(Prompt.DiscardPhasePrompt, toDiscard),
-                                                 v, out skill, out cards, out players);
+                                                 v, out var skill, out cards, out var players);
             }
 
             if (!answered)
@@ -649,8 +675,10 @@ public abstract partial class Game
 
     public void InsertBeforeDeal(Player target, List<Card> list, MovementHelper helper = null)
     {
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>(list);
+        var move = new CardsMovement
+        {
+            Cards = new List<Card>(list)
+        };
         move.Cards.Reverse();
         move.To = new DeckPlace(null, DeckType.Dealing);
         if (helper != null)
@@ -666,9 +694,11 @@ public abstract partial class Game
 
     public void InsertAfterDeal(Player target, List<Card> list, MovementHelper helper = null)
     {
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>(list);
-        move.To = new DeckPlace(null, DeckType.Dealing);
+        var move = new CardsMovement
+        {
+            Cards = new List<Card>(list),
+            To = new DeckPlace(null, DeckType.Dealing)
+        };
         move.Helper.IsFakedMove = true;
         if (helper != null)
         {
@@ -683,10 +713,12 @@ public abstract partial class Game
 
     public void PlaceIntoDiscard(Player target, List<Card> list)
     {
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>(list);
-        move.To = new DeckPlace(null, DeckType.Discard);
-        move.Helper = new MovementHelper();
+        var move = new CardsMovement
+        {
+            Cards = new List<Card>(list),
+            To = new DeckPlace(null, DeckType.Discard),
+            Helper = new MovementHelper()
+        };
         MoveCards(move);
         if (target != null)
         {
@@ -696,7 +728,7 @@ public abstract partial class Game
 
     public bool PlayerCanDiscardCards(Player p, List<Card> cards)
     {
-        foreach (Card c in cards)
+        foreach (var c in cards)
         {
             if (!PlayerCanDiscardCard(p, c))
             {
@@ -708,10 +740,12 @@ public abstract partial class Game
 
     public bool PlayerCanBeTargeted(Player source, List<Player> targets, ICard card)
     {
-        GameEventArgs arg = new GameEventArgs();
-        arg.Source = source;
-        arg.Targets = targets;
-        arg.Card = card;
+        var arg = new GameEventArgs
+        {
+            Source = source,
+            Targets = targets,
+            Card = card
+        };
         try
         {
             Emit(GameEvent.PlayerCanBeTargeted, arg);
@@ -736,11 +770,8 @@ public abstract partial class Game
     {
         NotificationProxy.NotifyLogEvent(new LogEvent("PinDianStart", from, to), new List<Player>() { from, to }, false);
         NotificationProxy.NotifyPinDianStart(from, to, skill);
-        Dictionary<Player, ISkill> aSkill;
-        Dictionary<Player, List<Card>> aCards;
-        Dictionary<Player, List<Player>> aPlayers;
 
-        GlobalProxy.AskForMultipleCardUsage(new CardUsagePrompt("PinDian"), new PinDianVerifier(), new List<Player>() { from, to }, out aSkill, out aCards, out aPlayers);
+        GlobalProxy.AskForMultipleCardUsage(new CardUsagePrompt("PinDian"), new PinDianVerifier(), [from, to], out var aSkill, out var aCards, out var aPlayers);
         Card card1, card2;
         if (!aCards.ContainsKey(from) || aCards[from].Count == 0)
         {
@@ -763,18 +794,20 @@ public abstract partial class Game
         c1 = card1;
         c2 = card2;
         NotificationProxy.NotifyPinDianEnd(c1, c2);
-        NotificationProxy.NotifyLogEvent(new LogEvent("PinDianCard", from, c1), new List<Player>() { from, to }, false, false);
-        NotificationProxy.NotifyLogEvent(new LogEvent("PinDianCard", to, c2), new List<Player>() { from, to }, false, false);
-        NotificationProxy.NotifyLogEvent(new LogEvent("PinDianResult", from, to, new LogEventArg(c1.Rank > c2.Rank ? "Win" : "notWin")), new List<Player>() { from, to }, false);
+        NotificationProxy.NotifyLogEvent(new LogEvent("PinDianCard", from, c1), [from, to], false, false);
+        NotificationProxy.NotifyLogEvent(new LogEvent("PinDianCard", to, c2), [from, to], false, false);
+        NotificationProxy.NotifyLogEvent(new LogEvent("PinDianResult", from, to, new LogEventArg(c1.Rank > c2.Rank ? "Win" : "notWin")), [from, to], false);
         bool? ret = null;
         if (card1.Rank > card2.Rank) ret = true;
         if (card1.Rank < card2.Rank) ret = false;
-        var arg = new PinDianCompleteEventArgs();
-        arg.Source = from;
-        arg.Targets = new List<Player>() { to };
-        arg.Cards = new List<Card>() { c1, c2 };
-        arg.CardsResult = new List<bool>() { false, false };
-        arg.PinDianResult = ret;
+        var arg = new PinDianCompleteEventArgs
+        {
+            Source = from,
+            Targets = [to],
+            Cards = [c1, c2],
+            CardsResult = [false, false],
+            PinDianResult = ret
+        };
         Emit(GameEvent.PinDianComplete, arg);
         c1Taken = arg.CardsResult[0];
         c2Taken = arg.CardsResult[1];
@@ -783,36 +816,30 @@ public abstract partial class Game
 
     public bool? PinDian(Player from, Player to, ISkill skill)
     {
-        Card card1, card2;
-        bool c1, c2;
-        var ret = PinDianReturnCards(from, to, out card1, out card2, skill, out c1, out c2);
+        var ret = PinDianReturnCards(from, to, out var card1, out var card2, skill, out var c1, out var c2);
         EnterAtomicContext();
         card1.Log.Source = from;
         card2.Log.Source = to;
-        if (!c1) PlaceIntoDiscard(from, new List<Card>() { card1 });
-        if (!c2) PlaceIntoDiscard(to, new List<Card>() { card2 });
+        if (!c1) PlaceIntoDiscard(from, [card1]);
+        if (!c2) PlaceIntoDiscard(to, [card2]);
         ExitAtomicContext();
         return ret;
     }
 
-    public Card SelectACardFrom(Player from, Player ask, Prompt prompt, String resultdeckname, bool equipExcluded = false, bool delayedToolsExcluded = true, bool noReveal = false)
+    public Card SelectACardFrom(Player from, Player ask, Prompt prompt, string resultdeckname, bool equipExcluded = false, bool delayedToolsExcluded = true, bool noReveal = false)
     {
         var deck = from.HandCards();
         if (!equipExcluded) deck = new List<Card>(deck.Concat(from.Equipments()));
         if (!delayedToolsExcluded) deck = new List<Card>(deck.Concat(from.DelayedTools()));
         if (deck.Count == 0) return null;
-        List<DeckPlace> places = new List<DeckPlace>();
-        places.Add(new DeckPlace(from, DeckType.Hand));
+        List<DeckPlace> places = [new DeckPlace(from, DeckType.Hand)];
         if (!equipExcluded) places.Add(new DeckPlace(from, DeckType.Equipment));
         if (!delayedToolsExcluded) places.Add(new DeckPlace(from, DeckType.DelayedTools));
-        List<List<Card>> answer;
 
-        if (!ask.AskForCardChoice(prompt, places, new List<string>() { resultdeckname }, new List<int>() { 1 }, new RequireOneCardChoiceVerifier(noReveal), out answer))
+        if (!ask.AskForCardChoice(prompt, places, [resultdeckname], [1], new RequireOneCardChoiceVerifier(noReveal), out var answer))
         {
             Trace.TraceInformation("Player {0} Invalid answer", ask);
-            answer = new List<List<Card>>();
-            answer.Add(new List<Card>());
-            answer[0].Add(deck.First());
+            answer = [[deck.First()]];
         }
         Card theCard = answer[0][0];
         if (noReveal)
@@ -839,20 +866,19 @@ public abstract partial class Game
     {
         if (cards.Count == 0) return;
         NotificationProxy.NotifyShowCardsStart(p, cards);
-        Dictionary<Player, int> answers;
-        GlobalProxy.AskForMultipleChoice(new MultipleChoicePrompt("ShowCards", p), new List<OptionPrompt>() { Prompt.YesChoice }, AlivePlayers, out answers);
+        GlobalProxy.AskForMultipleChoice(new MultipleChoicePrompt("ShowCards", p), [Prompt.YesChoice], AlivePlayers, out var answers);
         NotificationProxy.NotifyShowCardsEnd();
-        foreach (Card c in cards) CurrentGame.HideHandCard(c);
+        foreach (var c in cards) CurrentGame.HideHandCard(c);
     }
 
     public List<Card> PickDefaultCardsFrom(List<DeckPlace> places, int n = 1)
     {
-        List<Card> cards = new List<Card>();
+        var cards = new List<Card>();
         foreach (var pl in places)
         {
             cards.AddRange(Decks[pl]);
         }
-        List<Card> result = new List<Card>();
+        var result = new List<Card>();
         while (n-- > 0)
         {
             if (cards.Count == 0) return result;
@@ -877,10 +903,7 @@ public abstract partial class Game
         cleanupSquad.CalldownCleanupCrew(skill, attr);
     }
 
-    public bool IsMainHero(Hero h, Player p)
-    {
-        return h == p.Hero;
-    }
+    public bool IsMainHero(Hero h, Player p) => h == p.Hero;
 
     public ISkill LastAction { get; set; }
 

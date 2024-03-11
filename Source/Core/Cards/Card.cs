@@ -5,7 +5,7 @@ namespace Sanguosha.Core.Cards;
 
 public class Card : ICard
 {
-    public bool IsUnknown => (Id < 0);
+    public bool IsUnknown => Id < 0;
 
     public static readonly int UnknownCardId = -1;
     public static readonly int UnknownHeroId = -2;

@@ -7,10 +7,10 @@ public class TypeIO
     private delegate void WriterDlgt(BinaryWriter bw, object val);
     private delegate object ReaderDlgt(BinaryReader br);
 
-    private class IODelegate
+    private class IODelegate(TypeIO.WriterDlgt writer, TypeIO.ReaderDlgt reader)
     {
-        protected WriterDlgt writer;
-        protected ReaderDlgt reader;
+        protected WriterDlgt writer = writer;
+        protected ReaderDlgt reader = reader;
 
         public WriterDlgt Writer
         {
@@ -21,36 +21,32 @@ public class TypeIO
         {
             get { return reader; }
         }
-
-        public IODelegate(WriterDlgt writer, ReaderDlgt reader)
-        {
-            this.writer = writer;
-            this.reader = reader;
-        }
     }
 
     private readonly Dictionary<Type, IODelegate> typeToDelegateMap;
 
     public TypeIO()
     {
-        typeToDelegateMap = new Dictionary<Type, IODelegate>();
-        typeToDelegateMap[typeof(bool)] = new IODelegate(new WriterDlgt(BoolWriter), new ReaderDlgt(BoolReader));
-        typeToDelegateMap[typeof(byte)] = new IODelegate(new WriterDlgt(ByteWriter), new ReaderDlgt(ByteReader));
-        typeToDelegateMap[typeof(byte[])] = new IODelegate(new WriterDlgt(ByteArrayWriter), new ReaderDlgt(ByteArrayReader));
-        typeToDelegateMap[typeof(char)] = new IODelegate(new WriterDlgt(CharWriter), new ReaderDlgt(CharReader));
-        typeToDelegateMap[typeof(char[])] = new IODelegate(new WriterDlgt(CharArrayWriter), new ReaderDlgt(CharArrayReader));
-        typeToDelegateMap[typeof(decimal)] = new IODelegate(new WriterDlgt(DecimalWriter), new ReaderDlgt(DecimalReader));
-        typeToDelegateMap[typeof(double)] = new IODelegate(new WriterDlgt(DoubleWriter), new ReaderDlgt(DoubleReader));
-        typeToDelegateMap[typeof(short)] = new IODelegate(new WriterDlgt(ShortWriter), new ReaderDlgt(ShortReader));
-        typeToDelegateMap[typeof(int)] = new IODelegate(new WriterDlgt(IntWriter), new ReaderDlgt(IntReader));
-        typeToDelegateMap[typeof(long)] = new IODelegate(new WriterDlgt(LongWriter), new ReaderDlgt(LongReader));
-        typeToDelegateMap[typeof(sbyte)] = new IODelegate(new WriterDlgt(SByteWriter), new ReaderDlgt(SByteReader));
-        typeToDelegateMap[typeof(float)] = new IODelegate(new WriterDlgt(FloatWriter), new ReaderDlgt(FloatReader));
-        typeToDelegateMap[typeof(string)] = new IODelegate(new WriterDlgt(StringWriter), new ReaderDlgt(StringReader));
-        typeToDelegateMap[typeof(ushort)] = new IODelegate(new WriterDlgt(UShortWriter), new ReaderDlgt(UShortReader));
-        typeToDelegateMap[typeof(uint)] = new IODelegate(new WriterDlgt(UIntWriter), new ReaderDlgt(UIntReader));
-        typeToDelegateMap[typeof(ulong)] = new IODelegate(new WriterDlgt(ULongWriter), new ReaderDlgt(ULongReader));
-        typeToDelegateMap[typeof(DateTime)] = new IODelegate(new WriterDlgt(DateTimeWriter), new ReaderDlgt(DateTimeReader));
+        typeToDelegateMap = new Dictionary<Type, IODelegate>
+        {
+            [typeof(bool)] = new IODelegate(new WriterDlgt(BoolWriter), new ReaderDlgt(BoolReader)),
+            [typeof(byte)] = new IODelegate(new WriterDlgt(ByteWriter), new ReaderDlgt(ByteReader)),
+            [typeof(byte[])] = new IODelegate(new WriterDlgt(ByteArrayWriter), new ReaderDlgt(ByteArrayReader)),
+            [typeof(char)] = new IODelegate(new WriterDlgt(CharWriter), new ReaderDlgt(CharReader)),
+            [typeof(char[])] = new IODelegate(new WriterDlgt(CharArrayWriter), new ReaderDlgt(CharArrayReader)),
+            [typeof(decimal)] = new IODelegate(new WriterDlgt(DecimalWriter), new ReaderDlgt(DecimalReader)),
+            [typeof(double)] = new IODelegate(new WriterDlgt(DoubleWriter), new ReaderDlgt(DoubleReader)),
+            [typeof(short)] = new IODelegate(new WriterDlgt(ShortWriter), new ReaderDlgt(ShortReader)),
+            [typeof(int)] = new IODelegate(new WriterDlgt(IntWriter), new ReaderDlgt(IntReader)),
+            [typeof(long)] = new IODelegate(new WriterDlgt(LongWriter), new ReaderDlgt(LongReader)),
+            [typeof(sbyte)] = new IODelegate(new WriterDlgt(SByteWriter), new ReaderDlgt(SByteReader)),
+            [typeof(float)] = new IODelegate(new WriterDlgt(FloatWriter), new ReaderDlgt(FloatReader)),
+            [typeof(string)] = new IODelegate(new WriterDlgt(StringWriter), new ReaderDlgt(StringReader)),
+            [typeof(ushort)] = new IODelegate(new WriterDlgt(UShortWriter), new ReaderDlgt(UShortReader)),
+            [typeof(uint)] = new IODelegate(new WriterDlgt(UIntWriter), new ReaderDlgt(UIntReader)),
+            [typeof(ulong)] = new IODelegate(new WriterDlgt(ULongWriter), new ReaderDlgt(ULongReader)),
+            [typeof(DateTime)] = new IODelegate(new WriterDlgt(DateTimeWriter), new ReaderDlgt(DateTimeReader))
+        };
     }
 
     public bool Write(BinaryWriter bw, object val)

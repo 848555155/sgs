@@ -9,10 +9,7 @@ public class CardAttribute
 
     public static readonly CardAttribute SourceRequireTwoResponses = Register(nameof(SourceRequireTwoResponses));
 
-    private CardAttribute(string attrName)
-    {
-        Name = attrName;
-    }
+    private CardAttribute(string attrName) => Name = attrName;
 
     public string Name { get; set; }
 

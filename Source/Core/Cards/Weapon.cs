@@ -8,7 +8,7 @@ public abstract class Weapon : Equipment
 {
     protected override void RegisterEquipmentTriggers(Player p)
     {
-        p[Player.AttackRange] += (AttackRange - 1);
+        p[Player.AttackRange] += AttackRange - 1;
         RegisterWeaponTriggers(p);
     }
 
@@ -16,7 +16,7 @@ public abstract class Weapon : Equipment
 
     protected override void UnregisterEquipmentTriggers(Player p)
     {
-        p[Player.AttackRange] -= (AttackRange - 1);
+        p[Player.AttackRange] -= AttackRange - 1;
         UnregisterWeaponTriggers(p);
     }
 

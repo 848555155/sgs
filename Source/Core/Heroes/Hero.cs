@@ -122,7 +122,7 @@ public class Hero : ICloneable
     public void LoseAllSkills()
     {
         if (Skills.Count == 0) return;
-        List<ISkill> backup = new List<ISkill>(Skills);
+        var backup = new List<ISkill>(Skills);
         Skills.Clear();
         OnPropertyChanged("Skills");
         foreach (var sk in backup)

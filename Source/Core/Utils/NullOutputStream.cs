@@ -2,49 +2,21 @@
 
 namespace Sanguosha.Core.Utils;
 
-public class NullOutputStream : Stream
+public class NullOutputStream(Stream stream) : Stream
 {
-#pragma warning disable CA2213 // 应释放可释放的字段
-    private Stream stream;
-#pragma warning restore CA2213 // 应释放可释放的字段
+    public Stream InputStream { get; set; } = stream;
 
-    public Stream InputStream
-    {
-        get { return stream; }
-        set { stream = value; }
-    }
+    public override bool CanRead => true;
 
-    public NullOutputStream(Stream stream)
-    {
-        this.stream = stream;
-    }
+    public override bool CanSeek => false;
 
-    public override bool CanRead
-    {
-        get { return true; }
-    }
-
-    public override bool CanSeek
-    {
-        get { return false; }
-    }
-
-    public override bool CanWrite
-    {
-        get
-        {
-            return true;
-        }
-    }
+    public override bool CanWrite => true;
 
     public override void Flush()
     {
     }
 
-    public override long Length
-    {
-        get { return InputStream.Length; }
-    }
+    public override long Length => InputStream.Length;
 
     public override long Position
     {

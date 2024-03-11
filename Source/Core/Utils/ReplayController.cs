@@ -1,8 +1,6 @@
 ﻿namespace Sanguosha.Core.Utils;
 
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class ReplayController
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     public static readonly int EvenReplayBaseSpeedInMs = 2000;
     private readonly Semaphore pauseResume;

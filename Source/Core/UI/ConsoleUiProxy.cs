@@ -9,9 +9,7 @@ public class ConsoleUiProxy : IPlayerProxy
 {
     public Player HostPlayer { get; set; }
 
-#pragma warning disable CA1033 // 接口方法应可由子类型调用
     bool IPlayerProxy.AskForCardUsage(Prompt prompt, ICardUsageVerifier verifier, out ISkill skill, out List<Card> cards, out List<Player> players)
-#pragma warning restore CA1033 // 接口方法应可由子类型调用
     {
         Player p = HostPlayer;
         Console.Write("I AM PLAYER {0}({1}): ", p.Id, p.Hero.Name);
@@ -141,9 +139,7 @@ public class ConsoleUiProxy : IPlayerProxy
         }
     }
 
-#pragma warning disable CA1033 // 接口方法应可由子类型调用
     bool IPlayerProxy.AskForCardChoice(Prompt prompt, List<DeckPlace> sourceDecks, List<string> resultDeckNames, List<int> resultDeckMaximums, ICardChoiceVerifier verifier, out List<List<Card>> answer, AdditionalCardChoiceOptions options, CardChoiceRearrangeCallback callback)
-#pragma warning restore CA1033 // 接口方法应可由子类型调用
     {
         answer = null;
         return false;

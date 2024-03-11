@@ -4,9 +4,7 @@ using Sanguosha.Core.Skills;
 
 namespace Sanguosha.Core.UI;
 
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class AsyncProxyAdapter : IPlayerProxy
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     public void Freeze()
     {

@@ -64,7 +64,7 @@ public class GameEvent
 
     public GameEvent(string name)
     {
-        this.name = name;
+        this.Name = name;
         if (definedGameEvents.ContainsKey(name))
         {
             throw new DuplicateGameEventException();
@@ -72,17 +72,12 @@ public class GameEvent
         definedGameEvents[name] = this;
     }
 
-    private readonly string name;
-
     /// <summary>
     /// Unique name.
     /// </summary>
-    public string Name
-    {
-        get { return name; }
-    }
+    public string Name { get; }
 
-    private static readonly Dictionary<string, GameEvent> definedGameEvents = new Dictionary<string, GameEvent>();
+    private static readonly Dictionary<string, GameEvent> definedGameEvents = [];
 
     public static readonly GameEvent DoPlayer;
     public static readonly GameEvent Shuffle;
@@ -450,11 +445,11 @@ public class GameEvent
             return false;
         }
         GameEvent event2 = (GameEvent)obj;
-        return name.Equals(event2.name);
+        return Name.Equals(event2.Name);
     }
 
     public override int GetHashCode()
     {
-        return name.GetHashCode();
+        return Name.GetHashCode();
     }
 }

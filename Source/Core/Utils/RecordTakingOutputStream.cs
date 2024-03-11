@@ -150,25 +150,12 @@ public class RecordTakingOutputStream : Stream
 
     private readonly List<byte[]> internalBuffer;
 
-    public override long Length
-    {
-#pragma warning disable CA1065 // 不要在意外的位置引发异常
-        get { throw new NotImplementedException(); }
-#pragma warning restore CA1065 // 不要在意外的位置引发异常
-    }
+    public override long Length => throw new NotImplementedException();
 
     public override long Position
     {
-        get
-        {
-#pragma warning disable CA1065 // 不要在意外的位置引发异常
-            throw new NotImplementedException();
-#pragma warning restore CA1065 // 不要在意外的位置引发异常
-        }
-        set
-        {
-            throw new NotImplementedException();
-        }
+        get => throw new NotImplementedException();
+        set => throw new NotImplementedException();
     }
 
     public bool IsRecordEnabled { get; set; }

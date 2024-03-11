@@ -17,23 +17,11 @@ public enum CardCategory
 
 public static class CardCategoryManager
 {
-    public static bool IsCardCategory(CardCategory category, CardCategory belongsTo)
-    {
-        return (category & belongsTo) == belongsTo;
-    }
+    public static bool IsCardCategory(CardCategory category, CardCategory belongsTo) => (category & belongsTo) == belongsTo;
 
-    public static CardCategory BaseCategoryOf(CardCategory category)
-    {
-        return category & (CardCategory.Basic | CardCategory.Equipment | CardCategory.Tool);
-    }
+    public static CardCategory BaseCategoryOf(CardCategory category) => category & (CardCategory.Basic | CardCategory.Equipment | CardCategory.Tool);
 
-    public static bool IsCardCategory(this CardHandler cardType, CardCategory belongsTo)
-    {
-        return IsCardCategory(cardType.Category, belongsTo);
-    }
+    public static bool IsCardCategory(this CardHandler cardType, CardCategory belongsTo) => IsCardCategory(cardType.Category, belongsTo);
 
-    public static CardCategory BaseCategory(this CardHandler cardType)
-    {
-        return BaseCategoryOf(cardType.Category);
-    }
+    public static CardCategory BaseCategory(this CardHandler cardType) => BaseCategoryOf(cardType.Category);
 }

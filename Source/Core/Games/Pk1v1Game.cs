@@ -13,7 +13,7 @@ namespace Sanguosha.Core.Games;
 
 public class Pk1v1Game : RoleGame
 {
-    private static readonly DeckType ReadyToGoHeroes = DeckType.Register("ReadyToGoHeroes");
+    private static readonly DeckType ReadyToGoHeroes = DeckType.Register(nameof(ReadyToGoHeroes));
 
     public class Pk1v1PlayerActionTrigger : Trigger
     {
@@ -39,13 +39,15 @@ public class Pk1v1Game : RoleGame
                     if (!CurrentGame.Settings.CheatEnabled) return VerifierResult.Fail;
                     return VerifierResult.Success;
                 }
-                else if (skill is ActiveSkill)
+                else if (skill is ActiveSkill activeSkill)
                 {
-                    GameEventArgs arg = new GameEventArgs();
-                    arg.Source = CurrentGame.CurrentPlayer;
-                    arg.Targets = players;
-                    arg.Cards = cards;
-                    return ((ActiveSkill)skill).Validate(arg);
+                    var arg = new GameEventArgs
+                    {
+                        Source = CurrentGame.CurrentPlayer,
+                        Targets = players,
+                        Cards = cards
+                    };
+                    return activeSkill.Validate(arg);
                 }
                 else if (skill is CardTransformSkill)
                 {
@@ -74,10 +76,7 @@ public class Pk1v1Game : RoleGame
             }
 
 
-            public override IList<CardHandler> AcceptableCardTypes
-            {
-                get { return null; }
-            }
+            public override IList<CardHandler> AcceptableCardTypes => null;
         }
 
         private bool GetReadyToGo(Player p)
@@ -131,12 +130,9 @@ public class Pk1v1Game : RoleGame
                 if (newturn) return;
                 Trace.Assert(CurrentGame.UiProxies.ContainsKey(currentPlayer));
                 IPlayerProxy proxy = CurrentGame.UiProxies[currentPlayer];
-                ISkill skill;
-                List<Card> cards;
-                List<Player> players;
-                PlayerActionStageVerifier v = new PlayerActionStageVerifier();
+                var v = new PlayerActionStageVerifier();
                 CurrentGame.Emit(GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = currentPlayer, Verifier = v });
-                if (!proxy.AskForCardUsage(new Prompt(Prompt.PlayingPhasePrompt), v, out skill, out cards, out players))
+                if (!proxy.AskForCardUsage(new Prompt(Prompt.PlayingPhasePrompt), v, out var skill, out var cards, out var players))
                 {
                     break;
                 }
@@ -167,10 +163,12 @@ public class Pk1v1Game : RoleGame
                             {
                                 if (searchCard.Id == cs.CardId)
                                 {
-                                    CardsMovement move = new CardsMovement();
-                                    move.Cards = new List<Card>() { searchCard };
-                                    move.To = new DeckPlace(CurrentGame.CurrentPlayer, DeckType.Hand);
-                                    move.Helper = new MovementHelper();
+                                    var move = new CardsMovement
+                                    {
+                                        Cards = [searchCard],
+                                        To = new DeckPlace(CurrentGame.CurrentPlayer, DeckType.Hand),
+                                        Helper = new MovementHelper()
+                                    };
                                     CurrentGame.MoveCards(move);
                                     break;
                                 }
@@ -198,13 +196,15 @@ public class Pk1v1Game : RoleGame
                         }
                         continue;
                     }
-                    else if (skill is ActiveSkill)
+                    else if (skill is ActiveSkill activeSkill)
                     {
-                        GameEventArgs arg = new GameEventArgs();
-                        arg.Source = CurrentGame.CurrentPlayer;
-                        arg.Targets = players;
-                        arg.Cards = cards;
-                        ((ActiveSkill)skill).NotifyAndCommit(arg);
+                        var arg = new GameEventArgs
+                        {
+                            Source = CurrentGame.CurrentPlayer,
+                            Targets = players,
+                            Cards = cards
+                        };
+                        activeSkill.NotifyAndCommit(arg);
                         CurrentGame.NotificationProxy.NotifyActionComplete();
                         CurrentGame.LastAction = skill;
                         continue;
@@ -293,10 +293,7 @@ public class Pk1v1Game : RoleGame
             //弃置死亡玩家所有的牌和标记
             p.IsDead = true;
             CurrentGame.SyncImmutableCardsAll(CurrentGame.Decks[p, DeckType.Hand]);
-            List<Card> toDiscarded = new List<Card>();
-            toDiscarded.AddRange(p.HandCards());
-            toDiscarded.AddRange(p.Equipments());
-            toDiscarded.AddRange(p.DelayedTools());
+            List<Card> toDiscarded = [.. p.HandCards(), .. p.Equipments(), .. p.DelayedTools()];
             List<Card> privateCards = CurrentGame.Decks.GetPlayerPrivateCards(p);
             var heroCards = from hc in privateCards where hc.Type.IsCardCategory(CardCategory.Hero) select hc;
             toDiscarded.AddRange(privateCards.Except(heroCards));
@@ -310,7 +307,7 @@ public class Pk1v1Game : RoleGame
                         hc.Type = new UnknownHeroCardHandler();
                     }
                 }
-                CardsMovement move = new CardsMovement();
+                var move = new CardsMovement();
                 move.Cards.AddRange(heroCards);
                 move.To = new DeckPlace(null, DeckType.Heroes);
                 move.Helper.IsFakedMove = true;
@@ -339,20 +336,16 @@ public class Pk1v1Game : RoleGame
                 }
             }
             p.IsDead = false;
-            List<DeckPlace> sourceDecks = new List<DeckPlace>();
-            sourceDecks.Add(new DeckPlace(p, SelectedHero));
-            List<string> resultDeckNames = new List<string>();
-            resultDeckNames.Add("HeroChoice");
-            List<int> resultDeckMaximums = new List<int>();
-            List<List<Card>> answer;
+            List<DeckPlace> sourceDecks = [new DeckPlace(p, SelectedHero)];
+            List<string> resultDeckNames = ["HeroChoice"];
+            List<int> resultDeckMaximums = [];
             int numberOfHeroes = CurrentGame.Settings.DualHeroMode ? 2 : 1;
             resultDeckMaximums.Add(numberOfHeroes);
             var newVer = new RequireCardsChoiceVerifier(numberOfHeroes, false, true);
 
-            if (!p.AskForCardChoice(new CardChoicePrompt("Pk1v1.NextHeroChoice", numberOfHeroes), sourceDecks, resultDeckNames, resultDeckMaximums, newVer, out answer))
+            if (!p.AskForCardChoice(new CardChoicePrompt("Pk1v1.NextHeroChoice", numberOfHeroes), sourceDecks, resultDeckNames, resultDeckMaximums, newVer, out var answer))
             {
-                answer = new List<List<Card>>();
-                answer.Add(new List<Card>() { CurrentGame.Decks[p, SelectedHero].First() });
+                answer = [[CurrentGame.Decks[p, SelectedHero].First()]];
                 if (numberOfHeroes == 2) answer[0].Add(CurrentGame.Decks[p, SelectedHero].ElementAt(1));
             }
             CurrentGame.Decks[p, ReadyToGoHeroes].AddRange(answer[0]);
@@ -387,8 +380,10 @@ public class Pk1v1Game : RoleGame
 
     private class Pk1v1GameRuleTrigger : Trigger
     {
-        private readonly List<Card> usedRoleCards;
-        private static readonly List<Card> allRoleCards;
+        private readonly List<Card> usedRoleCards = [];
+        private static readonly List<Card> allRoleCards = new List<Card>(from c in GameEngine.CardSet
+                                          where c.Type is RoleCardHandler
+                                          select c);
 
         private Card _FindARoleCard(Role role)
         {
@@ -406,18 +401,6 @@ public class Pk1v1Game : RoleGame
             return null;
         }
 
-        static Pk1v1GameRuleTrigger()
-        {
-            allRoleCards = new List<Card>(from c in GameEngine.CardSet
-                                          where c.Type is RoleCardHandler
-                                          select c);
-        }
-
-        public Pk1v1GameRuleTrigger()
-        {
-            usedRoleCards = new List<Card>();
-        }
-
         private void _DebugDealingDeck(Game game)
         {
             if (game.Decks[null, DeckType.Dealing].Any(tc => tc.Type is HeroCardHandler || tc.Type is RoleCardHandler || tc.Id == Card.UnknownHeroId || tc.Id == Card.UnknownRoleId))
@@ -428,19 +411,13 @@ public class Pk1v1Game : RoleGame
             }
         }
 
-        public class Pk1v1HeroChoiceVerifier : ICardChoiceVerifier
+        public class Pk1v1HeroChoiceVerifier(int count, int extraSeconds) : ICardChoiceVerifier
         {
-            private readonly bool noCardReveal;
-            private readonly int count;
-            private readonly bool showToall;
-            private readonly int extraSec;
-            public Pk1v1HeroChoiceVerifier(int count, int extraSeconds)
-            {
-                noCardReveal = false;
-                this.count = count;
-                this.showToall = true;
-                extraSec = extraSeconds;
-            }
+            private readonly bool noCardReveal = false;
+            private readonly int count = count;
+            private readonly bool showToall = true;
+            private readonly int extraSec = extraSeconds;
+
             public VerifierResult Verify(List<List<Card>> answer)
             {
                 if ((answer.Count > 1) || (answer.Count > 0 && answer[0].Count > count))
@@ -467,18 +444,15 @@ public class Pk1v1Game : RoleGame
                 }
                 return VerifierResult.Success;
             }
-            public UiHelper Helper
-            {
-                get { return new UiHelper() { RevealCards = !noCardReveal, ShowToAll = showToall, ExtraTimeOutSeconds = extraSec }; }
-            }
+            public UiHelper Helper => new() { RevealCards = !noCardReveal, ShowToAll = showToall, ExtraTimeOutSeconds = extraSec };
         }
         public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
         {
             Pk1v1Game game = CurrentGame as Pk1v1Game;
 
-            foreach (Player pp in game.Players)
+            foreach (var pp in game.Players)
             {
-                game.HandCardVisibility.Add(pp, new List<Player>() { pp });
+                game.HandCardVisibility.Add(pp, [pp]);
             }
 
             // Put the whole deck in the dealing deck
@@ -546,13 +520,15 @@ public class Pk1v1Game : RoleGame
                 game.Decks[null, RoleDeckType].Add(_FindARoleCard(Role.Ruler));
             }
 
-            List<CardsMovement> moves = new List<CardsMovement>();
+            List<CardsMovement> moves = [];
             int i = 0;
-            foreach (Player p in game.Players)
+            foreach (var p in game.Players)
             {
-                CardsMovement move = new CardsMovement();
-                move.Cards = new List<Card>() { game.Decks[null, RoleDeckType][i] };
-                move.To = new DeckPlace(p, RoleDeckType);
+                var move = new CardsMovement
+                {
+                    Cards = [game.Decks[null, RoleDeckType][i]],
+                    To = new DeckPlace(p, RoleDeckType)
+                };
                 moves.Add(move);
                 i++;
             }
@@ -561,7 +537,7 @@ public class Pk1v1Game : RoleGame
             //hero allocation
             game.Shuffle(game.Decks[DeckType.Heroes]);
 
-            List<Card> heroPool = new List<Card>();
+            List<Card> heroPool = [];
             int toDraw = 12;
             for (int rc = 0; rc < toDraw; rc++)
             {
@@ -575,34 +551,33 @@ public class Pk1v1Game : RoleGame
             game.Players[rulerId].Role = Role.Ruler;
             game.Players[1 - rulerId].Role = Role.Defector;
 
-            List<int> heroSelectCount = new List<int>() { 1, 2, 2, 2, 2, 2, 1 };
+            List<int> heroSelectCount = [1, 2, 2, 2, 2, 2, 1];
             int seq = 0;
             int turn = rulerId;
-            Dictionary<int, int> map = new Dictionary<int,int>();
-            map.Add(0, 0);
-            map.Add(1, 1);
+            var map = new Dictionary<int, int>
+            {
+                { 0, 0 },
+                { 1, 1 }
+            };
             var deckPlace = new DeckPlace(null, tempHero);
             game.NotificationProxy.NotifyTwoSidesCardPickStart(new CardChoicePrompt("Pk1v1.InitHeroPick.Init"), deckPlace, map, 6, 6);
             while (heroSelectCount.Count > seq)
             {
-                List<DeckPlace> sourceDecks = new List<DeckPlace>();
-                sourceDecks.Add(new DeckPlace(null, tempHero));
-                List<string> resultDeckNames = new List<string>();
-                resultDeckNames.Add("HeroChoice");
-                List<int> resultDeckMaximums = new List<int>();
+                List<DeckPlace> sourceDecks = [new DeckPlace(null, tempHero)];
+                List<string> resultDeckNames = ["HeroChoice"];
+                List<int> resultDeckMaximums = [];
                 int numHeroes = heroSelectCount[seq];
                 resultDeckMaximums.Add(numHeroes);
-                List<List<Card>> answer;
                 var newVer = new Pk1v1HeroChoiceVerifier(1, seq + 1 == heroSelectCount.Count ? -(CurrentGame.Settings.TimeOutSeconds - 2) : 0);
                 for (int j = 0; j < numHeroes; j++)
                 {
-                    var option = new AdditionalCardChoiceOptions();
-                    option.IsTwoSidesCardChoice = true;
-                    if (!game.UiProxies[game.Players[turn]].AskForCardChoice(new CardChoicePrompt("Pk1v1.InitHeroPick", numHeroes), sourceDecks, resultDeckNames, resultDeckMaximums, newVer, out answer, option))
+                    var option = new AdditionalCardChoiceOptions
                     {
-                        answer = new List<List<Card>>();
-                        answer.Add(new List<Card>());
-                        answer[0].Add(game.Decks[null, tempHero].First(h => !answer[0].Contains(h) && !game.Decks[game.Players[turn], SelectedHero].Contains(h) && !game.Decks[game.Players[1 - turn], SelectedHero].Contains(h)));
+                        IsTwoSidesCardChoice = true
+                    };
+                    if (!game.UiProxies[game.Players[turn]].AskForCardChoice(new CardChoicePrompt("Pk1v1.InitHeroPick", numHeroes), sourceDecks, resultDeckNames, resultDeckMaximums, newVer, out var answer, option))
+                    {
+                        answer = [[game.Decks[null, tempHero].First(h => !answer[0].Contains(h) && !game.Decks[game.Players[turn], SelectedHero].Contains(h) && !game.Decks[game.Players[1 - turn], SelectedHero].Contains(h))]];
                     }
                     game.Decks[game.Players[turn], SelectedHero].AddRange(answer[0]);
                     game.NotificationProxy.NotifyTwoSidesCardPicked(turn == 0, game.Decks[deckPlace].IndexOf(answer[0][0]));
@@ -616,9 +591,9 @@ public class Pk1v1Game : RoleGame
 
             Player current = game.CurrentPlayer = game.Players[1 - rulerId];
 
-            Dictionary<Player, List<Card>> restDraw = new Dictionary<Player, List<Card>>();
-            List<Player> players = new List<Player>(game.Players);
-            foreach (Player p in players)
+            Dictionary<Player, List<Card>> restDraw = [];
+            var players = new List<Player>(game.Players);
+            foreach (var p in players)
             {
                 restDraw.Add(p, new List<Card>(game.Decks[p, SelectedHero]));
             }
@@ -757,8 +732,10 @@ public class Pk1v1Game : RoleGame
             current = game.CurrentPlayer;
             while (true)
             {
-                GameEventArgs args = new GameEventArgs();
-                args.Source = current;
+                var args = new GameEventArgs
+                {
+                    Source = current
+                };
                 game.CurrentPhaseEventIndex = 0;
                 game.CurrentPhase = TurnPhase.BeforeStart;
                 game.CurrentPlayer = current;
@@ -775,7 +752,7 @@ public class Pk1v1Game : RoleGame
             CurrentGame.CurrentPlayer[Player.DealAdjustment]--;
         }
     }
-    public class InitialDealAdjustmentUnregister : Trigger
+    public class InitialDealAdjustmentUnregister(Pk1v1Game.InitialDealAdjustment trigger) : Trigger
     {
         public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
         {
@@ -783,19 +760,17 @@ public class Pk1v1Game : RoleGame
             CurrentGame.UnregisterTrigger(GameEvent.PhasePostEnd, this);
         }
 
-        private readonly InitialDealAdjustment theTrigger;
-        public InitialDealAdjustmentUnregister(InitialDealAdjustment trigger)
-        {
-            theTrigger = trigger;
-        }
+        private readonly InitialDealAdjustment theTrigger = trigger;
     }
 
     protected static void StartGameDeal(Game game, Player player)
     {
-        List<CardsMovement> moves = new List<CardsMovement>();
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>();
-        move.To = new DeckPlace(player, DeckType.Hand);
+        List<CardsMovement> moves = [];
+        CardsMovement move = new CardsMovement
+        {
+            Cards = [],
+            To = new DeckPlace(player, DeckType.Hand)
+        };
         game.Emit(GameEvent.StartGameDeal, new GameEventArgs() { Source = player });
         int dealCount = player.MaxHealth + player[Player.DealAdjustment];
         for (int i = 0; i < dealCount; i++)

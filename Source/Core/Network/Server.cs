@@ -9,9 +9,7 @@ using ProtoBuf;
 
 namespace Sanguosha.Core.Network;
 
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class Server
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     //The following invariant MUST hold: the first <numberOfGamers> handlers are for gamers. The last one is for spectators.
     private readonly int numberOfGamers;

@@ -7,9 +7,7 @@ using Sanguosha.Core.UI;
 
 namespace Sanguosha.Core.Network;
 
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class GlobalServerProxy : IGlobalUiProxy
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     private readonly Dictionary<Player, ServerNetworkProxy> proxy;
     private Dictionary<Player, Thread> proxyListener;

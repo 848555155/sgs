@@ -24,9 +24,7 @@ public enum OnlineStatus
     [ProtoEnum]
     Quit
 }
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class ServerGamer
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     public ServerGamer()
     {
@@ -73,7 +71,6 @@ public class ServerGamer
 
     public void StartSender()
     {
-#pragma warning disable CA2002 // 不要锁定具有弱标识的对象
         lock (this)
         {                
             if (sendThread == null)
@@ -86,7 +83,6 @@ public class ServerGamer
 
     public void StartReceiver()
     {
-#pragma warning disable CA2002 // 不要锁定具有弱标识的对象
         lock (this)
         {
             if (!IsSpectator && receiveThread == null)
@@ -135,7 +131,6 @@ public class ServerGamer
     public GameDataPacket Receive()
     {
         GameDataPacket packet;
-#pragma warning disable CA2002 // 不要锁定具有弱标识的对象
         lock (this)
         {
             lock (receiverLock)
@@ -161,7 +156,6 @@ public class ServerGamer
                 }
             }
         }
-#pragma warning restore CA2002 // 不要锁定具有弱标识的对象
         return packet;
     }
             

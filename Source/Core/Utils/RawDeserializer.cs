@@ -3,9 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace Sanguosha.Core.Utils;
 
-#pragma warning disable CA1001 // 具有可释放字段的类型应该是可释放的
 public class RawDeserializer
-#pragma warning restore CA1001 // 具有可释放字段的类型应该是可释放的
 {
     protected BinaryReader br;
 

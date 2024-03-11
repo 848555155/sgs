@@ -8,40 +8,19 @@ namespace Sanguosha.Core.Games;
 
 public static class PlayerExtension
 {
-    public static List<Card> HandCards(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.Hand];
-    }
+    public static List<Card> HandCards(this Player p) => Game.CurrentGame.Decks[p, DeckType.Hand];
 
-    public static List<Card> Equipments(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.Equipment];
-    }
+    public static List<Card> Equipments(this Player p) => Game.CurrentGame.Decks[p, DeckType.Equipment];
 
-    public static List<Card> DelayedTools(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.DelayedTools];
-    }
+    public static List<Card> DelayedTools(this Player p) => Game.CurrentGame.Decks[p, DeckType.DelayedTools];
 
-    public static Card Weapon(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is Weapon);
-    }
+    public static Card Weapon(this Player p) => Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is Weapon);
 
-    public static Card Armor(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is Armor);
-    }
+    public static Card Armor(this Player p) => Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is Armor);
 
-    public static Card DefensiveHorse(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is DefensiveHorse);
-    }
+    public static Card DefensiveHorse(this Player p) => Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is DefensiveHorse);
 
-    public static Card OffensiveHorse(this Player p)
-    {
-        return Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is OffensiveHorse);
-    }
+    public static Card OffensiveHorse(this Player p) => Game.CurrentGame.Decks[p, DeckType.Equipment].FirstOrDefault(c => c.Type is OffensiveHorse);
 
     /// <summary>
     /// 询问使用或打出卡牌，可以发动技能。

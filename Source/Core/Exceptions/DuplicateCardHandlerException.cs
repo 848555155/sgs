@@ -1,3 +1,3 @@
 ﻿namespace Sanguosha.Core.Exceptions;
 
-internal class DuplicateCardHandlerException : SgsException { }
+internal class DuplicateCardHandlerException : SgsException;

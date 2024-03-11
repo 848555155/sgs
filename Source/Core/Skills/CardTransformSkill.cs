@@ -9,20 +9,8 @@ namespace Sanguosha.Core.Skills;
 
 public abstract class CardTransformSkill : ISkill
 {
-    public UiHelper Helper
-    {
-        get;
-        protected set;
-    }
-    public class CardTransformFailureException : SgsException
-    {
-    }
-
-    public CardTransformSkill()
-    {
-        LinkedPassiveSkill = null;
-        Helper = new UiHelper();
-    }
+    public UiHelper Helper { get; protected set; } = new();
+    public class CardTransformFailureException : SgsException;
 
     /// <summary>
     /// 尝试使用当前技能转换一组卡牌。
@@ -63,7 +51,7 @@ public abstract class CardTransformSkill : ISkill
         }
         return ret;
     }
-    
+
     protected virtual bool DoTransformSideEffect(CompositeCard card, object arg, List<Player> targets, bool isPlay)
     {
         return true;
@@ -75,7 +63,7 @@ public abstract class CardTransformSkill : ISkill
     /// <remarks>
     /// 断粮和疬火同时拥有卡牌转换技和被动技成分，故设置此成员变量
     /// </remarks>
-    public PassiveSkill LinkedPassiveSkill { get; protected set; }
+    public PassiveSkill LinkedPassiveSkill { get; protected set; } = null;
     public Hero HeroTag { get; set; }
 
     private Player owner;

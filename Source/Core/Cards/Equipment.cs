@@ -121,10 +121,5 @@ public abstract class Equipment : CardHandler
 
     public Card ParentCard { get; set; }
 
-    public override CardCategory Category
-    {
-#pragma warning disable CA1065 // 不要在意外的位置引发异常
-        get { throw new NotImplementedException(); }
-#pragma warning restore CA1065 // 不要在意外的位置引发异常
-    }
+    public override CardCategory Category => throw new NotImplementedException();
 }

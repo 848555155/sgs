@@ -2,68 +2,21 @@
 
 namespace Sanguosha.Core.Utils;
 
-public class RecordTakingInputStream : Stream
+public class RecordTakingInputStream(Stream inputStream, Stream recordStream) : Stream
 {
-#pragma warning disable CA2213 // 应释放可释放的字段
-    private Stream _inputStream;
-#pragma warning restore CA2213 // 应释放可释放的字段
+    public Stream InputStream { get; set; } = inputStream;
 
-    public Stream InputStream
-    {
-        get { return _inputStream; }
-        set { _inputStream = value; }
-    }
-#pragma warning disable CA2213 // 应释放可释放的字段
-    private Stream _recordStream;
-#pragma warning restore CA2213 // 应释放可释放的字段
+    public Stream RecordStream { get; set; } = recordStream;
 
-    public Stream RecordStream
-    {
-        get { return _recordStream; }
-        set { _recordStream = value; }
-    }
+    public override bool CanRead => true;
 
-    public RecordTakingInputStream()
-    {
+    public override bool CanSeek => false;
 
-    }
+    public override bool CanWrite => true;
 
-    public RecordTakingInputStream(Stream inputStream, Stream recordStream)
-    {
-        _inputStream = inputStream;
-        _recordStream = recordStream;
-    }
+    public override void Flush() => RecordStream?.Flush();
 
-    public override bool CanRead
-    {
-        get { return true; }
-    }
-
-    public override bool CanSeek
-    {
-        get { return false; }
-    }
-
-    public override bool CanWrite
-    {
-        get 
-        {
-            return true; 
-        }
-    }
-
-    public override void Flush()
-    {
-        if (RecordStream != null)
-        {
-            RecordStream.Flush();
-        }
-    }
-
-    public override long Length
-    {
-        get { return InputStream.Length; }
-    }
+    public override long Length => InputStream.Length;
 
     public override long Position
     {

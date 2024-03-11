@@ -126,12 +126,12 @@ public partial class LobbyService: LobbyBase
                 var ping = disconnected.CallbackChannel;
                 try
                 {
-                    if (ping.Ping())
-                    {
-                        reconnectionString = null;
-                        retAccount = null;
-                        return Result(LoginStatus.InvalidUsernameAndPassword, retAccount);
-                    }
+                    // if (ping.Ping())
+                    // {
+                    //     reconnectionString = null;
+                    //     retAccount = null;
+                    //     return Result(LoginStatus.InvalidUsernameAndPassword, retAccount);
+                    // }
                 }
                 catch (Exception)
                 {
@@ -204,11 +204,11 @@ public partial class LobbyService: LobbyBase
             {
                 try
                 {
-                    account.OpContext.Channel.Close();
+                    // account.OpContext.Channel.Close();
                 }
                 catch (Exception)
                 {
-                    account.OpContext.Channel.Abort();
+                    // account.OpContext.Channel.Abort();
                 }
                 return;
             }
@@ -222,11 +222,11 @@ public partial class LobbyService: LobbyBase
             loggedInAccounts.Remove(account.Account.UserName, out var _);
             try
             {
-                account.OpContext.Channel.Close();
+                // account.OpContext.Channel.Close();
             }
             catch (Exception)
             {
-                account.OpContext.Channel.Abort();
+                // account.OpContext.Channel.Abort();
             }
         }
     }

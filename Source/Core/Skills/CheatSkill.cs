@@ -11,11 +11,6 @@ public enum CheatType
 
 public class CheatSkill : ISkill
 {
-    public CheatSkill()
-    {
-        Helper = new UiHelper();
-        HeroTag = null;
-    }
     public CheatType CheatType { get; set; }
     public int CardId { get; set; }
 
@@ -44,15 +39,7 @@ public class CheatSkill : ISkill
         return skill;
     }
 
-    public Hero HeroTag
-    {
-        get;
-        set;
-    }
+    public Hero HeroTag { get; set; } = null;
 
-    public UiHelper Helper
-    {
-        get;
-        private set;
-    }
+    public UiHelper Helper { get; private set; } = new();
 }

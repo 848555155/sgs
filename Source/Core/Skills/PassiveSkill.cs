@@ -5,16 +5,10 @@ namespace Sanguosha.Core.Skills;
 
 public abstract class PassiveSkill : ISkill
 {
-    public PassiveSkill()
-    {
-        isAutoInvoked = false;
-        Helper = new UiHelper();
-    }
-
     private Players.Player owner;
     public ISkill LinkedSkill { get; protected set; }
 
-    
+
     /// <summary>
     /// Owner of the skill.
     /// </summary>
@@ -22,7 +16,7 @@ public abstract class PassiveSkill : ISkill
     public virtual Players.Player Owner
     {
         get { return owner; }
-        set 
+        set
         {
             if (owner == value) return;
             if (owner != null)
@@ -53,8 +47,8 @@ public abstract class PassiveSkill : ISkill
 
     public Hero HeroTag { get; set; }
 
-    private bool? isAutoInvoked;
-    public bool? IsAutoInvoked 
+    private bool? isAutoInvoked = false;
+    public bool? IsAutoInvoked
     {
         get
         {
@@ -78,9 +72,5 @@ public abstract class PassiveSkill : ISkill
 
 
 
-    public UiHelper Helper
-    {
-        get;
-        private set;
-    }
+    public UiHelper Helper { get; private set; } = new();
 }

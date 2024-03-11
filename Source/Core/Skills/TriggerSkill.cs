@@ -15,8 +15,8 @@ public abstract class TriggerSkill : PassiveSkill
     public TriggerSkill()
     {
         Triggers = new Dictionary<GameEvent, Trigger>();
-        DeckCleanup = new List<DeckType>();
-        AttributeCleanup = new List<PlayerAttribute>();
+        DeckCleanup = [];
+        AttributeCleanup = [];
     }
 
     public void NotifySkillUse(List<Player> targets)

@@ -3,16 +3,13 @@
 [Serializable]    
 public class DeckType
 {
-    private static readonly Dictionary<string, DeckType> registeredDeckTypes = new Dictionary<string,DeckType>();
+    private static readonly Dictionary<string, DeckType> registeredDeckTypes = [];
 
-    public static DeckType Register(string name)
-    {
-        return Register(name, name);
-    }
+    public static DeckType Register(string name) => Register(name, name);
 
     public static DeckType Register(string name, string shortName)
     {
-        if (!registeredDeckTypes.TryGetValue(shortName, out DeckType value))
+        if (!registeredDeckTypes.TryGetValue(shortName, out var value))
         {
             value = new DeckType(name, shortName);
             registeredDeckTypes.Add(shortName, value);

@@ -18,10 +18,7 @@ public class DeckPlace(Player player, DeckType deckType)
         return Player == dp.Player && DeckType == dp.DeckType;
     }
 
-    public override int GetHashCode()
-    {
-        return ((Player == null) ? 0 : Player.GetHashCode()) + ((DeckType == null) ? 0 : DeckType.GetHashCode());
-    }
+    public override int GetHashCode() => ((Player == null) ? 0 : Player.GetHashCode()) + ((DeckType == null) ? 0 : DeckType.GetHashCode());
 
     public static bool operator ==(DeckPlace a, DeckPlace b)
     {

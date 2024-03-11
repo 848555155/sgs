@@ -3,17 +3,14 @@ using Sanguosha.Core.Triggers;
 
 namespace Sanguosha.Core.Games;
 
-public class RoleCardHandler : CardHandler
+public class RoleCardHandler(Role r) : CardHandler
 {
     public override object Clone()
     {
-        return new RoleCardHandler(this.Role);
+        return new RoleCardHandler(Role);
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.Unknown; }
-    }
+    public override CardCategory Category => CardCategory.Unknown;
 
     protected override void Process(Players.Player source, Players.Player dest, ICard card, ReadOnlyCard cardr, GameEventArgs inResponseTo)
     {
@@ -25,20 +22,9 @@ public class RoleCardHandler : CardHandler
         throw new NotImplementedException();
     }
 
-    public Role Role { get; set; }
+    public Role Role { get; set; } = r;
 
-    public RoleCardHandler(Role r)
-    {
-        Role = r;
-    }
-
-    public override string Name
-    {
-        get
-        {
-            return Role.ToString();
-        }
-    }
+    public override string Name => Role.ToString();
 }
 public class UnknownRoleCardHandler : RoleCardHandler
 {
@@ -46,13 +32,7 @@ public class UnknownRoleCardHandler : RoleCardHandler
     {
     }
 
-    public override string Name
-    {
-        get
-        {
-            return _cardTypeString;
-        }
-    }
+    public override string Name => _cardTypeString;
 
     private static readonly string _cardTypeString = "UnknownRole";
 }

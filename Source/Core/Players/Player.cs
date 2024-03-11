@@ -233,10 +233,7 @@ public class Player : INotifyPropertyChanged
     /// </summary>
     private readonly List<ISkill> additionalUndeletableSkills;
 
-    public IList<ISkill> AdditionalUndeletableSkills
-    {
-        get { return new ReadOnlyCollection<ISkill>(additionalUndeletableSkills); }
-    }
+    public IList<ISkill> AdditionalUndeletableSkills => new ReadOnlyCollection<ISkill>(additionalUndeletableSkills);
 
 
     public void AcquireAdditionalSkill(ISkill skill, Hero tag, bool undeletable = false)

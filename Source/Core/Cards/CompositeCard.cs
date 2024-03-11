@@ -7,13 +7,11 @@ public class CompositeCard : ICard
     public CompositeCard()
     {
         Subcards = [];
-        attributes = null;
     }
 
     public CompositeCard(List<Card> cards)
     {
         Subcards = cards;
-        attributes = null;
     }
 
     public List<Card> Subcards { get; set; }
@@ -89,9 +87,7 @@ public class CompositeCard : ICard
 
     public virtual CardHandler Type { get; set; }
 
-    protected Dictionary<CardAttribute, int> attributes;
-
-    public Dictionary<CardAttribute, int> Attributes { get; set; }
+    public Dictionary<CardAttribute, int> Attributes { get; set; } = null;
 
     public int this[CardAttribute key]
     {

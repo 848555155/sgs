@@ -56,19 +56,19 @@ public class RoleGame : Game
                     if (!CurrentGame.Settings.CheatEnabled) return VerifierResult.Fail;
                     return VerifierResult.Success;
                 }
-                else if (skill is ActiveSkill)
+                else if (skill is ActiveSkill activeSkill)
                 {
-                    GameEventArgs arg = new GameEventArgs();
-                    arg.Source = CurrentGame.CurrentPlayer;
-                    arg.Targets = players;
-                    arg.Cards = cards;
-                    return ((ActiveSkill)skill).Validate(arg);
+                    var arg = new GameEventArgs
+                    {
+                        Source = CurrentGame.CurrentPlayer,
+                        Targets = players,
+                        Cards = cards
+                    };
+                    return activeSkill.Validate(arg);
                 }
-                else if (skill is CardTransformSkill)
+                else if (skill is CardTransformSkill cardTransformSkill)
                 {
-                    CardTransformSkill s = (CardTransformSkill)skill;
-                    CompositeCard result;
-                    VerifierResult ret = s.TryTransform(cards, players, out result);
+                    VerifierResult ret = cardTransformSkill.TryTransform(cards, players, out var result);
                     if (ret == VerifierResult.Success)
                     {
                         return result.Type.Verify(CurrentGame.CurrentPlayer, skill, cards, players);
@@ -105,12 +105,9 @@ public class RoleGame : Game
             {
                 Trace.Assert(CurrentGame.UiProxies.ContainsKey(currentPlayer));
                 IPlayerProxy proxy = CurrentGame.UiProxies[currentPlayer];
-                ISkill skill;
-                List<Card> cards;
-                List<Player> players;
-                PlayerActionStageVerifier v = new PlayerActionStageVerifier();
+                var v = new PlayerActionStageVerifier();
                 CurrentGame.Emit(GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = currentPlayer, Verifier = v });
-                if (!proxy.AskForCardUsage(new Prompt(Prompt.PlayingPhasePrompt), v, out skill, out cards, out players))
+                if (!proxy.AskForCardUsage(new Prompt(Prompt.PlayingPhasePrompt), v, out var skill, out var cards, out var players))
                 {
                     break;
                 }
@@ -141,10 +138,12 @@ public class RoleGame : Game
                             {
                                 if (searchCard.Id == cs.CardId)
                                 {
-                                    CardsMovement move = new CardsMovement();
-                                    move.Cards = new List<Card>() { searchCard };
-                                    move.To = new DeckPlace(CurrentGame.CurrentPlayer, DeckType.Hand);
-                                    move.Helper = new MovementHelper();
+                                    CardsMovement move = new CardsMovement
+                                    {
+                                        Cards = [searchCard],
+                                        To = new DeckPlace(CurrentGame.CurrentPlayer, DeckType.Hand),
+                                        Helper = new MovementHelper()
+                                    };
                                     CurrentGame.MoveCards(move);
                                     break;
                                 }
@@ -172,20 +171,21 @@ public class RoleGame : Game
                         }
                         continue;
                     }
-                    else if (skill is ActiveSkill)
+                    else if (skill is ActiveSkill activeSkill)
                     {
-                        GameEventArgs arg = new GameEventArgs();
-                        arg.Source = CurrentGame.CurrentPlayer;
-                        arg.Targets = players;
-                        arg.Cards = cards;
-                        ((ActiveSkill)skill).NotifyAndCommit(arg);
+                        var arg = new GameEventArgs
+                        {
+                            Source = CurrentGame.CurrentPlayer,
+                            Targets = players,
+                            Cards = cards
+                        };
+                        activeSkill.NotifyAndCommit(arg);
                         CurrentGame.NotificationProxy.NotifyActionComplete();
                         CurrentGame.LastAction = skill;
                         continue;
                     }
-                    CompositeCard c;
                     CardTransformSkill s = (CardTransformSkill)skill;
-                    VerifierResult r = s.TryTransform(cards, players, out c);
+                    VerifierResult r = s.TryTransform(cards, players, out var c);
                     Trace.TraceInformation("Player used {0}", c.Type);
                 }
                 else
@@ -222,9 +222,11 @@ public class RoleGame : Game
         {
             Player currentPlayer = CurrentGame.CurrentPlayer;
             Trace.TraceInformation("Player {0} discard stage.", currentPlayer.Id);
-            var args = new AdjustmentEventArgs();
-            args.Source = eventArgs.Source;
-            args.AdjustmentAmount = 0;
+            var args = new AdjustmentEventArgs
+            {
+                Source = eventArgs.Source,
+                AdjustmentAmount = 0
+            };
             CurrentGame.Emit(GameEvent.PlayerHandCardCapacityAdjustment, args);
             CurrentGame.ForcePlayerDiscard(currentPlayer,
                 (p, d) =>
@@ -316,9 +318,11 @@ public class RoleGame : Game
                 //使用延时锦囊和装备是应该触发PlayerUsedCard的。
                 //延时锦囊也应该触发CardUsageTargetConfirming和CardUsageTargetConfirmed
                 //因为在国战中，有成为目标后“取消之”这一个概念。
-                GameEventArgs newArg = new GameEventArgs();
-                newArg.Source = eventArgs.Source;
-                newArg.UiTargets = eventArgs.Targets;
+                var newArg = new GameEventArgs
+                {
+                    Source = eventArgs.Source,
+                    UiTargets = eventArgs.Targets,
+                };
                 newArg.Targets = c.Type.ActualTargets(newArg.Source, eventArgs.Targets, c);
                 newArg.Card = c;
                 newArg.ReadonlyCard = new ReadOnlyCard(c);
@@ -337,7 +341,7 @@ public class RoleGame : Game
             var rdonlyCard = new ReadOnlyCard(c);
             computeBackup = new List<Card>(CurrentGame.Decks[DeckType.Compute]);
             CurrentGame.Decks[DeckType.Compute].Clear();
-            CardsMovement m = new CardsMovement();
+            var m = new CardsMovement();
             Player isDoingAFavor = eventArgs.Source;
             if (c is CompositeCard)
             {
@@ -375,9 +379,11 @@ public class RoleGame : Game
             }
             Player savedSource = eventArgs.Source;
 
-            GameEventArgs arg = new GameEventArgs();
-            arg.Source = eventArgs.Source;
-            arg.UiTargets = eventArgs.Targets;
+            var arg = new GameEventArgs
+            {
+                Source = eventArgs.Source,
+                UiTargets = eventArgs.Targets
+            };
             arg.Targets = c.Type.ActualTargets(arg.Source, eventArgs.Targets, c);
             arg.Card = c;
             arg.ReadonlyCard = rdonlyCard;
@@ -436,13 +442,15 @@ public class RoleGame : Game
 
     private static void StartGameDeal(Game game)
     {
-        List<CardsMovement> moves = new List<CardsMovement>();
+        List<CardsMovement> moves = [];
         // Deal everyone 4 cards
         foreach (Player player in game.AlivePlayers)
         {
-            CardsMovement move = new CardsMovement();
-            move.Cards = new List<Card>();
-            move.To = new DeckPlace(player, DeckType.Hand);
+            var move = new CardsMovement
+            {
+                Cards = [],
+                To = new DeckPlace(player, DeckType.Hand)
+            };
             game.Emit(GameEvent.StartGameDeal, new GameEventArgs() { Source = player });
             int dealCount = 4 + player[Player.DealAdjustment];
             for (int i = 0; i < dealCount; i++)
@@ -456,13 +464,15 @@ public class RoleGame : Game
         game.MoveCards(moves, null, GameDelays.GameBeforeStart);
     }
 
-    public static DeckType RoleDeckType = DeckType.Register("Role");
+    public static readonly DeckType RoleDeckType = DeckType.Register("Role");
 
 
     private class RoleGameRuleTrigger : Trigger
     {
-        private readonly List<Card> usedRoleCards;
-        private static readonly List<Card> allRoleCards;
+        private readonly List<Card> usedRoleCards = [];
+        private static readonly List<Card> allRoleCards = new List<Card>(from c in GameEngine.CardSet
+                                          where c.Type is RoleCardHandler
+                                          select c);
 
         private Card _FindARoleCard(Role role)
         {
@@ -478,18 +488,6 @@ public class RoleGame : Game
                 }
             }
             return null;
-        }
-
-        static RoleGameRuleTrigger()
-        {
-            allRoleCards = new List<Card>(from c in GameEngine.CardSet
-                                          where c.Type is RoleCardHandler
-                                          select c);
-        }
-
-        public RoleGameRuleTrigger()
-        {
-            usedRoleCards = new List<Card>();
         }
 
         private void _DebugDealingDeck(Game game)
@@ -511,7 +509,7 @@ public class RoleGame : Game
                 game.HandCardVisibility.Add(pp, new List<Player>() { pp });
             }
 
-            int numberOfDefectors = (game.Players.Count > 2 ? game.Settings.NumberOfDefectors : 1);
+            int numberOfDefectors = game.Players.Count > 2 ? game.Settings.NumberOfDefectors : 1;
 
             // Put the whole deck in the dealing deck
             
@@ -611,9 +609,11 @@ public class RoleGame : Game
                 game.Decks[null, RoleDeckType].Clear();
                 while (count-- > 0)
                 {
-                    Card c = new Card(SuitType.None, 0, new UnknownRoleCardHandler());
-                    c.Id = Card.UnknownRoleId;
-                    c.Place = new DeckPlace(null, RoleDeckType);
+                    var c = new Card(SuitType.None, 0, new UnknownRoleCardHandler())
+                    {
+                        Id = Card.UnknownRoleId,
+                        Place = new DeckPlace(null, RoleDeckType)
+                    };
                     game.Decks[null, RoleDeckType].Add(c);
                 }
                 game.SyncImmutableCardAll(game.Decks[null, RoleDeckType][0]);
@@ -652,8 +652,7 @@ public class RoleGame : Game
             foreach (Player player in game.Players)
             {
                 Card card = game.Decks[player, RoleDeckType][0];
-                var role = card.Type as RoleCardHandler;
-                if (role != null)
+                if (card.Type is RoleCardHandler role)
                 {
                     if (role.Role == Role.Ruler)
                     {
@@ -698,20 +697,14 @@ public class RoleGame : Game
             game.Decks[null, tempHero].AddRange(rulerDraw);
             Trace.TraceInformation("Ruler is {0}", rulerId);
             game.Players[rulerId].Role = Role.Ruler;
-            List<DeckPlace> sourceDecks = new List<DeckPlace>();
-            sourceDecks.Add(new DeckPlace(null, tempHero));
-            List<string> resultDeckNames = new List<string>();
-            resultDeckNames.Add("HeroChoice");
-            List<int> resultDeckMaximums = new List<int>();
-            resultDeckMaximums.Add(numHeroes);
-            List<List<Card>> answer;
+            List<DeckPlace> sourceDecks = [new DeckPlace(null, tempHero)];
+            List<string> resultDeckNames = ["HeroChoice"];
+            List<int> resultDeckMaximums = [numHeroes];
             var newVer = new RequireCardsChoiceVerifier(numHeroes, false, true);
             if (numHeroes > 1) newVer.Helper.ExtraTimeOutSeconds = 10;
-            if (!game.UiProxies[game.Players[rulerId]].AskForCardChoice(new CardChoicePrompt("RulerHeroChoice"), sourceDecks, resultDeckNames, resultDeckMaximums, newVer, out answer))
+            if (!game.UiProxies[game.Players[rulerId]].AskForCardChoice(new CardChoicePrompt("RulerHeroChoice"), sourceDecks, resultDeckNames, resultDeckMaximums, newVer, out var answer))
             {
-                answer = new List<List<Card>>();
-                answer.Add(new List<Card>());
-                answer[0].Add(game.Decks[DeckType.Heroes][0]);
+                answer = [[game.Decks[DeckType.Heroes][0]]];
                 if (CurrentGame.Settings.DualHeroMode)
                 {
                     answer[0].Add(game.Decks[DeckType.Heroes][1]);
@@ -732,8 +725,8 @@ public class RoleGame : Game
             Trace.TraceInformation("Assign {0} to player {1}", h.Hero.Name, rulerId);
             CurrentGame.Players[rulerId].Hero = h.Hero;
             CurrentGame.Players[rulerId].Allegiance = h.Hero.Allegiance;
-            CurrentGame.Players[rulerId].IsMale = h.Hero.IsMale ? true : false;
-            CurrentGame.Players[rulerId].IsFemale = h.Hero.IsMale ? false : true;
+            CurrentGame.Players[rulerId].IsMale = h.Hero.IsMale;
+            CurrentGame.Players[rulerId].IsFemale = !h.Hero.IsMale;
             if (CurrentGame.Settings.DualHeroMode)
             {
                 h = (HeroCardHandler)answer[0][1].Type;
@@ -746,13 +739,13 @@ public class RoleGame : Game
             int optionalHeros = game.Settings.NumHeroPicks;
             toDraw = optionalHeros + (CurrentGame.Settings.DualHeroMode ? Math.Max(6 - optionalHeros, 0) : 0);
             game.Shuffle(game.Decks[DeckType.Heroes]);
-            Dictionary<Player, List<Card>> restDraw = new Dictionary<Player, List<Card>>();
-            List<Player> players = new List<Player>(game.Players);
+            Dictionary<Player, List<Card>> restDraw = [];
+            var players = new List<Player>(game.Players);
             players.Remove(game.Players[rulerId]);
             int idx = 0;
             foreach (Player p in players)
             {
-                restDraw.Add(p, new List<Card>());
+                restDraw.Add(p, []);
                 for (int n = 0; n < toDraw; n++)
                 {
                     game.SyncImmutableCard(p, game.Decks[DeckType.Heroes][idx]);
@@ -772,7 +765,7 @@ public class RoleGame : Game
                 pxy.Value.Freeze();
             }
 
-            List<Card> toRemove = new List<Card>();
+            List<Card> toRemove = [];
             for (int repeat = 0; repeat < 2; repeat++)
             {
                 if (repeat == 1 && !CurrentGame.Settings.DualHeroMode) break;
@@ -880,12 +873,14 @@ public class RoleGame : Game
                         DeckPlace heroesConvert = new DeckPlace(p, tempSpHeroes);
                         game.Decks[heroesConvert].AddRange(convertibleHeroes[playerHero.Name]);
                         List<List<Card>> choice;
-                        AdditionalCardChoiceOptions options = new AdditionalCardChoiceOptions();
-                        options.IsCancellable = true;
+                        AdditionalCardChoiceOptions options = new AdditionalCardChoiceOptions
+                        {
+                            IsCancellable = true
+                        };
                         if (p.AskForCardChoice(new CardChoicePrompt("HeroesConvert", p),
-                            new List<DeckPlace>() { heroesConvert },
-                            new List<string>() { "convert" },
-                            new List<int>() { 1 },
+                            [heroesConvert],
+                            ["convert"],
+                            [1],
                             new RequireOneCardChoiceVerifier(false, true),
                             out choice,
                             options))
@@ -894,7 +889,7 @@ public class RoleGame : Game
                             {
                                 sk.Owner = null;
                             }
-                            Hero hero = ((choice[0][0].Type as HeroCardHandler).Hero.Clone()) as Hero;
+                            Hero hero = (choice[0][0].Type as HeroCardHandler).Hero.Clone() as Hero;
                             foreach (var skill in new List<ISkill>(hero.Skills))
                             {
                                 if (skill.IsRulerOnly && (p.Role != Role.Ruler || heroIndex == 1))
@@ -906,8 +901,8 @@ public class RoleGame : Game
                             {
                                 p.Hero = hero;
                                 p.Allegiance = hero.Allegiance;
-                                p.IsMale = hero.IsMale ? true : false;
-                                p.IsFemale = hero.IsMale ? false : true;
+                                p.IsMale = hero.IsMale;
+                                p.IsFemale = !hero.IsMale;
                             }
                             else p.Hero2 = hero;
                             changeHero = true;
@@ -916,7 +911,7 @@ public class RoleGame : Game
                         game.Decks[heroesConvert].Clear();
                     }
                 }
-                if (changeHero) p.MaxHealth = p.Health = (game as RoleGame).GetMaxHealth(p);
+                if (changeHero) p.MaxHealth = p.Health = game.GetMaxHealth(p);
                 CurrentGame.HandleGodHero(p);
             }
 
@@ -938,8 +933,10 @@ public class RoleGame : Game
 
             while (true)
             {
-                GameEventArgs args = new GameEventArgs();
-                args.Source = current;
+                var args = new GameEventArgs
+                {
+                    Source = current
+                };
                 game.CurrentPhaseEventIndex = 0;
                 game.CurrentPhase = TurnPhase.BeforeStart;
                 game.CurrentPlayer = current;
@@ -970,7 +967,7 @@ public class RoleGame : Game
                 {
                     game.CurrentPhaseEventIndex = PhaseEvents.Length - 1;
                     CurrentGame.NotificationProxy.NotifyLogEvent(new LogEvent("SkipPhase", currentPlayer, new LogEventArg(string.Format("Phase.{0}", (int)game.CurrentPhase))),
-                                                                      new List<Player>() { currentPlayer },
+                                                                      [currentPlayer],
                                                                       false);
                     continue;
                 }
@@ -1014,11 +1011,6 @@ public class RoleGame : Game
                 game.PlaceIntoDiscard(null, new List<Card>(game.Decks[null, DeckType.Compute]));
             }
         }
-    }
-
-
-    public RoleGame()
-    {
     }
 
     private class PlayerIsDead : Trigger
@@ -1122,14 +1114,11 @@ public class RoleGame : Game
             p.IsDead = true;
             //弃置死亡玩家所有的牌和标记
             CurrentGame.SyncImmutableCardsAll(CurrentGame.Decks[p, DeckType.Hand]);
-            List<Card> toDiscarded = new List<Card>();
-            toDiscarded.AddRange(p.HandCards());
-            toDiscarded.AddRange(p.Equipments());
-            toDiscarded.AddRange(p.DelayedTools());
+            List<Card> toDiscarded = [.. p.HandCards(), .. p.Equipments(), .. p.DelayedTools()];
             List<Card> privateCards = CurrentGame.Decks.GetPlayerPrivateCards(p);
             var heroCards = from hc in privateCards where hc.Type.IsCardCategory(CardCategory.Hero) select hc;
             toDiscarded.AddRange(privateCards.Except(heroCards));
-            if (heroCards.Count() > 0)
+            if (heroCards.Any())
             {
                 if (CurrentGame.IsClient)
                 {
@@ -1139,7 +1128,7 @@ public class RoleGame : Game
                         hc.Type = new UnknownHeroCardHandler();
                     }
                 }
-                CardsMovement move = new CardsMovement();
+                var move = new CardsMovement();
                 move.Cards.AddRange(heroCards);
                 move.To = new DeckPlace(null, DeckType.Heroes);
                 move.Helper.IsFakedMove = true;
@@ -1186,10 +1175,12 @@ public class RoleGame : Game
             {
                 Trace.TraceInformation("Loyalist killl by ruler. GG");
                 CurrentGame.SyncImmutableCardsAll(CurrentGame.Decks[source, DeckType.Hand]);
-                CardsMovement move = new CardsMovement();
-                move.Cards = new List<Card>();
+                var move = new CardsMovement
+                {
+                    Cards = []
+                };
                 bool showHandCards = false;
-                foreach (Card c in CurrentGame.Decks[source, DeckType.Hand])
+                foreach (var c in CurrentGame.Decks[source, DeckType.Hand])
                 {
                     if (CurrentGame.PlayerCanDiscardCard(source, c))
                     {
@@ -1202,9 +1193,7 @@ public class RoleGame : Game
                     CurrentGame.ShowHandCards(p, p.HandCards());
                     CurrentGame.SyncImmutableCardsAll(move.Cards);
                 }
-                List<Card> cards = new List<Card>();
-                cards.AddRange(move.Cards);
-                cards.AddRange(CurrentGame.Decks[source, DeckType.Equipment]);
+                List<Card> cards = [.. move.Cards, .. CurrentGame.Decks[source, DeckType.Equipment]];
                 move.Cards = new List<Card>(cards);
                 move.To = new DeckPlace(null, DeckType.Discard);
                 move.Helper = new MovementHelper();

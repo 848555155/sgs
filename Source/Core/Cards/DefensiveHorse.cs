@@ -8,18 +8,12 @@ public class DefensiveHorse(string name) : Equipment
 {
     public override object Clone()
     {
-        return Activator.CreateInstance(this.GetType(), this.HorseName);            
+        return Activator.CreateInstance(GetType(), HorseName);            
     }
 
-    protected override void RegisterEquipmentTriggers(Player p)
-    {
-        p[Player.RangePlus]++;
-    }
+    protected override void RegisterEquipmentTriggers(Player p) => p[Player.RangePlus]++;
 
-    protected override void UnregisterEquipmentTriggers(Player p)
-    {
-        p[Player.RangePlus]--;
-    }
+    protected override void UnregisterEquipmentTriggers(Player p) => p[Player.RangePlus]--;
 
     public override CardCategory Category => CardCategory.DefensiveHorse;
 
