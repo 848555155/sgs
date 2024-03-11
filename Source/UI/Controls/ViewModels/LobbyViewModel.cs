@@ -8,6 +8,7 @@ using System.Windows;
 using System.Threading;
 using System.Diagnostics;
 using System.ComponentModel;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Sanguosha.UI.Controls;
 
@@ -40,16 +41,16 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     private void PlayerCancelReady()        
     {
-        var result = _connection.CancelReady();
-        if (result == RoomOperationResult.Success)
+        var result = Connection.CancelReady(new Empty());
+        if (result.RoomOperationResult == RoomOperationResult.Success)
         {
         }
     }
 
     private void PlayerReady()
     {
-        var result = _connection.Ready();
-        if (result == RoomOperationResult.Success)
+        var result = Connection.Ready(new Empty());
+        if (result.RoomOperationResult == RoomOperationResult.Success)
         {                
         }
     }
@@ -64,21 +65,15 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     {
         get
         {
-            if (_instance == null) _instance = new LobbyViewModel();
+            _instance ??= new LobbyViewModel();
             return _instance;
         }
     }
 
-    private ILobbyService _connection;
-
     /// <summary>
     /// Gets/sets connection to lobby service. 
     /// </summary>
-    public ILobbyService Connection
-    {
-        get { return _connection; }
-        set { _connection = value; }
-    }
+    public Lobby.Core.Lobby.LobbyClient Connection { get; set; }
 
     private LoginToken _loginToken;
 
@@ -236,10 +231,10 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     /// </summary>
     public void UpdateRooms()
     {
-        var result = _connection.GetRooms(false);
+        var result = Connection.GetRooms(new BoolValue() { Value = false });
         Rooms.Clear();
         bool found = false;
-        foreach (var room in result)
+        foreach (var room in result.Rooms)
         {
             var model = new RoomViewModel() { Room = room };
             Rooms.Add(model);
@@ -260,7 +255,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     /// </summary>
     public void CreateRoom(RoomSettings settings)
     {
-        var room = _connection.CreateRoom(settings);
+        var room = Connection.CreateRoom(new CreateRoomRequest() { Settings = settings });
         if (room != null)
         {
             CurrentRoom = new RoomViewModel() { Room = room };
@@ -281,7 +276,14 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         {
             if (!ExitRoom()) return false;
         }
-        if (_IsSuccess(Connection.EnterRoom(_currentRoom.Id, false, null, out room)))
+        var reply = Connection.EnterRoom(new()
+        {
+            RoomId = _currentRoom.Id,
+            Spectate = false,
+            Password = null
+        });
+        room = reply.Room;
+        if (_IsSuccess(reply.RoomOperationResult))
         {
             CurrentRoom = new RoomViewModel() { Room = room };                
             Trace.Assert(CurrentSeat != null, "Successfully joined a room, but do not find myself in the room");
@@ -293,8 +295,8 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     public bool ExitRoom()
     {
         if (CurrentRoom == null) return false;
-        var result = Connection.ExitRoom();
-        if (_IsSuccess(result))
+        var result = Connection.ExitRoom(new Empty());
+        if (_IsSuccess(result.RoomOperationResult))
         {
             CurrentSeat = null;
             UpdateRooms();
@@ -305,7 +307,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public bool StartGame()
     {
-        if (_IsSuccess(_connection.StartGame()))
+        if (_IsSuccess(Connection.StartGame(new Empty()).RoomOperationResult))
         {
             CurrentRoom.State = RoomState.Gaming;
             return true;
@@ -315,7 +317,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public bool SpectateGame()
     {
-        if (_IsSuccess(_connection.Spectate(_currentRoom.Id)))
+        if (_IsSuccess(Connection.Spectate(new Int32Value() { Value = _currentRoom.Id } ).RoomOperationResult))
         {
             return true;
         }
@@ -393,35 +395,35 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         }
         var index = CurrentRoom.Seats.IndexOf(seat);
         if (index < 0) return false;
-        return _IsSuccess(Connection.ChangeSeat(index));
+        return _IsSuccess(Connection.ChangeSeat(new Int32Value() { Value = index }).RoomOperationResult);
     }
 
     public bool CloseSeat(SeatViewModel seat)
     {
         var index = CurrentRoom.Seats.IndexOf(seat);
         if (index < 0) return false;
-        return _IsSuccess(Connection.CloseSeat(index));
+        return _IsSuccess(Connection.CloseSeat(new Int32Value() { Value = index }).RoomOperationResult);
     }
 
     public bool OpenSeat(SeatViewModel seat)
     {
         var index = CurrentRoom.Seats.IndexOf(seat);
         if (index < 0) return false;
-        return _IsSuccess(Connection.OpenSeat(index));
+        return _IsSuccess(Connection.OpenSeat(new Int32Value() { Value = index }).RoomOperationResult);
     }
 
     public bool KickPlayer(SeatViewModel seat)
     {
         var index = CurrentRoom.Seats.IndexOf(seat);
         if (index < 0) return false;
-        return _IsSuccess(Connection.Kick(index));
+        return _IsSuccess(Connection.Kick(new Int32Value() { Value = index }).RoomOperationResult);
     }
 
     public bool SendMessage(string msg)
     {
         try
         {
-            return _IsSuccess(Connection.Chat(msg));
+            return _IsSuccess(Connection.Chat(new StringValue() { Value = msg }).RoomOperationResult);
         }
         catch (Exception)
         {
@@ -429,14 +431,10 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         }
     }
 
-    public bool Ping()
-    {
-        return true;
-    }
 
     public void Logout()
     {
-        Connection.Logout();
+        Connection.Logout(new Empty());
         LoginToken = new LoginToken();
     }
 

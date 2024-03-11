@@ -1,12 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFramework>net8.0-windows</TargetFramework>
+    <TargetFrameworks>net8.0;net8.0-windows</TargetFrameworks>
     <OutputType>Library</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <RootNamespace>Sanguosha.Core</RootNamespace>
-    <UseWindowsForms>true</UseWindowsForms>
-    <UseWPF>true</UseWPF>
-    <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <OutputPath>..\..\Bin\Debug\</OutputPath>
@@ -22,20 +19,17 @@
     <ProjectReference Include="..\Lobby\Service\Core.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Configuration.ConfigurationManager" Version="8.0.0" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="protobuf-net" Version="2.4.8" />
     <PackageReference Include="Grpc.Net.Client" Version="2.52.0" />
-    <PackageReference Include="protobuf-net.Grpc" Version="1.1.1" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Skills\Skill.cs" />
     <Compile Remove="Skills\UsageTriggerSkill.cs" />
   </ItemGroup>
-  <ItemGroup>
+  <!--<ItemGroup>
     <Compile Update="Properties\Settings.Designer.cs">
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
       <AutoGen>True</AutoGen>
@@ -47,7 +41,7 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-  </ItemGroup>
+  </ItemGroup>-->
   <!--<PropertyGroup>
     <PostBuildEvent>if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
 copy $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts</PostBuildEvent>

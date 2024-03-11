@@ -20,8 +20,6 @@ public enum RoomState
 
 public partial class Room
 {
-    public object RoomLock;
-
     public int Id { get; set; }
 
     public string Name { get; set; }

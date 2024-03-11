@@ -24,8 +24,8 @@ public partial class ServerPage : Page
 
     private void cbAllowCheating_Click_1(object sender, RoutedEventArgs e)
     {
-        LobbyServiceImpl.CheatEnabled = cbAllowCheating.IsChecked == true;
+        LobbyService.CheatEnabled = cbAllowCheating.IsChecked == true;
     }
 
-    public Lobby.Server.LobbyServiceImpl GameService { get; set; }
+    public LobbyService GameService { get; set; }
 }

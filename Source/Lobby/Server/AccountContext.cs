@@ -10,4 +10,11 @@ public class AccountContext(DbContextOptions<AccountContext> options) : DbContex
     //     integrated security=true"
 
     public DbSet<Core.Account> Accounts { get; set; }
+
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        modelBuilder.Entity<Core.Account>()
+            .HasKey(a => a.UserName);
+    }
 }

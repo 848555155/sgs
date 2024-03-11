@@ -668,10 +668,6 @@
     <Resource Include="Images\Cards\Normal\HeJin.jpg" />
     <Resource Include="Images\Cards\Normal\ShuiYanQiJun.jpg" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
-    <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
-  </ItemGroup>
   <!--<ItemGroup>
     <Page Remove="Images\SystemImages.xaml" />
   </ItemGroup>-->

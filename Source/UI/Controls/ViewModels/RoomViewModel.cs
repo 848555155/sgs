@@ -3,6 +3,7 @@ using System.Linq;
 using Sanguosha.Lobby.Core;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Sanguosha.UI.Controls;
 
@@ -147,7 +148,7 @@ public class RoomViewModel : ViewModelBase
 
     public void ChangeSeat(int seatId)
     {
-        var result = LobbyViewModel.Instance.Connection.ChangeSeat(seatId);
+        var result = LobbyViewModel.Instance.Connection.ChangeSeat(new Int32Value() { Value = seatId }).RoomOperationResult;
         if (result == RoomOperationResult.Locked) { } //cannot change seat locked
     }
 

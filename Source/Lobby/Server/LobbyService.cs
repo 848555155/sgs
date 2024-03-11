@@ -3,6 +3,7 @@ using Grpc.Core;
 using Microsoft.EntityFrameworkCore;
 using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
+using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.IO;
 using System.Net;
@@ -12,11 +13,11 @@ using static Sanguosha.Lobby.Core.Lobby;
 
 namespace Sanguosha.Lobby.Server;
 
-public class LobbyService: LobbyBase
+public partial class LobbyService: LobbyBase
 {
-    private static readonly Dictionary<string, ClientAccount> loggedInAccounts = [];
+    private static readonly ConcurrentDictionary<string, ClientAccount> loggedInAccounts = [];
 
-    private static readonly Dictionary<int, ServerRoom> rooms = [];
+    private static readonly ConcurrentDictionary<int, ServerRoom> rooms = [];
     private static int newRoomId = 1;
 
     public static IPAddress HostingIp { get; set; }
@@ -52,16 +53,15 @@ public class LobbyService: LobbyBase
         CleanerThread.Start();
     }
 
-    private Account Authenticate(string username, string hash)
+    private async Task<Account> Authenticate(string username, string hash)
     {
-        if (accountContext == null) return new Account() { UserName = username };
-        lock (accountContext)
-        {
-            var result = from a in accountContext.Accounts where a.UserName.Equals(username) select a;
-            if (!result.Any()) return null;
-            if (!result.First().Password.Equals(hash)) return null;
-            return result.First();
-        }
+        var result = from a in accountContext.Accounts where a.UserName.Equals(username) select a;
+        if (!await result.AnyAsync()) 
+            return null;
+        var account = await result.FirstAsync();
+        if (!account.Password.Equals(hash)) 
+            return null;
+        return await result.FirstAsync();
     }
 
     private void DeadRoomCleanup()
@@ -85,7 +85,7 @@ public class LobbyService: LobbyBase
                                     || rm.Value.Room.Seats.Any(st => !loggedInAccounts.ContainsKey(st.Account.UserName))
                                     )
                                 {
-                                    rooms.Remove(rm.Key);
+                                    rooms.Remove(rm.Key, out var _);
                                 }
                             }
                         }
@@ -95,21 +95,26 @@ public class LobbyService: LobbyBase
         }
     }
 
-    public LoginStatus Login(int version, string username, string hash, out Account retAccount, out string reconnectionString, out LoginToken reconnectionToken)
+    public override async Task<LoginReply> Login(LoginRequest request, ServerCallContext context)
     {
-        reconnectionToken = new LoginToken();
-        reconnectionString = null;
+        int version = request.Version;
+        string username = request.Username;
+        string hash = request.Hash;
+        Account retAccount = null;
+
+        var reconnectionToken = new LoginToken();
+        string reconnectionString = null;
         if (version != Misc.ProtocolVersion)
         {
             retAccount = null;
-            return LoginStatus.OutdatedVersion;
+            return Result(LoginStatus.OutdatedVersion, retAccount);
         }
 
-        Account authenticatedAccount = Authenticate(username, hash);
+        var authenticatedAccount = await Authenticate(username, hash);
         if (authenticatedAccount == null)
         {
             retAccount = null;
-            return LoginStatus.InvalidUsernameAndPassword;
+            return Result(LoginStatus.InvalidUsernameAndPassword, retAccount);
         }
         var connection = OperationContext.Current.GetCallbackChannel<IGameClient>();
         lock (loggedInAccounts)
@@ -125,7 +130,7 @@ public class LobbyService: LobbyBase
                     {
                         reconnectionString = null;
                         retAccount = null;
-                        return LoginStatus.InvalidUsernameAndPassword;
+                        return Result(LoginStatus.InvalidUsernameAndPassword, retAccount);
                     }
                 }
                 catch (Exception)
@@ -153,10 +158,9 @@ public class LobbyService: LobbyBase
                 var acc = new ClientAccount()
                 {
                     Account = authenticatedAccount,
-                    CallbackChannel = connection,
-                    LobbyService = (LobbyServiceImpl)this
+                    LobbyService = this
                 };
-                loggedInAccounts.Add(username, acc);
+                loggedInAccounts.TryAdd(username, acc);
                 currentAccount = acc;
                 // hack
                 var roomresult = from r in rooms.Values where r.Room.Seats.Any(st => st.Account == authenticatedAccount) select r;
@@ -167,7 +171,7 @@ public class LobbyService: LobbyBase
             }
         }
         Trace.TraceInformation("{0} logged in", username);
-        EventHandler faultHandler = (o, s) =>
+        var faultHandler = () =>
         {
             try
             {
@@ -179,14 +183,15 @@ public class LobbyService: LobbyBase
             }
         };
 
-        OperationContext.Current.Channel.Faulted += faultHandler;
-        OperationContext.Current.Channel.Closed += faultHandler;
+        context.CancellationToken.Register(faultHandler);
+
         retAccount = currentAccount.Account;
         _Unspectate(currentAccount);
-        currentAccount.OpContext = OperationContext.Current;
+        currentAccount.OpContext = context;
         currentAccount.LastAction = DateTime.Now;
-        return LoginStatus.Success;
+        return Result(LoginStatus.Success, retAccount, reconnectionString, reconnectionToken.TokenString.ToString());
     }
+
 
     private static void _Logout(ClientAccount account, bool forced = false)
     {
@@ -214,7 +219,7 @@ public class LobbyService: LobbyBase
             if (!loggedInAccounts.ContainsKey(account.Account.UserName)) return;
             account.LobbyService.currentAccount = null;
             account.CurrentSpectatingRoom = null;
-            loggedInAccounts.Remove(account.Account.UserName);
+            loggedInAccounts.Remove(account.Account.UserName, out var _);
             try
             {
                 account.OpContext.Channel.Close();
@@ -226,27 +231,33 @@ public class LobbyService: LobbyBase
         }
     }
 
-    public void Logout()
+    public override async Task<Empty> Logout(Empty request, ServerCallContext context)
     {
-        if (currentAccount == null) return;
+        if (currentAccount == null) return new Empty();
         Trace.TraceInformation("{0} logged out", currentAccount.Account.UserName);
         _Logout(currentAccount);
         currentAccount = null;
+        return new Empty();
     }
 
-    public IEnumerable<Room> GetRooms(bool notReadyRoomsOnly)
+
+    public override async Task<RoomsReply> GetRooms(BoolValue request, ServerCallContext context)
     {
+        var notReadyRoomsOnly = request.Value;
         if (currentAccount == null) return null;
         lock (rooms)
         {
-            return from r in rooms.Values
-                   where (!notReadyRoomsOnly || r.Room.State == RoomState.Waiting)
-                   select r.Room;
+            var result = new RoomsReply();
+            result.Rooms.AddRange((from r in rooms.Values
+                                   where (!notReadyRoomsOnly || r.Room.State == RoomState.Waiting)
+                                   select r.Room).ToList());
+            return result;
         }
     }
 
-    public Room CreateRoom(RoomSettings settings, string password = null)
+    public override async Task<Room> CreateRoom(CreateRoomRequest request, ServerCallContext context)
     {
+        var settings = request.Settings;
         if (currentAccount == null) return null;
         if (currentAccount.CurrentRoom != null)
         {
@@ -259,7 +270,7 @@ public class LobbyService: LobbyBase
             {
                 newRoomId++;
             }
-            Room room = new Room();
+            var room = new Room();
             int maxSeats = settings.GameType == GameType.Pk1V1 ? 2 : 8;
             for (int i = 0; i < maxSeats; i++)
             {
@@ -271,7 +282,7 @@ public class LobbyService: LobbyBase
             room.OwnerId = 0;
             room.Settings = settings;
             var srvRoom = new ServerRoom() { Room = room };
-            rooms.Add(newRoomId, srvRoom);
+            rooms.TryAdd(newRoomId, srvRoom);
             currentAccount.CurrentRoom = srvRoom;
             currentAccount.LastAction = DateTime.Now;
             Trace.TraceInformation("created room {0}", newRoomId);
@@ -279,14 +290,17 @@ public class LobbyService: LobbyBase
         }
     }
 
-    public RoomOperationResult EnterRoom(int roomId, bool spectate, string password, out Room room)
+    public override async Task<EnterRoomReply> EnterRoom(EnterRoomRequest request, ServerCallContext context)
     {
-        room = null;
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
+        int roomId = request.RoomId;
+        //bool spectate, string password
+        Room room = null;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated, room);
         Trace.TraceInformation("{1} Enter room {0}", roomId, currentAccount.Account.UserName);
         if (currentAccount.CurrentRoom != null)
         {
-            return RoomOperationResult.Locked;
+            return Result(RoomOperationResult.Locked, room);
         }
 
         ServerRoom serverRoom = null;
@@ -295,7 +309,7 @@ public class LobbyService: LobbyBase
         {
             if (!rooms.ContainsKey(roomId))
             {
-                return RoomOperationResult.Invalid;
+                return Result(RoomOperationResult.Invalid, room);
             }
             else
             {
@@ -306,7 +320,8 @@ public class LobbyService: LobbyBase
 
         lock (clientRoom)
         {
-            if (clientRoom.IsEmpty || clientRoom.State == RoomState.Gaming) return RoomOperationResult.Locked;
+            if (clientRoom.IsEmpty || clientRoom.State == RoomState.Gaming) 
+                return Result(RoomOperationResult.Locked, room); 
             int seatNo = 0;
             foreach (var seat in clientRoom.Seats)
             {
@@ -321,13 +336,13 @@ public class LobbyService: LobbyBase
                     Trace.TraceInformation("Seat {0}", seatNo);
                     _Unspectate(currentAccount);
                     room = clientRoom;
-                    return RoomOperationResult.Success;
+                    return Result(RoomOperationResult.Success, room); 
                 }
                 seatNo++;
             }
             Trace.TraceInformation("Full");
         }
-        return RoomOperationResult.Full;
+        return Result(RoomOperationResult.Full, room);
     }
 
     private static void _DestroyRoom(int roomId)
@@ -337,7 +352,7 @@ public class LobbyService: LobbyBase
         {
             if (!rooms.ContainsKey(roomId)) return;
             room = rooms[roomId];
-            rooms.Remove(roomId);
+            rooms.Remove(roomId, out var _);
         }
         lock (room.Spectators)
         {
@@ -424,9 +439,9 @@ public class LobbyService: LobbyBase
         }
     }
 
-    public RoomOperationResult ExitRoom()
+    public override Task<RoomOperationResultReplay> ExitRoom(Empty request, ServerCallContext context)
     {
-        return _ExitRoom(currentAccount);
+        return Task.FromResult(Result(_ExitRoom(currentAccount)));
     }
 
     private static void _NotifyRoomLayoutChanged(Room room)
@@ -438,13 +453,7 @@ public class LobbyService: LobbyBase
             {
                 try
                 {
-                    IGameClient channel = null;
-                    lock (loggedInAccounts)
-                    {
-                        channel = loggedInAccounts[notify.Account.UserName].CallbackChannel;
-                    }
-                    Trace.Assert(channel != null);
-                    channel.NotifyRoomUpdate(room.Id, room);
+                     loggedInAccounts[notify.Account.UserName].NotifyRoomUpdate(room.Id, room);
 
                 }
                 catch (Exception)
@@ -469,8 +478,7 @@ public class LobbyService: LobbyBase
                     {
                         lock (loggedInAccounts)
                         {
-                            var channel = loggedInAccounts[notify.Account.UserName].CallbackChannel;
-                            channel.NotifyGameStart(ip.ToString() + ":" + port, notify.Account.LoginToken);
+                            loggedInAccounts[notify.Account.UserName].NotifyGameStart(ip.ToString() + ":" + port, notify.Account.LoginToken);
                         }
                     }
                     catch (Exception)
@@ -482,18 +490,22 @@ public class LobbyService: LobbyBase
         }
     }
 
-    public RoomOperationResult ChangeSeat(int newSeat)
+    public override async Task<RoomOperationResultReplay> ChangeSeat(Int32Value request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) return RoomOperationResult.Invalid;
+        var newSeat = request.Value;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid);
         var room = currentAccount.CurrentRoom.Room;
         lock (room)
         {
             if (room.State == RoomState.Gaming)
             {
-                return RoomOperationResult.Locked;
+                return Result(RoomOperationResult.Locked);
             }
-            if (newSeat < 0 || newSeat >= room.Seats.Count) return RoomOperationResult.Invalid;
+            if (newSeat < 0 || newSeat >= room.Seats.Count) 
+                return Result(RoomOperationResult.Invalid);
             var seat = room.Seats[newSeat];
             if (seat.Account == null && seat.State == SeatState.Empty)
             {
@@ -502,20 +514,21 @@ public class LobbyService: LobbyBase
                     if (remove.Account == currentAccount.Account)
                     {
                         currentAccount.LastAction = DateTime.Now;
-                        if (remove == seat) return RoomOperationResult.Invalid;
+                        if (remove == seat) 
+                            return Result(RoomOperationResult.Invalid);
                         seat.State = remove.State;
                         seat.Account = remove.Account;
                         remove.Account = null;
                         remove.State = SeatState.Empty;
                         _NotifyRoomLayoutChanged(room);
 
-                        return RoomOperationResult.Success;
+                        return Result(RoomOperationResult.Success);
                     }
                 }
             }
         }
         Trace.TraceInformation("Full");
-        return RoomOperationResult.Full;
+        return Result(RoomOperationResult.Full);
     }
 
     private void _OnGameEnds(int roomId)
@@ -559,7 +572,8 @@ public class LobbyService: LobbyBase
                     {
                         try
                         {
-                            loggedInAccounts[seat.Account.UserName].CallbackChannel.Ping();
+                            // change to check status
+                            //loggedInAccounts[seat.Account.UserName].CallbackChannel.Ping();
                         }
                         catch (Exception)
                         {
@@ -599,201 +613,219 @@ public class LobbyService: LobbyBase
         _NotifyRoomLayoutChanged(room.Room);
     }
 
-    public RoomOperationResult StartGame()
+    public override async Task<RoomOperationResultReplay> StartGame(Empty request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) { return RoomOperationResult.Invalid; }
+        
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid);
         int portNumber;
         var room = currentAccount.CurrentRoom;
         var total = room.Room.Seats.Count(pl => pl.Account != null);
         var initiator = room.Room.Seats.FirstOrDefault(pl => pl.Account == currentAccount.Account);
-        if (room.Room.State == RoomState.Gaming) return RoomOperationResult.Invalid;
-        if (total <= 1) return RoomOperationResult.Invalid;
-        if (initiator == null || initiator.State != SeatState.Host) return RoomOperationResult.Invalid;
-        if (room.Room.Seats.Any(cs => cs.Account != null && cs.State != SeatState.Host && cs.State != SeatState.GuestReady)) return RoomOperationResult.Invalid;
-        lock (room.Room)
+        if (room.Room.State == RoomState.Gaming) 
+            return Result(RoomOperationResult.Invalid);
+        if (total <= 1) 
+            return Result(RoomOperationResult.Invalid);
+        if (initiator == null || initiator.State != SeatState.Host) 
+            return Result(RoomOperationResult.Invalid);
+        if (room.Room.Seats.Any(cs => cs.Account != null && cs.State != SeatState.Host && cs.State != SeatState.GuestReady)) 
+            return Result(RoomOperationResult.Invalid);
+        room.Room.State = RoomState.Gaming;
+        foreach (var unready in room.Room.Seats)
         {
-            room.Room.State = RoomState.Gaming;
-            foreach (var unready in room.Room.Seats)
-            {
-                if (unready.State == SeatState.GuestReady) unready.State = SeatState.Gaming;
-            }
-            var gs = new GameSettings()
-            {
-                TimeOutSeconds = room.Room.Settings.TimeOutSeconds,
-                TotalPlayers = total,
-                CheatEnabled = CheatEnabled,
-                DualHeroMode = room.Room.Settings.IsDualHeroMode,
-                NumHeroPicks = room.Room.Settings.NumHeroPicks,
-                NumberOfDefectors = room.Room.Settings.NumberOfDefectors == 2 ? 2 : 1,
-                GameType = room.Room.Settings.GameType,
-            };
-
-            // Load pakcages.
-            if (gs.GameType == GameType.RoleGame)
-            {
-                gs.PackagesEnabled.Add("Sanguosha.Expansions.BasicExpansion");
-                gs.PackagesEnabled.Add("Sanguosha.Expansions.BattleExpansion");
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.Wind) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.WindExpansion");
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.Fire) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.FireExpansion");
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.Woods) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.WoodsExpansion");
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.Hills) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.HillsExpansion");
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.Sp) != 0)
-                {
-                    gs.PackagesEnabled.Add("Sanguosha.Expansions.SpExpansion");
-                    gs.PackagesEnabled.Add("Sanguosha.Expansions.StarSpExpansion");
-                }
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.OverKnightFame) != 0)
-                {
-                    gs.PackagesEnabled.Add("Sanguosha.Expansions.OverKnightFame11Expansion");
-                    gs.PackagesEnabled.Add("Sanguosha.Expansions.OverKnightFame12Expansion");
-                    gs.PackagesEnabled.Add("Sanguosha.Expansions.OverKnightFame13Expansion");
-                }
-                if ((room.Room.Settings.EnabledPackages & EnabledPackages.Others) != 0)
-                {
-                    gs.PackagesEnabled.Add("Sanguosha.Expansions.AssasinExpansion");
-                }
-            }
-            if (gs.GameType == GameType.Pk1V1)
-            {
-                gs.PackagesEnabled.Add("Sanguosha.Expansions.Pk1v1Expansion");
-            }
-
-            foreach (var addconfig in room.Room.Seats)
-            {
-                var account = addconfig.Account;
-                if (account != null)
-                {
-                    account.LoginToken = new LoginToken() { TokenString = Guid.NewGuid() };
-                    account.IsDead = false;
-                    gs.Accounts.Add(account);
-                }
-            }
-            GameService.StartGameService(HostingIp, gs, room.Room.Id, _OnGameEnds, out portNumber);
-            room.Room.IpAddress = PublicIp.ToString();
-            room.Room.IpPort = portNumber;
-            _NotifyGameStart(room.Room.Id, PublicIp, portNumber);
+            if (unready.State == SeatState.GuestReady) unready.State = SeatState.Gaming;
         }
+        var gs = new GameSettings()
+        {
+            TimeOutSeconds = room.Room.Settings.TimeOutSeconds,
+            TotalPlayers = total,
+            CheatEnabled = CheatEnabled,
+            DualHeroMode = room.Room.Settings.IsDualHeroMode,
+            NumHeroPicks = room.Room.Settings.NumHeroPicks,
+            NumberOfDefectors = room.Room.Settings.NumberOfDefectors == 2 ? 2 : 1,
+            GameType = room.Room.Settings.GameType,
+        };
+
+        // Load pakcages.
+        if (gs.GameType == GameType.RoleGame)
+        {
+            gs.PackagesEnabled.Add("Sanguosha.Expansions.BasicExpansion");
+            gs.PackagesEnabled.Add("Sanguosha.Expansions.BattleExpansion");
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.Wind) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.WindExpansion");
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.Fire) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.FireExpansion");
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.Woods) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.WoodsExpansion");
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.Hills) != 0) gs.PackagesEnabled.Add("Sanguosha.Expansions.HillsExpansion");
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.Sp) != 0)
+            {
+                gs.PackagesEnabled.Add("Sanguosha.Expansions.SpExpansion");
+                gs.PackagesEnabled.Add("Sanguosha.Expansions.StarSpExpansion");
+            }
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.OverKnightFame) != 0)
+            {
+                gs.PackagesEnabled.Add("Sanguosha.Expansions.OverKnightFame11Expansion");
+                gs.PackagesEnabled.Add("Sanguosha.Expansions.OverKnightFame12Expansion");
+                gs.PackagesEnabled.Add("Sanguosha.Expansions.OverKnightFame13Expansion");
+            }
+            if ((room.Room.Settings.EnabledPackages & EnabledPackages.Others) != 0)
+            {
+                gs.PackagesEnabled.Add("Sanguosha.Expansions.AssasinExpansion");
+            }
+        }
+        if (gs.GameType == GameType.Pk1V1)
+        {
+            gs.PackagesEnabled.Add("Sanguosha.Expansions.Pk1v1Expansion");
+        }
+
+        foreach (var addconfig in room.Room.Seats)
+        {
+            var account = addconfig.Account;
+            if (account != null)
+            {
+                account.LoginToken = new LoginToken() { TokenString = Guid.NewGuid() };
+                account.IsDead = false;
+                gs.Accounts.Add(account);
+            }
+        }
+        GameService.StartGameService(HostingIp, gs, room.Room.Id, _OnGameEnds, out portNumber);
+        room.Room.IpAddress = PublicIp.ToString();
+        room.Room.IpPort = portNumber;
+        _NotifyGameStart(room.Room.Id, PublicIp, portNumber);
         currentAccount.LastAction = DateTime.Now;
-        return RoomOperationResult.Success;
+        return Result(RoomOperationResult.Success);
     }
 
-    public RoomOperationResult Ready()
+    public override async Task<RoomOperationResultReplay> Ready(Empty request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) { return RoomOperationResult.Invalid; }
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid);
         var room = currentAccount.CurrentRoom.Room;
         lock (room)
         {
             var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
-            if (seat == null) return RoomOperationResult.Invalid;
-            if (seat.State != SeatState.GuestTaken) return RoomOperationResult.Invalid;
+            if (seat == null) 
+                return Result(RoomOperationResult.Invalid);
+            if (seat.State != SeatState.GuestTaken) 
+                return Result(RoomOperationResult.Invalid);
             seat.State = SeatState.GuestReady;
             _NotifyRoomLayoutChanged(room);
         }
         currentAccount.LastAction = DateTime.Now;
-        return RoomOperationResult.Success;
+        return Result(RoomOperationResult.Success);
     }
 
-    public RoomOperationResult CancelReady()
+    public override async Task<RoomOperationResultReplay> CancelReady(Empty request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) { return RoomOperationResult.Invalid; }
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid); 
         var room = currentAccount.CurrentRoom.Room;
-        lock (room)
-        {
-            var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
-            if (seat == null) return RoomOperationResult.Invalid;
-            if (seat.State != SeatState.GuestReady) return RoomOperationResult.Invalid;
-            seat.State = SeatState.GuestTaken;
-            _NotifyRoomLayoutChanged(room);
-        }
+        var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
+        if (seat == null)
+            return Result(RoomOperationResult.Invalid);
+        if (seat.State != SeatState.GuestReady)
+            return Result(RoomOperationResult.Invalid);
+        seat.State = SeatState.GuestTaken;
+        _NotifyRoomLayoutChanged(room);
         currentAccount.LastAction = DateTime.Now;
-        return RoomOperationResult.Success;
+        return Result(RoomOperationResult.Success);
     }
 
-    public RoomOperationResult Kick(int seatNo)
+    public override async Task<RoomOperationResultReplay> Kick(Int32Value request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) { return RoomOperationResult.Invalid; }
+        var seatNo = request.Value;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid); 
         var room = currentAccount.CurrentRoom.Room;
-        lock (room)
+        var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
+        if (seat == null)
+            return Result(RoomOperationResult.Invalid);
+        if (seat.State != SeatState.Host)
+            return Result(RoomOperationResult.Invalid);
+        if (seatNo < 0 || seatNo >= room.Seats.Count)
+            return Result(RoomOperationResult.Invalid);
+        if (room.Seats[seatNo].State == SeatState.GuestReady || room.Seats[seatNo].State == SeatState.GuestTaken)
         {
-            var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
-            if (seat == null) return RoomOperationResult.Invalid;
-            if (seat.State != SeatState.Host) return RoomOperationResult.Invalid;
-            if (seatNo < 0 || seatNo >= room.Seats.Count) return RoomOperationResult.Invalid;
-            if (room.Seats[seatNo].State == SeatState.GuestReady || room.Seats[seatNo].State == SeatState.GuestTaken)
-            {
-                var kicked = room.Seats[seatNo].Account;
+            var kicked = room.Seats[seatNo].Account;
 
-                lock (loggedInAccounts)
-                {
-                    if (kicked == null || !loggedInAccounts.ContainsKey(kicked.UserName) ||
-                        _ExitRoom(loggedInAccounts[kicked.UserName], true) == RoomOperationResult.Invalid)
-                    {
-                        // zombie occured?
-                        room.Seats[seatNo].State = SeatState.Empty;
-                        room.Seats[seatNo].Account = null;
-                    }
-                    else
-                    {
-                        try
-                        {
-                            loggedInAccounts[kicked.UserName].CallbackChannel.NotifyKicked();
-                        }
-                        catch (Exception)
-                        {
-                        }
-                    }
-                }
-                return RoomOperationResult.Success;
-            }
-            else
+            if (kicked == null || !loggedInAccounts.TryGetValue(kicked.UserName, out var clientAccount) ||
+                _ExitRoom(clientAccount, true) == RoomOperationResult.Invalid)
             {
+                // zombie occured?
                 room.Seats[seatNo].State = SeatState.Empty;
                 room.Seats[seatNo].Account = null;
             }
+            else
+            {
+                try
+                {
+                    clientAccount.NotifyKicked();
+                }
+                catch (Exception)
+                {
+                }
+            }
+            return Result(RoomOperationResult.Success);
         }
-        return RoomOperationResult.Invalid;
-    }
-
-    public RoomOperationResult OpenSeat(int seatNo)
-    {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) { return RoomOperationResult.Invalid; }
-        var room = currentAccount.CurrentRoom.Room;
-        lock (room)
+        else
         {
-            var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
-            if (seat == null) return RoomOperationResult.Invalid;
-            if (seat.State != SeatState.Host) return RoomOperationResult.Invalid;
-            if (seatNo < 0 || seatNo >= room.Seats.Count) return RoomOperationResult.Invalid;
-            if (room.Seats[seatNo].State != SeatState.Closed) return RoomOperationResult.Invalid;
             room.Seats[seatNo].State = SeatState.Empty;
-            _NotifyRoomLayoutChanged(room);
+            room.Seats[seatNo].Account = null;
         }
-        currentAccount.LastAction = DateTime.Now;
-        return RoomOperationResult.Success;
+        return Result(RoomOperationResult.Invalid);
     }
 
-    public RoomOperationResult CloseSeat(int seatNo)
+    public override async Task<RoomOperationResultReplay> OpenSeat(Int32Value request, ServerCallContext context)
     {
-        if (currentAccount == null) return RoomOperationResult.NotAutheticated;
-        if (currentAccount.CurrentRoom == null) { return RoomOperationResult.Invalid; }
+        var seatNo = request.Value;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid); 
         var room = currentAccount.CurrentRoom.Room;
-        lock (room)
-        {
-            var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
-            if (seat == null) return RoomOperationResult.Invalid;
-            if (seat.State != SeatState.Host) return RoomOperationResult.Invalid;
-            if (seatNo < 0 || seatNo >= room.Seats.Count) return RoomOperationResult.Invalid;
-            if (room.Seats[seatNo].State != SeatState.Empty) return RoomOperationResult.Invalid;
-            room.Seats[seatNo].State = SeatState.Closed;
-            _NotifyRoomLayoutChanged(room);
-        }
+        var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
+        if (seat == null) 
+            return Result(RoomOperationResult.Invalid);
+        if (seat.State != SeatState.Host) 
+            return Result(RoomOperationResult.Invalid);
+        if (seatNo < 0 || seatNo >= room.Seats.Count) 
+            return Result(RoomOperationResult.Invalid);
+        if (room.Seats[seatNo].State != SeatState.Closed) 
+            return Result(RoomOperationResult.Invalid);
+        room.Seats[seatNo].State = SeatState.Empty;
+        _NotifyRoomLayoutChanged(room);
         currentAccount.LastAction = DateTime.Now;
-        return RoomOperationResult.Success;
+        return Result(RoomOperationResult.Success);
+    }
+
+    public override async Task<RoomOperationResultReplay> CloseSeat(Int32Value request, ServerCallContext context)
+    {
+        var seatNo = request.Value;
+        if (currentAccount == null) 
+            return Result(RoomOperationResult.NotAutheticated);
+        if (currentAccount.CurrentRoom == null) 
+            return Result(RoomOperationResult.Invalid);
+        var room = currentAccount.CurrentRoom.Room;
+        var seat = room.Seats.FirstOrDefault(s => s.Account == currentAccount.Account);
+        if (seat == null) 
+            return Result(RoomOperationResult.Invalid);
+        if (seat.State != SeatState.Host) 
+            return Result(RoomOperationResult.Invalid);
+        if (seatNo < 0 || seatNo >= room.Seats.Count) 
+            return Result(RoomOperationResult.Invalid);
+        if (room.Seats[seatNo].State != SeatState.Empty) 
+            return Result(RoomOperationResult.Invalid);
+        room.Seats[seatNo].State = SeatState.Closed;
+        _NotifyRoomLayoutChanged(room);
+        currentAccount.LastAction = DateTime.Now;
+        return Result(RoomOperationResult.Success);
+
     }
 
     public override async Task<RoomOperationResultReplay> Chat(StringValue request, ServerCallContext context)
@@ -825,7 +857,7 @@ public class LobbyService: LobbyBase
                         {
                             if (loggedInAccounts.ContainsKey(seat.Account.UserName))
                             {
-                                loggedInAccounts[seat.Account.UserName].CallbackChannel.NotifyChat(currentAccount.Account, message);
+                                loggedInAccounts[seat.Account.UserName].NotifyChat(currentAccount.Account, message);
                             }
                         }
                     }
@@ -845,7 +877,7 @@ public class LobbyService: LobbyBase
                         {
                             if (loggedInAccounts.ContainsKey(sp))
                             {
-                                loggedInAccounts[sp].CallbackChannel.NotifyChat(currentAccount.Account, message);
+                                loggedInAccounts[sp].NotifyChat(currentAccount.Account, message);
                             }
                         }
                     }
@@ -896,8 +928,7 @@ public class LobbyService: LobbyBase
             }
         }
         currentAccount.CurrentSpectatingRoom = room;
-        var channel = currentAccount.CallbackChannel;
-        channel.NotifyGameStart(room.Room.IpAddress + ":" + room.Room.IpPort, new LoginToken() { TokenString = new Guid() });
+        currentAccount.NotifyGameStart(room.Room.IpAddress + ":" + room.Room.IpPort, new LoginToken() { TokenString = new Guid() });
         await Task.CompletedTask;
         return Result(RoomOperationResult.Success);
     }
@@ -942,4 +973,14 @@ public class LobbyService: LobbyBase
     }
     private LoginStatusReply Result(LoginStatus loginStatus) => new() { LoginStatus = loginStatus };
     private RoomOperationResultReplay Result(RoomOperationResult roomOperationResult) => new() { RoomOperationResult = roomOperationResult };
+
+    private EnterRoomReply Result(RoomOperationResult roomOperationResult, Room room = null) => new() { RoomOperationResult = roomOperationResult, Room = room };
+
+    private LoginReply Result(LoginStatus loginStatus, Account retAccount, string connectionString = "", string tokenString = "") => new()
+    {
+        Status = loginStatus,
+        RetAccount = retAccount,
+        ReconnectionString = connectionString,
+        TokenString = tokenString
+    };
 }

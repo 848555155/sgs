@@ -18,7 +18,7 @@ using System.Net;
 using Sanguosha.Core.Utils;
 using System.Diagnostics;
 using Grpc.Net.Client;
-using ProtoBuf.Grpc.Client;
+using Google.Protobuf.WellKnownTypes;
 
 namespace Sanguosha.UI.Main;
 
@@ -62,16 +62,7 @@ public partial class Login : Page, IDisposable
     public static string ExpansionFolder = "./";
     public static string ResourcesFolder = "Resources";
 
-    private static bool _preloadCompleted = false;
-
-    internal static bool PreloadCompleted
-    {
-        get { return _preloadCompleted; }
-        set
-        {
-            _preloadCompleted = value;
-        }
-    }
+    internal static bool PreloadCompleted { get; set; } = false;
 
     private bool _startButtonEnabled;
 
@@ -89,13 +80,13 @@ public partial class Login : Page, IDisposable
     {
         if (Application.Current.Dispatcher.CheckAccess())
         {
-            startButton.IsEnabled = _startButtonEnabled && _preloadCompleted;
+            startButton.IsEnabled = _startButtonEnabled && PreloadCompleted;
         }
         else
         {
             Application.Current.Dispatcher.Invoke((ThreadStart)delegate()
             {
-                startButton.IsEnabled = _startButtonEnabled && _preloadCompleted;
+                startButton.IsEnabled = _startButtonEnabled && PreloadCompleted;
             });
         }
     }
@@ -116,7 +107,7 @@ public partial class Login : Page, IDisposable
     {
         get
         {
-            if (_instance == null) _instance = new Login();
+            _instance ??= new Login();
             return _instance;
         }
     }
@@ -152,7 +143,7 @@ public partial class Login : Page, IDisposable
         {
             try
             {
-                LobbyViewModel.Instance.Connection.Logout();
+                LobbyViewModel.Instance.Connection.Logout(new Empty());
                 LobbyViewModel.Instance.Connection = null;
             }
             catch (Exception)
@@ -224,7 +215,7 @@ public partial class Login : Page, IDisposable
 
         busyIndicator.BusyContent = Resources["Busy.ConnectServer"];
         busyIndicator.IsBusy = true;
-        ILobbyService server = null;
+        Lobby.Core.Lobby.LobbyClient server = null;
         LoginToken token = new LoginToken();
         string reconnect = null;
         _hostName = tab0HostName.Text;
@@ -244,8 +235,7 @@ public partial class Login : Page, IDisposable
                 _LogOut();
                 var lobbyModel = LobbyViewModel.Instance;
                 var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
-                server = channel.CreateGrpcService<ILobbyService>();
-                
+                server = new Lobby.Core.Lobby.LobbyClient(channel);
                 // todo change to GRPC
                 //var binding = new NetTcpBinding();
                 //binding.Security.Mode = SecurityMode.None;
@@ -253,10 +243,18 @@ public partial class Login : Page, IDisposable
                 //_channelFactory = new DuplexChannelFactory<ILobbyService>(typeof(LobbyViewModel), binding, endpoint);
                 //server = _channelFactory.CreateChannel();
 
-                _channelFactory.Faulted += channelFactory_Faulted;
+                //_channelFactory.Faulted += channelFactory_Faulted;
                 Account ret;
-                var stat = server.Login(Misc.ProtocolVersion, _userName, _passWd, out ret, out reconnect, out token);
-                if (stat == LoginStatus.Success)
+                var stat = server.Login(new()
+                {
+                    Version = Misc.ProtocolVersion,
+                    Username = _userName,
+                    Hash = _passWd
+                });
+                ret = stat.RetAccount;
+                reconnect = stat.ReconnectionString;
+                token = new() { TokenString = Guid.Parse(stat.TokenString) };
+                if (stat.Status == LoginStatus.Success)
                 {
                     LobbyViewModel.Instance.CurrentAccount = ret;
 
@@ -337,11 +335,23 @@ public partial class Login : Page, IDisposable
         //var endpoint = new EndpointAddress(string.Format("net.tcp://{0}/GameService", _hostName));
         //var channelFactory = new DuplexChannelFactory<ILobbyService>(typeof(LobbyViewModel), binding, endpoint);
         //LobbyViewModel.Instance.Connection = channelFactory.CreateChannel();
+
+        var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
+        LobbyViewModel.Instance.Connection = new Lobby.Core.Lobby.LobbyClient(channel);
+
         Account ret;
         string reconnect;
         LoginToken token;
-        var stat = LobbyViewModel.Instance.Connection.Login(Misc.ProtocolVersion, _userName, _passWd, out ret, out reconnect, out token);
-        if (stat == LoginStatus.Success)
+        var stat = LobbyViewModel.Instance.Connection.Login(new()
+        {
+            Version = Misc.ProtocolVersion,
+            Username = _userName,
+            Hash = _passWd
+        });
+        ret = stat.RetAccount;
+        reconnect = stat.ReconnectionString;
+        token = new() { TokenString = Guid.Parse(stat.TokenString) };
+        if (stat.Status == LoginStatus.Success)
         {
             LobbyViewModel.Instance.CurrentAccount = ret;
         }
@@ -363,7 +373,6 @@ public partial class Login : Page, IDisposable
 #endif
         busyIndicator.BusyContent = Resources["Busy.ConnectServer"];
         busyIndicator.IsBusy = true;
-        ILobbyService server = null;
         string hostName = tab0HostName.Text;
         if (!hostName.Contains(':'))
         {
@@ -383,8 +392,14 @@ public partial class Login : Page, IDisposable
                 //var endpoint = new EndpointAddress(string.Format("net.tcp://{0}/GameService", hostName));
                 //var channelFactory = new DuplexChannelFactory<ILobbyService>(typeof(LobbyViewModel), binding, endpoint);
                 //server = channelFactory.CreateChannel();
-                var stat = server.CreateAccount(userName, passwd);
-                ea.Result = stat;
+                var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
+                var server = new Lobby.Core.Lobby.LobbyClient(channel);
+                var stat = server.CreateAccount(new()
+                {
+                    UserName = userName, 
+                    P = passwd
+                });
+                ea.Result = stat.LoginStatus;
             }
             catch (Exception e)
             {
@@ -422,7 +437,7 @@ public partial class Login : Page, IDisposable
 
     private void _startServer()
     {
-        LobbyServiceImpl gameService = null;
+        LobbyService gameService = null;
         //CoreWCF.ServiceHostBase host = null;
         IPAddress serverIp = tab1IpAddresses.SelectedItem as IPAddress;
         if (serverIp == null)
@@ -453,9 +468,9 @@ public partial class Login : Page, IDisposable
             try
             {
                 ea.Result = false;
-                if (hasDatabase) LobbyServiceImpl.EnableDatabase();
-                LobbyServiceImpl.HostingIp = serverIp;
-                LobbyServiceImpl.PublicIp = publicIP;
+                if (hasDatabase) LobbyService.EnableDatabase();
+                LobbyService.HostingIp = serverIp;
+                LobbyService.PublicIp = publicIP;
                 // todo move to new project
                 //host = new CoreWCF.ServiceHostBase(typeof(LobbyServiceImpl));
                 //, new Uri[] { new Uri(string.Format("net.tcp://{0}:{1}/GameService", serverIp, portNumber)) });
@@ -485,9 +500,12 @@ public partial class Login : Page, IDisposable
             busyIndicator.IsBusy = false;
             if ((bool)ea.Result)
             {
-                ServerPage serverPage = new ServerPage();
-                //serverPage.Host = host;
-                serverPage.GameService = gameService;
+                var serverPage = new ServerPage
+                {
+                    // todo
+                    //serverPage.Host = host;
+                    GameService = gameService
+                };
                 this.NavigationService.Navigate(serverPage);
             }
             else
@@ -644,12 +662,12 @@ public partial class Login : Page, IDisposable
         _ListIpAddresses();
     }
 
-    private void tab1ClearDb_Click(object sender, System.Windows.RoutedEventArgs e)
+    private void tab1ClearDb_Click(object sender, RoutedEventArgs e)
     {
-        LobbyServiceImpl.WipeDatabase();
+        LobbyService.WipeDatabase();
     }
 
-    private void btnRegister_Click(object sender, System.Windows.RoutedEventArgs e)
+    private void btnRegister_Click(object sender, RoutedEventArgs e)
     {
         _createAccount();
     }

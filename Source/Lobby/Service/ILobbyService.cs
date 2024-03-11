@@ -71,20 +71,13 @@ public interface ILobbyService
 
 public interface IGameClient
 {
-    [OperationContract(IsOneWay = true)]
     void NotifyRoomUpdate(int id, Room room);
 
-    [OperationContract(IsOneWay = true)]
     void NotifyKicked();
 
-    [OperationContract(IsOneWay = true)]
     void NotifyGameStart(string connectionString, LoginToken token);
 
-    [OperationContract(IsOneWay = true)]
     void NotifyChat(Account account, string message);
-
-    [OperationContract]
-    bool Ping();
 }
 
 internal static class Helper

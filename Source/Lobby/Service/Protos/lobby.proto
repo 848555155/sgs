@@ -25,22 +25,44 @@ service Lobby {
   rpc Spectate (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
   rpc CreateAccount (CreateAccountRequest) returns (LoginStatusReply);
   rpc SubmitBugReport (stream google.protobuf.BytesValue) returns (google.protobuf.Empty);
+  rpc NotifyRoomUpdate (google.protobuf.Empty) returns (stream NotifyRoomUpdateReply);
+  rpc NotifyKicked (google.protobuf.Empty) returns (stream google.protobuf.Empty);
+  rpc NotifyGameStart (google.protobuf.Empty) returns (stream NotifyGameStartReply);
+  rpc NotifyChat (google.protobuf.Empty) returns (stream NotifyChatReply);
+}
+
+message NotifyRoomUpdateReply
+{
+	int32 id = 1;
+	Room room = 2;
+}
+
+message NotifyGameStartReply
+{
+	string connectionString = 1;
+	string token = 2;
+}
+
+message NotifyChatReply
+{
+	Account account = 1;
+	string message = 2;
 }
 
 message LoginRequest
 {
 	int32 version = 1;
 	string username = 2;
-	int32 hash = 3;
+	string hash = 3;
 }
 
 message LoginReply
 {
 	LoginStatus status = 1;
-	Account retAccount =  2;
-	string reconnection_string = 3;
+	optional Account retAccount =  2;
+	optional string reconnection_string = 3;
 	// TokenString type change from guid to string
-	string token_string = 4;
+	optional string token_string = 4;
 }
 
 message RoomsReply
