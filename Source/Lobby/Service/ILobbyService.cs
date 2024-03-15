@@ -131,8 +131,6 @@ public interface IGameClient
 
     Task NotifyChat(Account account, string message);
 
-    Task<bool> Ping();
-
 }
 internal static class Helper
 {

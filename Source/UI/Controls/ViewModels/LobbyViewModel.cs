@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -317,7 +318,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     public bool SpectateGame()
     {
-        if (_IsSuccess(Connection.Spectate(new Int32Value() { Value = _currentRoom.Id }).RoomOperationResult))
+        if (_IsSuccess(Connection.Spectate(new StringValue() { Value = _currentRoom.Id }).RoomOperationResult))
         {
             return true;
         }
@@ -325,29 +326,29 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     }
 
     #region Server Callbacks
-    public Task NotifyKicked()
+    public async Task NotifyKicked()
     {
         LobbyView.Instance.NotifyKeyEvent(Application.Current.TryFindResource("Lobby.Event.SelfKicked") as string);
         CurrentRoom = null;
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
+        await Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             UpdateRooms();
         });
     }
 
-    public Task NotifyGameStart(string connectionString, LoginToken token)
+    public async Task NotifyGameStart(string connectionString, LoginToken token)
     {
         GameServerConnectionString = connectionString;
         _loginToken = token;
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
+        await Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             LobbyView.Instance.StartGame();
         });
     }
 
-    public Task NotifyRoomUpdate(string id, Room room)
+    public async Task NotifyRoomUpdate(string id, Room room)
     {
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
+        await Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             var result = Rooms.FirstOrDefault(r => r.Id == id);
             if (result != null)
@@ -369,9 +370,9 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     private readonly List<KeyValuePair<string, string>> _chatCache;
 
-    public Task NotifyChat(Account act, string message)
+    public async Task NotifyChat(Account act, string message)
     {
-        Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
+        await Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
             if (_chatCache.Count > 100) _chatCache.RemoveRange(0, 50);
             _chatCache.Add(new KeyValuePair<string, string>(act.UserName, message));

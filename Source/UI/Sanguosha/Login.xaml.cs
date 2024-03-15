@@ -468,7 +468,7 @@ public partial class Login : Page, IDisposable
             try
             {
                 ea.Result = false;
-                if (hasDatabase) LobbyService.EnableDatabase();
+                //if (hasDatabase) LobbyService.EnableDatabase();
                 LobbyService.HostingIp = serverIp;
                 LobbyService.PublicIp = publicIP;
                 // todo move to new project
@@ -664,7 +664,7 @@ public partial class Login : Page, IDisposable
 
     private void tab1ClearDb_Click(object sender, RoutedEventArgs e)
     {
-        LobbyService.WipeDatabase();
+        //LobbyService.WipeDatabase();
     }
 
     private void btnRegister_Click(object sender, RoutedEventArgs e)
