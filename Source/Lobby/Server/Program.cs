@@ -1,6 +1,9 @@
-﻿using Sanguosha.Lobby.Server;
+﻿using Microsoft.AspNetCore.Server.Kestrel.Https;
+using Sanguosha.Lobby.Server;
 
 await Host.CreateDefaultBuilder(args)
-    .ConfigureWebHostDefaults(webBuilder => webBuilder.UseStartup<Startup>())
+    .ConfigureWebHostDefaults(webBuilder =>
+        webBuilder.UseStartup<Startup>())
     .Build()
     .RunAsync();
+

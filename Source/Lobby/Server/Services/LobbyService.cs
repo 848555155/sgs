@@ -96,13 +96,13 @@ public partial class LobbyService(
     }
 
 
-    private void _Logout(LobbyPlayer account, bool forced = false)
+    private async Task _Logout(LobbyPlayer account, bool forced = false)
     {
         logger.LogInformation("{UserName} logged out", account.Account.UserName);
         if (account == null) return;
         if (account.CurrentRoom != null)
         {
-            if (_ExitRoom(account, forced) != RoomOperationResult.Success)
+            if (await _ExitRoom(account, forced) != RoomOperationResult.Success)
             {
                 try
                 {
@@ -135,7 +135,7 @@ public partial class LobbyService(
         if (currentAccount == null)
             return new Empty();
         logger.LogTrace("{UserName} logged out", currentAccount.Account.UserName);
-        _Logout(currentAccount);
+        await _Logout(currentAccount);
         currentAccount = null;
         return new Empty();
     }
@@ -249,7 +249,7 @@ public partial class LobbyService(
         }
     }
 
-    private RoomOperationResult _ExitRoom(LobbyPlayer account, bool forced = false)
+    private async Task<RoomOperationResult> _ExitRoom(LobbyPlayer account, bool forced = false)
     {
         if (account == null)
             return RoomOperationResult.Invalid;
@@ -292,7 +292,7 @@ public partial class LobbyService(
                 }
             }
         }
-        if (room != null) _NotifyRoomLayoutChanged(room.Room);
+        if (room != null) await _NotifyRoomLayoutChanged(room.Room);
         return RoomOperationResult.Success;
     }
 
@@ -309,9 +309,9 @@ public partial class LobbyService(
         }
     }
 
-    public override Task<RoomOperationResultReplay> ExitRoom(Empty request, ServerCallContext context)
+    public override async Task<RoomOperationResultReplay> ExitRoom(Empty request, ServerCallContext context)
     {
-        return Task.FromResult(Result(_ExitRoom(currentAccount)));
+        return Result(await _ExitRoom(currentAccount));
     }
 
     private async Task _NotifyRoomLayoutChanged(Room room)
@@ -429,7 +429,7 @@ public partial class LobbyService(
                 }
                 catch (Exception)
                 {
-                    _Logout(lobbyManager.loggedInAccounts[seat.Account.UserName], true);
+                    await _Logout(lobbyManager.loggedInAccounts[seat.Account.UserName], true);
                     seat.Account = null;
                     seat.State = SeatState.Empty;
                     continue;
@@ -602,7 +602,7 @@ public partial class LobbyService(
             var kicked = room.Seats[seatNo].Account;
 
             if (kicked == null || !lobbyManager.loggedInAccounts.TryGetValue(kicked.UserName, out var clientAccount) ||
-                _ExitRoom(clientAccount, true) == RoomOperationResult.Invalid)
+                await _ExitRoom(clientAccount, true) == RoomOperationResult.Invalid)
             {
                 // zombie occured?
                 room.Seats[seatNo].State = SeatState.Empty;

@@ -53,7 +53,6 @@ public class Startup(IConfiguration configuration)
             app.UseExceptionHandler("/Error");
             app.UseHsts();
         }
-        app.UseHttpsRedirection();
         app.UseRouting();
         app.UseAuthorization();
         app.UseAuthentication();
