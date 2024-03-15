@@ -52,9 +52,6 @@ public class Tao : LifeSaver
         return VerifierResult.Success;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.Basic; }
-    }
+    public override CardCategory Category => CardCategory.Basic;
     public static readonly CardAttribute EatOneGetAnotherFreeCoupon = CardAttribute.Register("EatOneGetAnotherFreeCoupon");
 }

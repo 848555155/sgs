@@ -2,30 +2,18 @@
 
 namespace Sanguosha.Core.Utils;
 
-public class RawDeserializer
+public class RawDeserializer(Stream input)
 {
-    protected BinaryReader br;
+    protected BinaryReader br = new(input);
 
     /// <summary>
     /// Helper instance for reading value types.
     /// </summary>
-    protected TypeIO tr;
+    protected TypeIO tr = new();
 
-    public RawDeserializer(Stream input)
-    {
-        br = new BinaryReader(input);
-        tr = new TypeIO();
-    }
+    public bool DeserializeBool() => br.ReadBoolean();
 
-    public bool DeserializeBool()
-    {
-        return br.ReadBoolean();
-    }
-
-    public byte DeserializeByte()
-    {
-        return br.ReadByte();
-    }
+    public byte DeserializeByte() => br.ReadByte();
 
     public byte[] DeserializeBytes()
     {
@@ -33,10 +21,7 @@ public class RawDeserializer
         return br.ReadBytes(count);
     }
 
-    public char DeserializeChar()
-    {
-        return br.ReadChar();
-    }
+    public char DeserializeChar() => br.ReadChar();
 
     public char[] DeserializeChars()
     {
@@ -44,70 +29,31 @@ public class RawDeserializer
         return br.ReadChars(count);
     }
 
-    public decimal DeserializeDecimal()
-    {
-        return br.ReadDecimal();
-    }
+    public decimal DeserializeDecimal() => br.ReadDecimal();
 
-    public double DeserializeDouble()
-    {
-        return br.ReadDouble();
-    }
+    public double DeserializeDouble() => br.ReadDouble();
 
-    public short DeserializeShort()
-    {
-        return br.ReadInt16();
-    }
+    public short DeserializeShort() => br.ReadInt16();
 
-    public int DeserializeInt()
-    {
-        return br.ReadInt32();
-    }
+    public int DeserializeInt() => br.ReadInt32();
 
-    public long DeserializeLong()
-    {
-        return br.ReadInt64();
-    }
+    public long DeserializeLong() => br.ReadInt64();
 
-    public sbyte DeserializeSByte()
-    {
-        return br.ReadSByte();
-    }
+    public sbyte DeserializeSByte() => br.ReadSByte();
 
-    public float DeserializeFloat()
-    {
-        return br.ReadSingle();
-    }
+    public float DeserializeFloat() => br.ReadSingle();
 
-    public string DeserializeString()
-    {
-        return br.ReadString();
-    }
+    public string DeserializeString() => br.ReadString();
 
-    public ushort DeserializeUShort()
-    {
-        return br.ReadUInt16();
-    }
+    public ushort DeserializeUShort() => br.ReadUInt16();
 
-    public uint DeserializeUInt()
-    {
-        return br.ReadUInt32();
-    }
+    public uint DeserializeUInt() => br.ReadUInt32();
 
-    public ulong DeserializeULong()
-    {
-        return br.ReadUInt64();
-    }
+    public ulong DeserializeULong() => br.ReadUInt64();
 
-    public Guid DeserializeGuid()
-    {
-        return (Guid)Deserialize(typeof(Guid));
-    }
+    public Guid DeserializeGuid() => (Guid)Deserialize(typeof(Guid));
 
-    public DateTime DeserializeDateTime()
-    {
-        return (DateTime)Deserialize(typeof(DateTime));
-    }
+    public DateTime DeserializeDateTime() => (DateTime)Deserialize(typeof(DateTime));
 
     #region NullableTypes
 

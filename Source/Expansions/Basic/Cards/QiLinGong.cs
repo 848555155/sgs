@@ -26,9 +26,8 @@ public class QiLinGong : Weapon
             Card c;
             if (equipDeck.Count(s => (s.Type is DefensiveHorse) || (s.Type is OffensiveHorse)) > 1)
             {
-                int answer = 0;
-                Game.CurrentGame.UiProxies[Owner].AskForMultipleChoice(new MultipleChoicePrompt("QiLinGong", this), new List<OptionPrompt> { new OptionPrompt("JiaYiZuoJi"), new OptionPrompt("JianYiZuoJi") },
-                    out answer);
+                Game.CurrentGame.UiProxies[Owner].AskForMultipleChoice(new MultipleChoicePrompt("QiLinGong", this), [new OptionPrompt("JiaYiZuoJi"), new OptionPrompt("JianYiZuoJi")],
+                    out var answer);
                 if (answer == 1)
                 {
                     var results = from equip in equipDeck where equip.Type is OffensiveHorse select equip;
@@ -63,10 +62,7 @@ public class QiLinGong : Weapon
         }
     }
 
-    public override int AttackRange
-    {
-        get { return 5; }
-    }
+    public override int AttackRange => 5;
 
     protected override void RegisterWeaponTriggers(Player p)
     {

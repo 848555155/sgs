@@ -40,7 +40,7 @@ public class JieYuan : TriggerSkill
     {
         var trigger = new AutoNotifyUsagePassiveSkillTrigger(
             this,
-            (p, e, a) => { return a.Source != null && p.Health <= a.Source.Health && p != a.Source; },
+            (p, e, a) => a.Source != null && p.Health <= a.Source.Health && p != a.Source,
             (p, e, a, c, pls) =>
             {
                 JieYuanEffect = 0;
@@ -58,7 +58,7 @@ public class JieYuan : TriggerSkill
 
         var trigger2 = new AutoNotifyUsagePassiveSkillTrigger(
             this,
-            (p, e, a) => { return p.Health <= a.Targets[0].Health && p != a.Targets[0]; },
+            (p, e, a) => p.Health <= a.Targets[0].Health && p != a.Targets[0],
             (p, e, a, c, pls) =>
             {
                 JieYuanEffect = 1;

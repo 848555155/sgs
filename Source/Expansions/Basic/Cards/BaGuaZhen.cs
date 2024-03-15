@@ -21,12 +21,14 @@ public class BaGuaZhen : Armor
             ParentEquipment.InUse = false;
             if (c.SuitColor == SuitColorType.Red)
             {
-                eventArgs.Cards = new List<Card>();
+                eventArgs.Cards = [];
                 eventArgs.Skill = new CardWrapper(Owner, new Shan(), false);
-                ActionLog log = new ActionLog();
-                log.Source = Owner;
-                log.SkillAction = this;
-                log.GameAction = GameAction.None;
+                var log = new ActionLog
+                {
+                    Source = Owner,
+                    SkillAction = this,
+                    GameAction = GameAction.None
+                };
                 Game.CurrentGame.NotificationProxy.NotifySkillUse(log);
                 throw new TriggerResultException(TriggerResult.Success);
             }
@@ -35,7 +37,7 @@ public class BaGuaZhen : Armor
         {
             var trigger = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) => { return a.Card.Type is Shan && ArmorIsValid(Owner, a.Targets[0], a.ReadonlyCard); },
+                (p, e, a) => a.Card.Type is Shan && ArmorIsValid(Owner, a.Targets[0], a.ReadonlyCard),
                 Run,
                 TriggerCondition.OwnerIsSource
             )

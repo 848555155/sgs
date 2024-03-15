@@ -1,5 +1,4 @@
-﻿using Sanguosha.Core.Cards;
-using Sanguosha.Core.Games;
+﻿using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
 using Sanguosha.Expansions.Assassin.Skills;
 
@@ -9,8 +8,12 @@ public class AssassinExpansion : Expansion
 {
     public AssassinExpansion()
     {
-        CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("FuWan", true, Allegiance.Qun, 4, new MouKui()))));
-        CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("LiuXie", true, Allegiance.Qun, 3, new TianMing(), new MiZhao()))));
-        CardSet.Add(new Card(SuitType.None, -1, new HeroCardHandler(new Hero("LingJu", false, Allegiance.Qun, 3, new JieYuan(), new FenXin()))));
+        CardSet.AddRange(
+            [
+                CreateHeroCard<MouKui>("FuWan", true, Allegiance.Qun, 4),
+                CreateHeroCard<TianMing, MiZhao>("LiuXie", true, Allegiance.Qun, 3),
+                CreateHeroCard<JieYuan, FenXin>("LingJu", true, Allegiance.Qun, 3)
+            ]
+        );
     }
 }

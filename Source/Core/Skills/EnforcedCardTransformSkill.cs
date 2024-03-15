@@ -19,8 +19,8 @@ public abstract class EnforcedCardTransformSkill : TriggerSkill
         Decks = [];
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return a.Card != null && Decks.Contains(a.Card.Place.DeckType) && CardVerifier(a.Card); },
-            (p, e, a) => { TransfromAction(p, a.Card); },
+            (p, e, a) => a.Card != null && Decks.Contains(a.Card.Place.DeckType) && CardVerifier(a.Card),
+            (p, e, a) => TransfromAction(p, a.Card),
             TriggerCondition.OwnerIsSource
         )
         { IsAutoNotify = false };

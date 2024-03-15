@@ -19,11 +19,8 @@ public class DummyShaVerifier : CardUsageVerifier
         {
             return VerifierResult.Fail;
         }
-        if (players == null)
-        {
-            players = new List<Player>();
-        }
-        CompositeCard sha = new CompositeCard() { Type = type };
+        players ??= [];
+        var sha = new CompositeCard() { Type = type };
         if (!Game.CurrentGame.PlayerCanBeTargeted(source, players, sha))
         {
             return VerifierResult.Fail;
@@ -44,9 +41,8 @@ public class DummyShaVerifier : CardUsageVerifier
         {
             return VerifierResult.Fail;
         }
-        if (skill is CardTransformSkill)
+        if (skill is CardTransformSkill sk)
         {
-            CardTransformSkill sk = skill as CardTransformSkill;
             if (sk.TryTransform(dummyCards, null, out sha) != VerifierResult.Success)
             {
                 return VerifierResult.Fail;
@@ -77,6 +73,6 @@ public class DummyShaVerifier : CardUsageVerifier
         target = t;
         type = shaType;
         this.helper = helper;
-        dummyCards = new List<Card>() { new Card() { Type = shaType, Place = new DeckPlace(null, DeckType.None) } };
+        dummyCards = [new Card() { Type = shaType, Place = new DeckPlace(null, DeckType.None) }];
     }
 }

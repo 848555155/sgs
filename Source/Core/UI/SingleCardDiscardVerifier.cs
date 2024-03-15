@@ -8,13 +8,8 @@ namespace Sanguosha.Core.UI;
 public class SingleCardDiscardVerifier : CardUsageVerifier
 {
     public delegate bool CardMatcher(ICard card);
-    private CardMatcher match;
 
-    public CardMatcher Match
-    {
-        get { return match; }
-        set { match = value; }
-    }
+    public CardMatcher Match { get; set; }
 
     private readonly IList<CardHandler> possibleMatch;
 
@@ -23,8 +18,7 @@ public class SingleCardDiscardVerifier : CardUsageVerifier
         Match = m;
         if (handler != null)
         {
-            possibleMatch = new List<CardHandler>();
-            possibleMatch.Add(handler);
+            possibleMatch = [handler];
         }
         else
         {
@@ -57,8 +51,5 @@ public class SingleCardDiscardVerifier : CardUsageVerifier
         return VerifierResult.Success;
     }
 
-    public override IList<CardHandler> AcceptableCardTypes
-    {
-        get { return possibleMatch; }
-    }
+    public override IList<CardHandler> AcceptableCardTypes => possibleMatch;
 }

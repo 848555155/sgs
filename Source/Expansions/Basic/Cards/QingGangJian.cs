@@ -29,20 +29,14 @@ public class QingGangJian : Weapon
         {
             var trigger = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) =>
-                {
-                    return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha);
-                },
+                (p, e, a) => a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha),
                 Run,
                 TriggerCondition.OwnerIsSource
             );
             Triggers.Add(GameEvent.CardUsageTargetConfirmed, trigger);
             var trigger2 = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) =>
-                {
-                    return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha);
-                },
+                (p, e, a) => a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha),
                 (p, e, a) => { var args = a as DamageEventArgs; args.ReadonlyCard[Armor.IgnorePlayerArmor[args.Targets[0]]]--; },
                 TriggerCondition.OwnerIsSource
             )
@@ -63,10 +57,7 @@ public class QingGangJian : Weapon
         }
     }
 
-    public override int AttackRange
-    {
-        get { return 2; }
-    }
+    public override int AttackRange => 2;
 
 
     protected override void RegisterWeaponTriggers(Player p)

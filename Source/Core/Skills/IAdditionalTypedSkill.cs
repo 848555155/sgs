@@ -1,6 +1,8 @@
-﻿namespace Sanguosha.Core.Skills;
+﻿using Sanguosha.Core.Cards;
+
+namespace Sanguosha.Core.Skills;
 
 public interface IAdditionalTypedSkill : ISkill
 {
-    Cards.CardHandler AdditionalType { get; set; }
+    CardHandler AdditionalType { get; set; }
 }

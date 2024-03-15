@@ -1,10 +1,8 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <OutputType>Library</OutputType>
-  </PropertyGroup>
-  <PropertyGroup>
+    <Nullable>enable</Nullable>
     <RootNamespace>Sanguosha.Lobby.Core</RootNamespace>
     <AssemblyName>Lobby.Core</AssemblyName>
     <AssemblyTitle>Lobby</AssemblyTitle>
@@ -13,12 +11,6 @@
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <FileVersion>1.0.0.0</FileVersion>
   </PropertyGroup>
-  <ItemGroup>
-    <None Remove="Protos\lobby.proto" />
-  </ItemGroup>
-  <ItemGroup>
-    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
-  </ItemGroup>
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.21.5" />
     <PackageReference Include="Grpc.AspNetCore.Server" Version="2.49.0" />
@@ -32,5 +24,8 @@
   </ItemGroup>
   <ItemGroup>
     <Protobuf Include="Protos\lobby.proto" GrpcServices="Both" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Protos/" />
   </ItemGroup>
 </Project>

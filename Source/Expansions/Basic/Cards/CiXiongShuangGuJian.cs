@@ -20,11 +20,8 @@ public class CiXiongShuangGuJian : Weapon
     {
         protected void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
         {
-            ISkill skill;
-            List<Card> cards;
-            List<Player> players;
             SingleCardDiscardVerifier v = new SingleCardDiscardVerifier();
-            if (!Game.CurrentGame.UiProxies[eventArgs.Targets[0]].AskForCardUsage(new CardUsagePrompt("CiXiong2", eventArgs.Source), v, out skill, out cards, out players))
+            if (!Game.CurrentGame.UiProxies[eventArgs.Targets[0]].AskForCardUsage(new CardUsagePrompt("CiXiong2", eventArgs.Source), v, out var skill, out var cards, out var players))
             {
                 Game.CurrentGame.DrawCards(eventArgs.Source, 1);
             }
@@ -51,10 +48,7 @@ public class CiXiongShuangGuJian : Weapon
         public Equipment ParentEquipment { get; set; }
     }
 
-    public override int AttackRange
-    {
-        get { return 2; }
-    }
+    public override int AttackRange => 2;
 
     protected override void RegisterWeaponTriggers(Player p)
     {

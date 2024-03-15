@@ -11,17 +11,14 @@ namespace Sanguosha.Expansions.Basic.Cards;
 
 public class LifeSaver : CardHandler
 {
-    public override CardCategory Category
-    {
-        get { return CardCategory.Basic; }
-    }
+    public override CardCategory Category => CardCategory.Basic;
 
-    protected override void Process(Core.Players.Player source, Core.Players.Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
+    protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
         throw new NotImplementedException();
     }
 
-    public override Core.UI.VerifierResult Verify(Core.Players.Player source, ICard card, List<Core.Players.Player> targets, bool isLooseVerify)
+    public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
     {
         throw new NotImplementedException();
     }
@@ -47,10 +44,12 @@ public class LifeSaverVerifier : CardUsageVerifier
             }
             else if (skill is SaveLifeSkill)
             {
-                GameEventArgs arg = new GameEventArgs();
-                arg.Source = skill.Owner;
-                arg.Targets = players;
-                arg.Cards = cards;
+                var arg = new GameEventArgs
+                {
+                    Source = skill.Owner,
+                    Targets = players,
+                    Cards = cards
+                };
                 return (skill as SaveLifeSkill).Validate(arg);
             }
             else return VerifierResult.Fail;
@@ -63,17 +62,14 @@ public class LifeSaverVerifier : CardUsageVerifier
             }
             card = cards[0];
         }
-        if (!(card.Type is LifeSaver))
+        if (card.Type is not LifeSaver)
         {
             return VerifierResult.Fail;
         }
         return card.Type.Verify(source, skill, cards, new List<Player>());
     }
 
-    public override IList<CardHandler> AcceptableCardTypes
-    {
-        get { return new List<CardHandler>() { new LifeSaver() }; }
-    }
+    public override IList<CardHandler> AcceptableCardTypes => [new LifeSaver()];
 }
 
 public class PlayerDying : Trigger
@@ -92,8 +88,10 @@ public class PlayerDying : Trigger
     {
         Player target = eventArgs.Targets[0];
         if (target.Health > 0) return;
-        LifeSaverVerifier v = new LifeSaverVerifier();
-        v.DyingPlayer = target;
+        var v = new LifeSaverVerifier
+        {
+            DyingPlayer = target
+        };
         List<Player> toAsk = Game.CurrentGame.AlivePlayers;
         foreach (Player p in toAsk)
         {
@@ -101,28 +99,29 @@ public class PlayerDying : Trigger
             if (!_CanUseTaoToSaveOther(p) && !_CanUseSaveLifeSkillToSaveOther(p) && p != target) continue;
             while (!target.IsDead && target.Health <= 0)
             {
-                ISkill skill;
-                List<Card> cards;
-                List<Player> players;
                 Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToUseCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = p, Verifier = v });
-                if (Game.CurrentGame.UiProxies[p].AskForCardUsage(new CardUsagePrompt("SaveALife", target, 1 - target.Health), v, out skill, out cards, out players))
+                if (Game.CurrentGame.UiProxies[p].AskForCardUsage(new CardUsagePrompt("SaveALife", target, 1 - target.Health), v, out var skill, out var cards, out var players))
                 {
                     if (skill != null && skill is SaveLifeSkill)
                     {
-                        GameEventArgs arg = new GameEventArgs();
-                        arg.Source = p;
-                        arg.Targets = players;
-                        arg.Cards = cards;
+                        var arg = new GameEventArgs
+                        {
+                            Source = p,
+                            Targets = players,
+                            Cards = cards
+                        };
                         ((SaveLifeSkill)skill).NotifyAndCommit(arg);
                     }
                     else
                     {
                         try
                         {
-                            GameEventArgs args = new GameEventArgs();
-                            args.Source = p;
-                            args.Skill = skill;
-                            args.Cards = cards;
+                            var args = new GameEventArgs
+                            {
+                                Source = p,
+                                Skill = skill,
+                                Cards = cards
+                            };
                             Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
                         }
                         catch (TriggerResultException e)

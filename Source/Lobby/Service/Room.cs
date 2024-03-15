@@ -20,7 +20,7 @@ public enum RoomState
 
 public partial class Room
 {
-    public int Id { get; set; }
+    public string Id { get; set; }
 
     public string Name { get; set; }
 
@@ -31,8 +31,6 @@ public partial class Room
     public bool SpectatorDisabled { get; set; }
 
     public bool ChatDisabled { get; set; }
-
-    public int OwnerId { get; set; }
 
     public List<Seat> Seats { get; set; } = [];
 

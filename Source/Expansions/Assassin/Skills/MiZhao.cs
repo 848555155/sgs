@@ -61,12 +61,9 @@ public class MiZhao : AutoVerifiedActiveSkill
         Game.CurrentGame.HandleCardTransferToHand(Owner, arg.Targets[0], Owner.HandCards());
         List<Player> alivePlayers = Game.CurrentGame.AlivePlayers;
         if (!alivePlayers.Any(p => p.HandCards().Count > 0 && p != arg.Targets[0])) return true;
-        ISkill skill;
-        List<Card> cards;
-        List<Player> players;
-        if (!Owner.AskForCardUsage(new CardUsagePrompt("MiZhao", arg.Targets[0]), new MiZhaoVerifier(arg.Targets[0]), out skill, out cards, out players))
+        if (!Owner.AskForCardUsage(new CardUsagePrompt("MiZhao", arg.Targets[0]), new MiZhaoVerifier(arg.Targets[0]), out var skill, out var cards, out var players))
         {
-            players = new List<Player>();
+            players = [];
             foreach (Player p in alivePlayers)
             {
                 if (p.HandCards().Count > 0 && p != arg.Targets[0])
@@ -89,7 +86,7 @@ public class MiZhao : AutoVerifiedActiveSkill
     }
 
     private static readonly PlayerAttribute MiZhaoUsed = PlayerAttribute.Register("MiZhaoUsed", true);
-    public static CardAttribute MiZhaoSha = CardAttribute.Register("MiZhaoSha");
+    public static readonly CardAttribute MiZhaoSha = CardAttribute.Register("MiZhaoSha");
 
     private class MiZhaoPassiveSkill : TriggerSkill
     {

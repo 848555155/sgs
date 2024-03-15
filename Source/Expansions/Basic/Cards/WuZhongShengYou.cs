@@ -30,11 +30,8 @@ public class WuZhongShengYou : CardHandler
             return new List<Player>(targets);
         }
 
-        return new List<Player>() { source };
+        return [source];
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.ImmediateTool; }
-    }
+    public override CardCategory Category => CardCategory.ImmediateTool;
 }

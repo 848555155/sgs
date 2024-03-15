@@ -20,7 +20,7 @@ public class CardUseLog : IGameLog
     public Player Target
     {
         get { Trace.Assert(Targets.Count == 1); return Targets[0]; }
-        set { Trace.Assert(Targets == null); Targets = new List<Player>(); Targets.Add(value); }
+        set { Trace.Assert(Targets == null); Targets = [value]; }
     }
 }
 
@@ -61,18 +61,13 @@ public enum GameAction
 
 public class ActionLog : IGameLog
 {
-    public ActionLog()
-    {
-        Targets = new List<Player>();
-        SecondaryTargets = new List<Player>();
-    }
     public GameAction GameAction { get; set; }
     public ISkill SkillAction { get; set; }
 
     public ICard CardAction { get; set; }
     public Player Source { get; set; }
-    public List<Player> Targets { get; set; }
-    public List<Player> SecondaryTargets { get; set; }
+    public List<Player> Targets { get; set; } = [];
+    public List<Player> SecondaryTargets { get; set; } = [];
     /// <summary>
     /// Gets/sets skill tag that is used for indexing different types of animation/audio
     /// associated with the same skill.

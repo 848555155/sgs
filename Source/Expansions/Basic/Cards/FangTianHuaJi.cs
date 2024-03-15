@@ -30,7 +30,7 @@ public class FangTianHuaJi : Weapon
             }
             else
             {
-                theList = new List<Card>() { (args.Card as Card) };
+                theList = [(args.Card as Card)];
             }
             List<Card> handCards = new List<Card>(Game.CurrentGame.Decks[Owner, DeckType.Hand]);
             //你的"最后"一张手牌
@@ -108,10 +108,7 @@ public class FangTianHuaJi : Weapon
         throw new NotImplementedException();
     }
 
-    public override int AttackRange
-    {
-        get { return 4; }
-    }
+    public override int AttackRange => 4;
 
     protected override void RegisterWeaponTriggers(Player p)
     {

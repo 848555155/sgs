@@ -139,13 +139,7 @@ public abstract partial class Game : INotifyPropertyChanged
     public Network.Server GameServer { get; set; }
     public Network.Client GameClient { get; set; }
 
-    public ReplayController ReplayController
-    {
-        get
-        {
-            return GameClient?.ReplayController;
-        }
-    }
+    public ReplayController ReplayController => GameClient?.ReplayController;
 
     public void SyncUnknownLocationCard(Player player, Card card)
     {

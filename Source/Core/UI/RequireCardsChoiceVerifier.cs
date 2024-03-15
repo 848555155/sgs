@@ -2,17 +2,12 @@
 
 namespace Sanguosha.Core.UI;
 
-public class RequireCardsChoiceVerifier : ICardChoiceVerifier
+public class RequireCardsChoiceVerifier(int count, bool noreveal = false, bool showToAll = false) : ICardChoiceVerifier
 {
-    private readonly bool noCardReveal;
-    private readonly int count;
-    private readonly bool showToall;
-    public RequireCardsChoiceVerifier(int count, bool noreveal = false, bool showToAll = false)
-    {
-        noCardReveal = noreveal;
-        this.count = count;
-        this.showToall = showToAll;
-    }
+    private readonly bool noCardReveal = noreveal;
+    private readonly int count = count;
+    private readonly bool showToall = showToAll;
+
     public VerifierResult Verify(List<List<Card>> answer)
     {
         if ((answer.Count > 1) || (answer.Count > 0 && answer[0].Count > count))
@@ -25,8 +20,5 @@ public class RequireCardsChoiceVerifier : ICardChoiceVerifier
         }
         return VerifierResult.Success;
     }
-    public UiHelper Helper
-    {
-        get { return new UiHelper() { RevealCards = !noCardReveal, ShowToAll = showToall }; }
-    }
+    public UiHelper Helper => new() { RevealCards = !noCardReveal, ShowToAll = showToall };
 }

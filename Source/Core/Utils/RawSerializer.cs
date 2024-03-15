@@ -2,13 +2,7 @@
 
 namespace Sanguosha.Core.Utils;
 
-public class RawSerializerException : ApplicationException
-{
-    public RawSerializerException(string msg)
-        : base(msg)
-    {
-    }
-}
+public class RawSerializerException(string msg) : ApplicationException(msg);
 
 /// <summary>
 /// Helper class encapsulating both the object and the nullable state flag.
@@ -62,27 +56,21 @@ public class ObjectInfo
 /// <summary>
 /// Raw serializer class.  Serializes value types and structs whose length can be determined by the marshaller.
 /// </summary>
-public class RawSerializer
+/// <remarks>
+/// Constructor.
+/// </remarks>
+/// <param name="output">The output stream.</param>
+public class RawSerializer(Stream output)
 {
     /// <summary>
     /// The binary writer instance to which value types are written.
     /// </summary>
-    protected BinaryWriter bw;
+    protected BinaryWriter bw = new(output);
 
     /// <summary>
     /// Helper instance for writing value types.
     /// </summary>
-    protected TypeIO tw;
-
-    /// <summary>
-    /// Constructor.
-    /// </summary>
-    /// <param name="output">The output stream.</param>
-    public RawSerializer(Stream output)
-    {
-        bw = new BinaryWriter(output);
-        tw = new TypeIO();
-    }
+    protected TypeIO tw = new();
 
     public void Serialize(bool val)
     {

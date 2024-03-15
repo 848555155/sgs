@@ -5,33 +5,14 @@ using Sanguosha.Core.Skills;
 
 namespace Sanguosha.Core.UI;
 
-public class SingleCardUsageVerifier : CardUsageVerifier
+public class SingleCardUsageVerifier(SingleCardUsageVerifier.CardMatcher m, bool isUseCard, CardHandler handler = null) : CardUsageVerifier
 {
     public delegate bool CardMatcher(ICard card);
-    private CardMatcher match;
 
-    public CardMatcher Match
-    {
-        get { return match; }
-        set { match = value; }
-    }
+    public CardMatcher Match { get; set; } = m;
 
-    private readonly IList<CardHandler> possibleMatch;
-    private readonly bool isUseCard;
-
-    public SingleCardUsageVerifier(CardMatcher m, bool isUseCard, CardHandler handler = null)
-    {
-        Match = m;
-        if (handler != null)
-        {
-            possibleMatch = new List<CardHandler>() { handler };
-        }
-        else
-        {
-            possibleMatch = null;
-        }
-        this.isUseCard = isUseCard;
-    }
+    private readonly IList<CardHandler> possibleMatch = handler != null ? ([handler]) : null;
+    private readonly bool isUseCard = isUseCard;
 
     public override VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
     {
@@ -41,13 +22,12 @@ public class SingleCardUsageVerifier : CardUsageVerifier
         }
         if (skill != null)
         {
-            CompositeCard card;
-            if (!(skill is CardTransformSkill))
+            if (skill is not CardTransformSkill)
             {
                 return VerifierResult.Fail;
             }
             CardTransformSkill s = (CardTransformSkill)skill;
-            VerifierResult r = s.TryTransform(cards, players, out card, !isUseCard);
+            VerifierResult r = s.TryTransform(cards, players, out var card, !isUseCard);
             if (r != VerifierResult.Success)
             {
                 return r;
@@ -106,8 +86,5 @@ public class SingleCardUsageVerifier : CardUsageVerifier
     }
 
 
-    public override IList<CardHandler> AcceptableCardTypes
-    {
-        get { return possibleMatch; }
-    }
+    public override IList<CardHandler> AcceptableCardTypes => possibleMatch;
 }

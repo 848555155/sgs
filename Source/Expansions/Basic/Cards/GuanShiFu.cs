@@ -56,10 +56,7 @@ public class GuanShiFu : Weapon
             return FastVerify(source, skill, cards, players);
         }
 
-        public UiHelper Helper
-        {
-            get { return new UiHelper(); }
-        }
+        public UiHelper Helper => new UiHelper();
 
         public GuanShiFuVerifier()
         {
@@ -82,7 +79,7 @@ public class GuanShiFu : Weapon
                 out skill, out cards, out players))
             {
                 ParentEquipment.InUse = false;
-                NotifySkillUse(new List<Player>());
+                NotifySkillUse([]);
                 Game.CurrentGame.HandleCardDiscard(Owner, cards);
                 Trace.Assert(eventArgs.Card.Type is Sha);
                 Game.CurrentGame.DoDamage(eventArgs.Source, eventArgs.Targets[0], 1, (eventArgs.Card.Type as Sha).ShaDamageElement, eventArgs.Card, eventArgs.ReadonlyCard);
@@ -104,10 +101,7 @@ public class GuanShiFu : Weapon
         }
     }
 
-    public override int AttackRange
-    {
-        get { return 3; }
-    }
+    public override int AttackRange => 3;
 
     protected override void RegisterWeaponTriggers(Player p)
     {

@@ -19,8 +19,5 @@ public class QingGuo : OneToOneCardTransformSkill
         return card.SuitColor == SuitColorType.Black;
     }
 
-    public override CardHandler PossibleResult
-    {
-        get { return new Shan(); }
-    }
+    public override CardHandler PossibleResult => new Shan();
 }

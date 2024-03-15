@@ -1,29 +1,17 @@
 ﻿namespace Sanguosha.Core.UI;
 
 
-public class CardUsagePrompt(string key, params object[] args) : Prompt(CardUsagePromptsPrefix + key, args)
-{
-}
+public class CardUsagePrompt(string key, params object[] args) : Prompt(CardUsagePromptsPrefix + key, args);
 
-public class CardChoicePrompt(string key, params object[] args) : Prompt(CardChoicePromptsPrefix + key, args)
-{
-}
+public class CardChoicePrompt(string key, params object[] args) : Prompt(CardChoicePromptsPrefix + key, args);
 
-public class MultipleChoicePrompt(string key, params object[] args) : Prompt(MultipleChoicePromptPrefix + key, args)
-{
-}
+public class MultipleChoicePrompt(string key, params object[] args) : Prompt(MultipleChoicePromptPrefix + key, args);
 
-public class OptionPrompt(string key, params object[] args) : Prompt(MultipleChoiceOptionPrefix + key, args)
-{
-}
+public class OptionPrompt(string key, params object[] args) : Prompt(MultipleChoiceOptionPrefix + key, args);
 
-public class LogEvent(string key, params object[] args) : Prompt(LogEventPrefix + key, args)
-{
-}
+public class LogEvent(string key, params object[] args) : Prompt(LogEventPrefix + key, args);
 
-public class LogEventArg(string key, params object[] args) : Prompt(LogEventArgPrefix + key, args)
-{
-}
+public class LogEventArg(string key, params object[] args) : Prompt(LogEventArgPrefix + key, args);
 
 public class Prompt
 {
@@ -41,16 +29,12 @@ public class Prompt
         _values.AddRange(args);
     }
 
-    public string ResourceKey
-    {
-        get;
-        set;
-    }
+    public string ResourceKey { get; set; }
 
     public IList<object> Values => _values;
 
     #region Resource Converter Prefixes
-    public static string DirectOutputPrefix = "#";
+    public static readonly string DirectOutputPrefix = "#";
     #endregion
 
     #region Card Usage Prompts
@@ -81,10 +65,10 @@ public class Prompt
     public static readonly OptionPrompt SpadeChoice = new OptionPrompt("Spade");
     public static readonly OptionPrompt ClubChoice = new OptionPrompt("Club");
     public static readonly OptionPrompt DiamondChoice = new OptionPrompt("Diamond");
-    public static readonly List<OptionPrompt> YesNoChoices = new List<OptionPrompt>() { NoChoice, YesChoice };
-    public static readonly List<OptionPrompt> SuitChoices = new List<OptionPrompt>() { ClubChoice, SpadeChoice, HeartChoice, DiamondChoice };
-    public static readonly List<OptionPrompt> RecoverOneHealthOrDrawOneCardOptions = new List<OptionPrompt>() { new OptionPrompt("RecoverHealth", 1), new OptionPrompt("DrawCards", 1) };
-    public static readonly List<OptionPrompt> RecoverOneHealthOrDrawTwoCardsOptions = new List<OptionPrompt>() { new OptionPrompt("RecoverHealth", 1), new OptionPrompt("DrawCards", 2) };
-    public static readonly List<OptionPrompt> AllegianceChoices = new List<OptionPrompt>() { new OptionPrompt("Qun"), new OptionPrompt("Shu"), new OptionPrompt("Wei"), new OptionPrompt("Wu") };
+    public static readonly List<OptionPrompt> YesNoChoices = [NoChoice, YesChoice];
+    public static readonly List<OptionPrompt> SuitChoices = [ClubChoice, SpadeChoice, HeartChoice, DiamondChoice];
+    public static readonly List<OptionPrompt> RecoverOneHealthOrDrawOneCardOptions = [new OptionPrompt("RecoverHealth", 1), new OptionPrompt("DrawCards", 1)];
+    public static readonly List<OptionPrompt> RecoverOneHealthOrDrawTwoCardsOptions = [new OptionPrompt("RecoverHealth", 1), new OptionPrompt("DrawCards", 2)];
+    public static readonly List<OptionPrompt> AllegianceChoices = [new OptionPrompt("Qun"), new OptionPrompt("Shu"), new OptionPrompt("Wei"), new OptionPrompt("Wu")];
     #endregion
 }

@@ -6,15 +6,9 @@ namespace Sanguosha.Expansions.Basic.Cards;
 
 public class GuoHeChaiQiao : ShunChai
 {
-    protected override string ResultDeckName
-    {
-        get { return "GuoHeChoice"; }
-    }
+    protected override string ResultDeckName => "GuoHeChoice";
 
-    protected override string ChoicePrompt
-    {
-        get { return "GuoHe"; }
-    }
+    protected override string ChoicePrompt => "GuoHe";
 
     protected override DeckPlace ShunChaiDest(Player source, Player dest)
     {

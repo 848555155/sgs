@@ -12,10 +12,7 @@ namespace Sanguosha.Expansions.Basic.Cards;
 
 public class Sha : CardHandler
 {
-    public virtual DamageElement ShaDamageElement
-    {
-        get { return DamageElement.None; }
-    }
+    public virtual DamageElement ShaDamageElement => DamageElement.None;
 
     public override void Process(GameEventArgs handlerArgs)
     {
@@ -106,10 +103,7 @@ public class Sha : CardHandler
         return VerifyCore(source, card, targets);
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.Basic; }
-    }
+    public override CardCategory Category => CardCategory.Basic;
     public static PlayerAttribute NumberOfShaUsed = PlayerAttribute.Register("NumberOfShaUsed", true);
     public static PlayerAttribute AdditionalShaUsable = PlayerAttribute.Register("AdditionalShaUsable", true);
     /// <summary>

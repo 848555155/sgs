@@ -13,8 +13,8 @@ public class QiCai : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.Tool); },
-            (p, e, a) => { (a as AdjustmentEventArgs).AdjustmentAmount += 500; },
+            (p, e, a) => CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.Tool),
+            (p, e, a) => (a as AdjustmentEventArgs).AdjustmentAmount += 500,
             TriggerCondition.OwnerIsSource
         )
         { IsAutoNotify = false };

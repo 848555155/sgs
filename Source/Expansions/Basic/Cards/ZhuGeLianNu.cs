@@ -26,10 +26,7 @@ public class ZhuGeLianNu : Weapon
         {
             var trigger = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) =>
-                {
-                    return a.Source[Sha.NumberOfShaUsed] > 0 && a.Card.Type is Sha;
-                },
+                (p, e, a) => a.Source[Sha.NumberOfShaUsed] > 0 && a.Card.Type is Sha,
                 (p, e, a) => { },
                 TriggerCondition.OwnerIsSource
             );

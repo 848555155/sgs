@@ -17,7 +17,7 @@ public class GlobalDummyProxy : IGlobalUiProxy
 
     public void AskForMultipleChoice(Prompt prompt, List<OptionPrompt> questions, List<Player> players, out Dictionary<Player, int> aanswer)
     {
-        aanswer = new Dictionary<Player, int>();
+        aanswer = [];
     }
 
     public void AskForHeroChoice(Dictionary<Player, List<Card>> restDraw, Dictionary<Player, List<Card>> heroSelection, int numberOfHeroes, ICardChoiceVerifier verifier)
@@ -27,9 +27,9 @@ public class GlobalDummyProxy : IGlobalUiProxy
 
     public void AskForMultipleCardUsage(Prompt prompt, ICardUsageVerifier verifier, List<Player> players, out Dictionary<Player, ISkill> askill, out Dictionary<Player, List<Card>> acards, out Dictionary<Player, List<Player>> aplayers)
     {
-        acards = new Dictionary<Player, List<Card>>();
-        aplayers = new Dictionary<Player, List<Player>>();
-        askill = new Dictionary<Player, ISkill>();
+        acards = [];
+        aplayers = [];
+        askill = [];
     }
 
     public void Abort()

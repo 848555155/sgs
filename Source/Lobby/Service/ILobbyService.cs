@@ -12,58 +12,110 @@ public struct LoginToken
     public Guid TokenString { get; set; }
 }
 
+public class LoginResult
+{
+    public LoginStatus Status { get; set; }
+
+    public Account? Account { get; set; }
+
+    public string? ReconnectionString { get; set; }
+
+    public LoginToken ReconnectionToken { get; set; }
+
+    public static LoginResult InvalidUsernameAndPassword => new()
+    {
+        Status = LoginStatus.InvalidUsernameAndPassword
+    };
+
+    public static LoginResult Success(Account account, string? reconnectionString, LoginToken reconnectionToken) => new()
+    {
+        Status = LoginStatus.Success,
+        Account = account,
+        ReconnectionString = reconnectionString,
+        ReconnectionToken = reconnectionToken
+    };
+}
+
+public class EnterRoomResult
+{
+    public RoomOperationResult Status { get; set; }
+
+    public Room? Room { get; set; }
+
+    public static EnterRoomResult Success(Room room) => new()
+    {
+        Status = RoomOperationResult.Success,
+        Room = room
+    };
+
+    public static EnterRoomResult Locked => new()
+    {
+        Status = RoomOperationResult.Locked
+    };
+
+    public static EnterRoomResult Invalid => new()
+    {
+        Status = RoomOperationResult.Invalid
+    };
+
+    public static EnterRoomResult Full => new()
+    {
+        Status = RoomOperationResult.Full
+    };
+}
+
 
 [ServiceKnownType("GetKnownTypes", typeof(Helper))]
 [ServiceContract(Namespace = "", CallbackContract = typeof(IGameClient), SessionMode = SessionMode.Required)]
 public interface ILobbyService
 {
     [OperationContract(IsInitiating = true)]
-    LoginStatus Login(int version, string username, string hash, out Account retAccount, out string reconnectionString, out LoginToken reconnectionToken);
+    Task<LoginResult> Login(string username, string password);
 
     [OperationContract(IsInitiating = false)]
-    void Logout();
+    Task Logout();
 
     [OperationContract]
     IEnumerable<Room> GetRooms(bool notReadyRoomsOnly);
 
     [OperationContract]
-    Room CreateRoom(RoomSettings settings, string password = null);
+    Task<Room?> CreateRoom(RoomSettings settings, string? password = null);
 
     [OperationContract]
-    RoomOperationResult EnterRoom(int roomId, bool spectate, string password, out Room room);
+    Task<EnterRoomResult> EnterRoom(string roomId, bool spectate, string password);
 
     [OperationContract]
-    RoomOperationResult ExitRoom();
+    Task<RoomOperationResult> ExitRoom();
 
     [OperationContract]
-    RoomOperationResult ChangeSeat(int newSeat);
+    Task<RoomOperationResult> ChangeSeat(int newSeat);
 
     [OperationContract]
-    RoomOperationResult StartGame();
+    Task<RoomOperationResult> StartGame();
 
     [OperationContract]
-    RoomOperationResult Ready();
+    Task<RoomOperationResult> Ready();
 
     [OperationContract]
-    RoomOperationResult CancelReady();
+    Task<RoomOperationResult> CancelReady();
 
     [OperationContract]
-    RoomOperationResult Kick(int seatNo);
+    Task<RoomOperationResult> Kick(int seatNo);
 
     [OperationContract]
-    RoomOperationResult OpenSeat(int seatNo);
+    Task<RoomOperationResult> OpenSeat(int seatNo);
 
     [OperationContract]
-    RoomOperationResult CloseSeat(int seatNo);
+    Task<RoomOperationResult> CloseSeat(int seatNo);
 
     [OperationContract]
-    RoomOperationResult Chat(string message);
+    Task<RoomOperationResult> Chat(string message);
 
     [OperationContract]
-    RoomOperationResult Spectate(int roomId);
+    Task<RoomOperationResult> Spectate(string roomId);
 
     [OperationContract]
-    LoginStatus CreateAccount(string userName, string p);
+    Task<LoginStatus> CreateAccount(string userName, string p);
 
     [OperationContract]
     void SubmitBugReport(Stream s);
@@ -71,13 +123,17 @@ public interface ILobbyService
 
 public interface IGameClient
 {
-    void NotifyRoomUpdate(int id, Room room);
+    Task NotifyRoomUpdate(string id, Room room);
 
-    void NotifyKicked();
+    Task NotifyKicked();
 
-    void NotifyGameStart(string connectionString, LoginToken token);
+    Task NotifyGameStart(string connectionString, LoginToken token);
 
-    void NotifyChat(Account account, string message);
+    Task NotifyChat(Account account, string message);
+
+    Task<bool> Ping();
+
+    Task NotifyCloseConnection();
 }
 
 internal static class Helper

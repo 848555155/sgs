@@ -11,10 +11,12 @@ public class CardWrapper : CardTransformSkill
 {
     public override VerifierResult TryTransform(List<Card> cards, List<Player> arg, out CompositeCard card, bool isPlay)
     {
-        card = new CompositeCard();
-        card.Type = handler;
-        card.Subcards = new List<Card>(cards);
-        card.Owner = Owner;
+        card = new CompositeCard
+        {
+            Type = handler,
+            Subcards = new List<Card>(cards),
+            Owner = Owner
+        };
         return VerifierResult.Success;
     }
 
@@ -31,11 +33,13 @@ public class CardWrapper : CardTransformSkill
     public override void NotifyAction(Player source, List<Player> targets, CompositeCard card)
     {
         if (withoutNotify) return;
-        ActionLog log = new ActionLog();
-        log.GameAction = GameAction.None;
-        log.CardAction = card;
-        log.Source = source;
-        log.SpecialEffectHint = GenerateSpecialEffectHintIndex(source, targets, card);
+        var log = new ActionLog
+        {
+            GameAction = GameAction.None,
+            CardAction = card,
+            Source = source,
+            SpecialEffectHint = GenerateSpecialEffectHintIndex(source, targets, card)
+        };
         Game.CurrentGame.NotificationProxy.NotifySkillUse(log);
     }
 }

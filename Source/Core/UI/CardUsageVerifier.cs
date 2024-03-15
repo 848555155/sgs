@@ -128,15 +128,8 @@ public interface ICardUsageVerifier
 
 public abstract class CardUsageVerifier : ICardUsageVerifier
 {
-    public CardUsageVerifier()
-    {
-        Helper = new UiHelper();
-    }
-
     public virtual VerifierResult Verify(Player source, ISkill skill, List<Card> cards, List<Player> players)
     {
-        CardTransformSkill transformSkill = skill as CardTransformSkill;
-
         if (skill is PassiveSkill)
         {
             return VerifierResult.Fail;
@@ -147,7 +140,7 @@ public abstract class CardUsageVerifier : ICardUsageVerifier
             return SlowVerify(source, skill, cards, players);
         }
 
-        if (transformSkill != null)
+        if (skill is CardTransformSkill transformSkill)
         {
             if (transformSkill is IAdditionalTypedSkill
                 || transformSkill.PossibleResults == null)
@@ -159,7 +152,7 @@ public abstract class CardUsageVerifier : ICardUsageVerifier
                 var commonResult = from type1 in AcceptableCardTypes
                                    where transformSkill.PossibleResults.Any(ci => type1.GetType().IsAssignableFrom(ci.GetType()))
                                    select type1;
-                if (commonResult.Count() != 0)
+                if (commonResult.Any())
                 {
                     return SlowVerify(source, skill, cards, players);
                 }
@@ -241,10 +234,6 @@ public abstract class CardUsageVerifier : ICardUsageVerifier
     public abstract IList<CardHandler> AcceptableCardTypes { get; }
 
 
-    public UiHelper Helper
-    {
-        get;
-        set;
-    }
+    public UiHelper Helper { get; set; } = new();
 
 }

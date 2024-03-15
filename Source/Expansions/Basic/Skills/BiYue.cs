@@ -14,7 +14,7 @@ public class BiYue : TriggerSkill
         Trigger trigger = new AutoNotifyPassiveSkillTrigger
         (
             this,
-            (p, e, a) => { Game.CurrentGame.DrawCards(p, 1); },
+            (p, e, a) => Game.CurrentGame.DrawCards(p, 1),
             TriggerCondition.OwnerIsSource
         );
 

@@ -39,13 +39,10 @@ public class JieDaoShaRen : CardHandler
             {
                 return VerifierResult.Fail;
             }
-            return (new Sha()).Verify(source, skill, cards, newList);
+            return new Sha().Verify(source, skill, cards, newList);
         }
 
-        public override IList<CardHandler> AcceptableCardTypes
-        {
-            get { return new List<CardHandler>() { new Sha() }; }
-        }
+        public override IList<CardHandler> AcceptableCardTypes => [new Sha()];
 
         private readonly Player target;
 

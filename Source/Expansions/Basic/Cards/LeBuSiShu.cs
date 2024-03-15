@@ -15,11 +15,13 @@ public class LeBuSiShu : DelayedTool
     {
         while (true)
         {
-            GameEventArgs args = new GameEventArgs();
-            args.Source = null;
-            args.Targets = new List<Player>() { p };
-            args.Card = c;
-            args.ReadonlyCard = new ReadOnlyCard(c);
+            var args = new GameEventArgs
+            {
+                Source = null,
+                Targets = [p],
+                Card = c,
+                ReadonlyCard = new ReadOnlyCard(c)
+            };
             try
             {
                 Game.CurrentGame.Emit(GameEvent.CardUsageBeforeEffected, args);
@@ -36,10 +38,11 @@ public class LeBuSiShu : DelayedTool
             }
             break;
         }
-        CardsMovement move = new CardsMovement();
-        move.Cards = new List<Card>();
-        move.Cards.Add(c);
-        move.To = new DeckPlace(null, DeckType.Discard);
+        var move = new CardsMovement
+        {
+            Cards = [c],
+            To = new DeckPlace(null, DeckType.Discard)
+        };
         move.Helper.IsFakedMove = true;
         Game.CurrentGame.MoveCards(move, false, Core.Utils.GameDelays.None);
     }

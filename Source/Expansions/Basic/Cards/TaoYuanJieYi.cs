@@ -27,10 +27,7 @@ public class TaoYuanJieYi : CardHandler
         return VerifierResult.Success;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.ImmediateTool; }
-    }
+    public override CardCategory Category => CardCategory.ImmediateTool;
 
     public override List<Player> ActualTargets(Player source, List<Player> dests, ICard card)
     {

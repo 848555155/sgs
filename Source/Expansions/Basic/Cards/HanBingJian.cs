@@ -29,19 +29,14 @@ public class HanBingJian : Weapon
             {
                 IPlayerProxy ui = Game.CurrentGame.UiProxies[Owner];
                 if (Owner.IsDead) return;
-                List<DeckPlace> places = new List<DeckPlace>();
-                places.Add(new DeckPlace(dest, DeckType.Hand));
-                places.Add(new DeckPlace(dest, DeckType.Equipment));
-                List<string> resultDeckPlace = new List<string>();
-                resultDeckPlace.Add("HanBing");
-                List<int> resultDeckMax = new List<int>();
-                resultDeckMax.Add(1);
+                List<DeckPlace> places = [new DeckPlace(dest, DeckType.Hand), new DeckPlace(dest, DeckType.Equipment)];
+                List<string> resultDeckPlace = ["HanBing"];
+                List<int> resultDeckMax = [1];
                 List<List<Card>> answer;
                 if (!ui.AskForCardChoice(new CardChoicePrompt("HanBing"), places, resultDeckPlace, resultDeckMax, new RequireOneCardChoiceVerifier(), out answer))
                 {
                     Trace.TraceInformation("Player {0} Invalid answer", Owner.Id);
-                    answer = new List<List<Card>>();
-                    answer.Add(new List<Card>());
+                    answer = [[]];
                     var collection = Game.CurrentGame.Decks[dest, DeckType.Hand].Concat
                                      (Game.CurrentGame.Decks[dest, DeckType.Equipment]);
                     answer[0].Add(collection.First());
@@ -66,10 +61,7 @@ public class HanBingJian : Weapon
         }
     }
 
-    public override int AttackRange
-    {
-        get { return 2; }
-    }
+    public override int AttackRange => 2;
 
     protected override void RegisterWeaponTriggers(Player p)
     {

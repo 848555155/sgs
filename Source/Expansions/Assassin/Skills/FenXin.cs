@@ -22,21 +22,24 @@ public class FenXin : TriggerSkill
         Game.CurrentGame.SyncCard(target, ref role1);
         Game.CurrentGame.SyncCard(Owner, ref role2);
 
-        List<CardsMovement> moves = new List<CardsMovement>();
-        CardsMovement move1 = new CardsMovement();
-        move1.Cards = new List<Card>() { role1 };
-        move1.To = new DeckPlace(target, RoleGame.RoleDeckType);
+        List<CardsMovement> moves = [];
+        var move1 = new CardsMovement
+        {
+            Cards = [role1],
+            To = new DeckPlace(target, RoleGame.RoleDeckType)
+        };
         moves.Add(move1);
 
-        CardsMovement move2 = new CardsMovement();
-        move2.Cards = new List<Card>() { role2 };
-        move2.To = new DeckPlace(Owner, RoleGame.RoleDeckType);
+        var move2 = new CardsMovement
+        {
+            Cards = [role2],
+            To = new DeckPlace(Owner, RoleGame.RoleDeckType)
+        };
         moves.Add(move2);
 
         Game.CurrentGame.MoveCards(moves);
 
-        var role = role2.Type as RoleCardHandler;
-        if (role != null)
+        if (role2.Type is RoleCardHandler role)
         {
             Owner.Role = role.Role;
         }

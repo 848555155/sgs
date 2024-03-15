@@ -11,13 +11,7 @@ public class TestUiProxy : IPlayerProxy
     {
     }
 
-    private Player hostPlayer;
-
-    public Player HostPlayer
-    {
-        get { return hostPlayer; }
-        set { hostPlayer = value; }
-    }
+    public Player HostPlayer { get; set; }
 
     private StreamReader logFile;
     private string line;
@@ -68,7 +62,7 @@ public class TestUiProxy : IPlayerProxy
         {
             if (m.Groups["skill"].Success)
             {
-                foreach (ISkill s in hostPlayer.Skills)
+                foreach (var s in HostPlayer.Skills)
                 {
                     if (s is CardTransformSkill)
                     {
@@ -100,9 +94,5 @@ public class TestUiProxy : IPlayerProxy
     }
 
 
-    public bool IsPlayable
-    {
-        get;
-        set;
-    }
+    public bool IsPlayable { get; set; }
 }

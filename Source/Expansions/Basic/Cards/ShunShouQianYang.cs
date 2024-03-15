@@ -8,15 +8,9 @@ namespace Sanguosha.Expansions.Basic.Cards;
 
 public class ShunShouQianYang : ShunChai
 {
-    protected override string ResultDeckName
-    {
-        get { return "ShunShouChoice"; }
-    }
+    protected override string ResultDeckName => "ShunShouChoice";
 
-    protected override string ChoicePrompt
-    {
-        get { return "ShunShou"; }
-    }
+    protected override string ChoicePrompt => "ShunShou";
 
     protected override DeckPlace ShunChaiDest(Player source, Player dest)
     {
@@ -25,11 +19,13 @@ public class ShunShouQianYang : ShunChai
 
     protected override bool ShunChaiAdditionalCheck(Player source, Player dest, ICard card)
     {
-        var args = new AdjustmentEventArgs();
-        args.Source = source;
-        args.Targets = new List<Player>() { dest };
-        args.Card = card;
-        args.AdjustmentAmount = 0;
+        var args = new AdjustmentEventArgs
+        {
+            Source = source,
+            Targets = [dest],
+            Card = card,
+            AdjustmentAmount = 0
+        };
         Game.CurrentGame.Emit(GameEvent.CardRangeModifier, args);
         if (Game.CurrentGame.DistanceTo(source, dest) > 1 + args.AdjustmentAmount)
         {

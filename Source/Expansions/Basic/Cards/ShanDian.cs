@@ -57,7 +57,7 @@ public class ShanDian : DelayedTool
         {
             GameEventArgs args = new GameEventArgs();
             args.Source = null;
-            args.Targets = new List<Player>() { p };
+            args.Targets = [p];
             args.Card = c;
             args.ReadonlyCard = new ReadOnlyCard(c);
             try
@@ -74,8 +74,7 @@ public class ShanDian : DelayedTool
             {
                 var roc = new ReadOnlyCard(c);
                 CardsMovement move = new CardsMovement();
-                move.Cards = new List<Card>();
-                move.Cards.Add(c);
+                move.Cards = [c];
                 move.To = new DeckPlace(null, DeckType.Discard);
                 Game.CurrentGame.MoveCards(move);
                 Game.CurrentGame.DoDamage(null, p, 3, DamageElement.Lightning, c, roc);

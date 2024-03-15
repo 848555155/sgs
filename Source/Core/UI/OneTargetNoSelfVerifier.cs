@@ -38,8 +38,5 @@ public class OneTargetNoSelfVerifier : ICardUsageVerifier
         return FastVerify(source, skill, cards, players);
     }
 
-    public UiHelper Helper
-    {
-        get { return new UiHelper(); }
-    }
+    public UiHelper Helper => new();
 }

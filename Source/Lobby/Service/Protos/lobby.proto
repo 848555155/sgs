@@ -1,13 +1,13 @@
 ﻿syntax = "proto3";
 
-package LobbyCore;
-
 import "google/protobuf/empty.proto";
 import "google/protobuf/wrappers.proto";
 
+package LobbyCore;
 option csharp_namespace = "Sanguosha.Lobby.Core";
 
 service Lobby {
+  rpc start (stream LobbyRequest) returns(stream NotifyMessage);
   rpc Login (LoginRequest) returns (LoginReply);
   rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty);
   rpc GetRooms (google.protobuf.BoolValue) returns (RoomsReply);
@@ -22,18 +22,29 @@ service Lobby {
   rpc OpenSeat (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
   rpc CloseSeat (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
   rpc Chat (google.protobuf.StringValue) returns (RoomOperationResultReplay);
-  rpc Spectate (google.protobuf.Int32Value) returns (RoomOperationResultReplay);
+  rpc Spectate (google.protobuf.StringValue) returns (RoomOperationResultReplay);
   rpc CreateAccount (CreateAccountRequest) returns (LoginStatusReply);
   rpc SubmitBugReport (stream google.protobuf.BytesValue) returns (google.protobuf.Empty);
   rpc NotifyRoomUpdate (google.protobuf.Empty) returns (stream NotifyRoomUpdateReply);
   rpc NotifyKicked (google.protobuf.Empty) returns (stream google.protobuf.Empty);
   rpc NotifyGameStart (google.protobuf.Empty) returns (stream NotifyGameStartReply);
   rpc NotifyChat (google.protobuf.Empty) returns (stream NotifyChatReply);
+  rpc Notify(google.protobuf.Empty) returns (stream NotifyMessage);
+}
+
+message NotifyMessage
+{
+    oneof message {
+        NotifyRoomUpdateReply room_update = 1;
+        NotifyGameStartReply game_start = 2;
+        google.protobuf.Empty kicked = 3;
+        NotifyChatReply chat = 4;
+    };
 }
 
 message NotifyRoomUpdateReply
 {
-	int32 id = 1;
+	string id = 1;
 	Room room = 2;
 }
 
@@ -78,7 +89,7 @@ message CreateRoomRequest
 
 message EnterRoomRequest
 {
-	int32 room_id = 1;
+	string room_id = 1;
 	bool spectate = 2;
 	string password = 3;
 }

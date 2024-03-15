@@ -91,10 +91,7 @@ public class JueDou : CardHandler
         return VerifierResult.Success;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.ImmediateTool; }
-    }
+    public override CardCategory Category => CardCategory.ImmediateTool;
 
     public static readonly GameEvent JueDouModifier = new GameEvent("JueDouModifier");
 }

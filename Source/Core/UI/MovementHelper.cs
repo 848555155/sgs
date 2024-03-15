@@ -4,49 +4,19 @@ namespace Sanguosha.Core.UI;
 
 public class MovementHelper
 {
-    private bool isFakedMove;
-
     /// <summary>
     /// the movement is not really a game move but a logical move designed to facilitate user choices, e.g. 遗计
     /// </summary>
-    public bool IsFakedMove
-    {
-        get { return isFakedMove; }
-        set { isFakedMove = value; }
-    }
+    public bool IsFakedMove { get; set; }
 
-    private int windowId;
+    public int WindowId { get; set; }
 
-    public int WindowId
-    {
-        get { return windowId; }
-        set { windowId = value; }
-    }
+    public bool IsWuGu { get; set; }
 
-    private bool isWuGu;
-
-    public bool IsWuGu
-    {
-        get { return isWuGu; }
-        set { isWuGu = value; }
-    }
-
-    private Hero privateDeckHeroTag;
-
-    public Hero PrivateDeckHeroTag
-    {
-        get { return privateDeckHeroTag; }
-        set { privateDeckHeroTag = value; }
-    }
-
-    private bool alwaysShowLog;
+    public Hero PrivateDeckHeroTag { get; set; }
 
     //show card move log even faked move.  e.g.落英
-    public bool AlwaysShowLog
-    {
-        get { return alwaysShowLog; }
-        set { alwaysShowLog = value; }
-    }
+    public bool AlwaysShowLog { get; set; }
 
     public MovementHelper()
     {

@@ -15,7 +15,7 @@ public class RenWangDun : Armor
         {
             var trigger = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) => { return a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Black && ArmorIsValid(Owner, a.Source, a.ReadonlyCard); },
+                (p, e, a) => a.ReadonlyCard != null && (a.ReadonlyCard.Type is Sha) && a.ReadonlyCard.SuitColor == SuitColorType.Black && ArmorIsValid(Owner, a.Source, a.ReadonlyCard),
                 (p, e, a) => { throw new TriggerResultException(TriggerResult.End); },
                 TriggerCondition.OwnerIsTarget
             );

@@ -16,18 +16,15 @@ public class FanKui : TriggerSkill
     public void OnAfterDamageInflicted(Player owner, GameEvent gameEvent, GameEventArgs eventArgs)
     {
         NotifySkillUse(new List<Player>() { eventArgs.Source });
-        List<DeckPlace> deck = new List<DeckPlace>();
-        deck.Add(new DeckPlace(eventArgs.Source, DeckType.Hand));
-        deck.Add(new DeckPlace(eventArgs.Source, DeckType.Equipment));
-        List<int> max = new List<int>() { 1 };
+        List<DeckPlace> deck = [new DeckPlace(eventArgs.Source, DeckType.Hand), new DeckPlace(eventArgs.Source, DeckType.Equipment)];
+        List<int> max = [1];
         List<List<Card>> result;
-        List<string> deckname = new List<string>() { "FanKui choice" };
+        List<string> deckname = ["FanKui choice"];
 
         if (!Game.CurrentGame.UiProxies[Owner].AskForCardChoice(new CardChoicePrompt("FanKui", eventArgs.Source), deck, deckname, max, new RequireOneCardChoiceVerifier(true), out result))
         {
             Trace.TraceInformation("Invalid choice for FanKui");
-            result = new List<List<Card>>();
-            result.Add(Game.CurrentGame.PickDefaultCardsFrom(deck));
+            result = [Game.CurrentGame.PickDefaultCardsFrom(deck)];
         }
         Game.CurrentGame.HandleCardTransferToHand(eventArgs.Source, owner, result[0]);
     }

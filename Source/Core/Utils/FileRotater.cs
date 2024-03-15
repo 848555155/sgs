@@ -72,7 +72,7 @@ public class FileRotator
         try
         {
             var suspects = from filePath in filePaths
-                           where Path.GetFileName(filePath).ToLower().StartsWith(fileName.ToLower()) &&
+                           where Path.GetFileName(filePath).StartsWith(fileName, StringComparison.CurrentCultureIgnoreCase) &&
                                  filePath.ToLower().EndsWith(extension.ToLower())
                            orderby File.GetLastWriteTime(filePath)
                            select filePath;

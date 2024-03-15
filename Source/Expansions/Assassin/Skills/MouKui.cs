@@ -21,9 +21,9 @@ public class MouKui : TriggerSkill
     private void Run1(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
     {
         MultipleChoicePrompt prompt;
-        List<OptionPrompt> options = new List<OptionPrompt>();
+        List<OptionPrompt> options = [];
         OptionPrompt option1 = new OptionPrompt("MouKuiMoPai");
-        Dictionary<Player, int> map = new Dictionary<Player, int>();
+        Dictionary<Player, int> map = [];
         foreach (var target in eventArgs.Targets)
         {
             if (!map.Keys.Contains(target)) map.Add(target, 0);
@@ -68,7 +68,7 @@ public class MouKui : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return a.ReadonlyCard.Type is Sha; },
+            (p, e, a) => a.ReadonlyCard.Type is Sha,
             Run1,
             TriggerCondition.OwnerIsSource
         )

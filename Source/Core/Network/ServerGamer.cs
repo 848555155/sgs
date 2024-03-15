@@ -249,10 +249,7 @@ public class ServerGamer
 
     public void Flush()
     {
-        if (DataStream != null)
-        {
-            DataStream.Flush();
-        }
+        DataStream?.Flush();
     }
 
     public bool IsSpectator

@@ -16,12 +16,13 @@ public abstract class Aoe : CardHandler
     protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
         SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()); }, false, RequiredCard);
-        List<Player> sourceList = new List<Player>();
-        sourceList.Add(source);
-        GameEventArgs args = new GameEventArgs();
-        args.Source = dest;
-        args.Targets = sourceList;
-        args.Card = new CompositeCard();
+        List<Player> sourceList = [source];
+        GameEventArgs args = new GameEventArgs
+        {
+            Source = dest,
+            Targets = sourceList,
+            Card = new CompositeCard()
+        };
         args.Card.Type = RequiredCard;
         args.ReadonlyCard = readonlyCard;
         try
@@ -39,12 +40,9 @@ public abstract class Aoe : CardHandler
         while (true)
         {
             IPlayerProxy ui = Game.CurrentGame.UiProxies[dest];
-            ISkill skill;
-            List<Player> p;
-            List<Card> cards;
             Game.CurrentGame.Emit(GameEvent.PlayerIsAboutToPlayCard, new PlayerIsAboutToUseOrPlayCardEventArgs() { Source = dest, Verifier = v1 });
             if (!ui.AskForCardUsage(new CardUsagePrompt(UsagePromptString, source),
-                                                  v1, out skill, out cards, out p))
+                                                  v1, out var skill, out var cards, out var p))
             {
                 Trace.TraceInformation("Player {0} Invalid answer", dest);
                 Game.CurrentGame.DoDamage(source.IsDead ? null : source, dest, 1, DamageElement.None, card, readonlyCard);
@@ -92,8 +90,5 @@ public abstract class Aoe : CardHandler
         return VerifierResult.Success;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.ImmediateTool; }
-    }
+    public override CardCategory Category => CardCategory.ImmediateTool;
 }

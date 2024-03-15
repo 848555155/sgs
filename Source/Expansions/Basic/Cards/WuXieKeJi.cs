@@ -24,10 +24,7 @@ public class WuXieKeJi : CardHandler
         return VerifierResult.Fail;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.ImmediateTool; }
-    }
+    public override CardCategory Category => CardCategory.ImmediateTool;
 }
 
 
@@ -36,7 +33,7 @@ public class WuXieKeJiTrigger : Trigger
     public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
     {
         ReadOnlyCard card = eventArgs.ReadonlyCard;
-        SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return c.Type is WuXieKeJi; }, true, new WuXieKeJi());
+        SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => c.Type is WuXieKeJi, true, new WuXieKeJi());
         v1.Helper.ExtraTimeOutSeconds = -9;
         List<Card> cards;
         List<Player> players;
@@ -62,8 +59,7 @@ public class WuXieKeJiTrigger : Trigger
                 }
                 foreach (var sk in p.ActionableSkills)
                 {
-                    CardTransformSkill cts = sk as CardTransformSkill;
-                    if (cts != null)
+                    if (sk is CardTransformSkill cts)
                     {
                         if (cts.PossibleResults == null)
                         {
@@ -96,11 +92,13 @@ public class WuXieKeJiTrigger : Trigger
                 {
                     try
                     {
-                        GameEventArgs args = new GameEventArgs();
-                        args.Source = responder;
-                        args.Targets = players;
-                        args.Skill = skill;
-                        args.Cards = cards;
+                        var args = new GameEventArgs
+                        {
+                            Source = responder,
+                            Targets = players,
+                            Skill = skill,
+                            Cards = cards
+                        };
                         Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
                     }
                     catch (TriggerResultException e)
@@ -109,8 +107,10 @@ public class WuXieKeJiTrigger : Trigger
                         continue;
                     }
                     promptPlayer = responder;
-                    promptCard = new CompositeCard();
-                    promptCard.Type = new WuXieKeJi();
+                    promptCard = new CompositeCard
+                    {
+                        Type = new WuXieKeJi()
+                    };
                     (promptCard as CompositeCard).Subcards = null;
                     WuXieSuccess = !WuXieSuccess;
                 }

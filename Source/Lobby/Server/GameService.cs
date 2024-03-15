@@ -10,20 +10,24 @@ namespace Sanguosha.Lobby.Server;
 
 public class GameService
 {
-    public delegate void GameEndCallback(int roomId);
-    public static void StartGameService(IPAddress IP, GameSettings setting, int roomId, GameEndCallback callback, out int portNumber)
+    public delegate Task GameEndCallback(string roomId);
+    public static void StartGameService(IPAddress IP, GameSettings setting, string roomId, GameEndCallback callback, out int portNumber)
     {
         int totalNumberOfPlayers = setting.TotalPlayers;
         int timeOutSeconds = setting.TimeOutSeconds;
 #if DEBUG
         Trace.Listeners.Clear();
 
-        TextWriterTraceListener twtl = new TextWriterTraceListener(Path.Combine(Directory.GetCurrentDirectory(), AppDomain.CurrentDomain.FriendlyName + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".txt"));
-        twtl.Name = "TextLogger";
-        twtl.TraceOutputOptions = TraceOptions.ThreadId | TraceOptions.DateTime;
+        var twtl = new TextWriterTraceListener(Path.Combine(Directory.GetCurrentDirectory(), AppDomain.CurrentDomain.FriendlyName + DateTime.Now.Hour.ToString() + DateTime.Now.Minute.ToString() + DateTime.Now.Second.ToString() + ".txt"))
+        {
+            Name = "TextLogger",
+            TraceOutputOptions = TraceOptions.ThreadId | TraceOptions.DateTime
+        };
 
-        ConsoleTraceListener ctl = new ConsoleTraceListener(false);
-        ctl.TraceOutputOptions = TraceOptions.DateTime;
+        var ctl = new ConsoleTraceListener(false)
+        {
+            TraceOutputOptions = TraceOptions.DateTime
+        };
 
         Trace.Listeners.Add(twtl);
         Trace.Listeners.Add(ctl);
@@ -38,28 +42,34 @@ public class GameService
         portNumber = server.IpPort;
         for (int i = 0; i < totalNumberOfPlayers; i++)
         {
-            var player = new Player();
-            player.Id = i;
+            var player = new Player
+            {
+                Id = i
+            };
             game.Players.Add(player);
-            IPlayerProxy proxy;
-            proxy = new ServerNetworkProxy(server, i);
-            proxy.TimeOutSeconds = timeOutSeconds;
-            proxy.HostPlayer = player;
+            IPlayerProxy proxy = new ServerNetworkProxy(server, i)
+            {
+                TimeOutSeconds = timeOutSeconds,
+                HostPlayer = player
+            };
             game.UiProxies.Add(player, proxy);
         }
-        GlobalServerProxy pxy = new GlobalServerProxy(game, game.UiProxies);
-        pxy.TimeOutSeconds = timeOutSeconds;
+        var pxy = new GlobalServerProxy(game, game.UiProxies)
+        {
+            TimeOutSeconds = timeOutSeconds
+        };
         game.GlobalProxy = pxy;
         game.NotificationProxy = new DummyNotificationProxy();
 
         game.GameServer = server;
-        var thread = new Thread(() =>
+        Task.Factory.StartNew(async () =>
         {
+            Thread.CurrentThread.IsBackground = true;
 #if !DEBUG
             try
             {
 #endif
-            game.Run();
+                game.Run();
 #if !DEBUG
             }
             catch (Exception)
@@ -68,14 +78,12 @@ public class GameService
 #endif
             try
             {
-                callback(roomId);
+                await callback(roomId);
             }
             catch (Exception)
             {
             }
-        })
-        { IsBackground = true };
-        thread.Start();
+        });
     }
 
 }

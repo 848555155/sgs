@@ -47,12 +47,9 @@ public class FanJian : ActiveSkill
         Owner[FanJianUsed] = 1;
         // suit guess
         SuitType suit = SuitType.Diamond;
-        List<DeckPlace> decks = new List<DeckPlace>();
-        decks.Add(new DeckPlace(Owner, DeckType.Hand));
-        List<int> max = new List<int>();
-        max.Add(1);
-        List<string> decknames = new List<string>();
-        decknames.Add("FanJianChoice");
+        List<DeckPlace> decks = [new DeckPlace(Owner, DeckType.Hand)];
+        List<int> max = [1];
+        List<string> decknames = ["FanJianChoice"];
         List<List<Card>> answer;
         Card theCard;
         int suitAnswer;
@@ -69,8 +66,7 @@ public class FanJian : ActiveSkill
         }
 
         Game.CurrentGame.SyncCardAll(ref theCard);
-        List<Card> clist = new List<Card>();
-        clist.Add(theCard);
+        List<Card> clist = [theCard];
         SuitType theCardSuit = theCard.Suit;
         Game.CurrentGame.HandleCardTransferToHand(Owner, arg.Targets[0], clist);
         if (theCardSuit != suit + 1)

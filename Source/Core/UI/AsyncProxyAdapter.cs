@@ -78,9 +78,9 @@ public class AsyncProxyAdapter : IPlayerProxy
             cards = answerCards;
             players = answerPlayers;
         }
-        cards ??= new List<Card>();
-        players ??= new List<Player>();
-        return (verifier.FastVerify(HostPlayer, answerSkill, cards, players) == VerifierResult.Success);
+        cards ??= [];
+        players ??= [];
+        return verifier.FastVerify(HostPlayer, answerSkill, cards, players) == VerifierResult.Success;
     }
 
     public bool AskForCardChoice(Prompt prompt, List<DeckPlace> sourceDecks, List<string> resultDeckNames, List<int> resultDeckMaximums, ICardChoiceVerifier verifier, out List<List<Card>> answer, AdditionalCardChoiceOptions options, CardChoiceRearrangeCallback callback)
@@ -99,7 +99,7 @@ public class AsyncProxyAdapter : IPlayerProxy
         }
         else
         {
-            return (verifier.Verify(answer) == VerifierResult.Success);
+            return verifier.Verify(answer) == VerifierResult.Success;
         }
 
     }
@@ -122,8 +122,5 @@ public class AsyncProxyAdapter : IPlayerProxy
     public int TimeOutSeconds { get; set; }
 
 
-    public bool IsPlayable
-    {
-        get { return proxy.IsPlayable; }
-    }
+    public bool IsPlayable => proxy.IsPlayable;
 }

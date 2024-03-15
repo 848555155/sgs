@@ -10,10 +10,7 @@ public class WanJianQiFa : Aoe
         RequiredCard = new Shan();
     }
 
-    protected override string UsagePromptString
-    {
-        get { return "WanJianQiFa"; }
-    }
+    protected override string UsagePromptString => "WanJianQiFa";
 
     public override CardHandler RequiredCard
     {

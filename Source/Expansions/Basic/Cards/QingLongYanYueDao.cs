@@ -41,12 +41,14 @@ public class QingLongYanYueDao : Weapon
                     try
                     {
                         Owner[Sha.NumberOfShaUsed]--;
-                        GameEventArgs args = new GameEventArgs();
-                        args.Source = eventArgs.Source;
-                        args.Targets = eventArgs.Targets;
-                        args.Skill = skill;
-                        args.Cards = cards;
-                        args.ReadonlyCard = new ReadOnlyCard(new Card() { Place = new DeckPlace(null, null) });
+                        var args = new GameEventArgs
+                        {
+                            Source = eventArgs.Source,
+                            Targets = eventArgs.Targets,
+                            Skill = skill,
+                            Cards = cards,
+                            ReadonlyCard = new ReadOnlyCard(new Card() { Place = new DeckPlace(null, null) })
+                        };
                         args.ReadonlyCard[QingLongSha] = 1;
                         Game.CurrentGame.Emit(GameEvent.CommitActionToTargets, args);
                     }
@@ -71,7 +73,7 @@ public class QingLongYanYueDao : Weapon
 
             var notify = new AutoNotifyPassiveSkillTrigger(
                 this,
-                (p, e, a) => { return a.ReadonlyCard[QingLongSha] == 1; },
+                (p, e, a) => a.ReadonlyCard[QingLongSha] == 1,
                 (p, e, a) => { },
                 TriggerCondition.OwnerIsSource
             )
@@ -82,10 +84,7 @@ public class QingLongYanYueDao : Weapon
         private static readonly CardAttribute QingLongSha = CardAttribute.Register("QingLongSha");
     }
 
-    public override int AttackRange
-    {
-        get { return 3; }
-    }
+    public override int AttackRange => 3;
 
     protected override void RegisterWeaponTriggers(Player p)
     {

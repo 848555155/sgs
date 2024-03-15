@@ -21,14 +21,14 @@ public abstract class ShunChai : CardHandler
         IPlayerProxy ui = Game.CurrentGame.UiProxies[source];
         if (source.IsDead) return;
         if (dest.HandCards().Count + dest.Equipments().Count + dest.DelayedTools().Count == 0) return; // ShunChai -> WuXie(from target) -> WuXie(soemone else) -> target has no card
-        List<DeckPlace> places = new List<DeckPlace>();
-        places.Add(new DeckPlace(dest, DeckType.Hand));
-        places.Add(new DeckPlace(dest, DeckType.Equipment));
-        places.Add(new DeckPlace(dest, DeckType.DelayedTools));
-        List<string> resultDeckPlace = new List<string>();
-        resultDeckPlace.Add(ResultDeckName);
-        List<int> resultDeckMax = new List<int>();
-        resultDeckMax.Add(1);
+        List<DeckPlace> places =
+        [
+            new DeckPlace(dest, DeckType.Hand),
+            new DeckPlace(dest, DeckType.Equipment),
+            new DeckPlace(dest, DeckType.DelayedTools),
+        ];
+        List<string> resultDeckPlace = [ResultDeckName];
+        List<int> resultDeckMax = [1];
         List<List<Card>> answer;
         if (!ui.AskForCardChoice(new CardChoicePrompt(ChoicePrompt), places, resultDeckPlace, resultDeckMax, new RequireOneCardChoiceVerifier(true), out answer))
         {
@@ -81,8 +81,5 @@ public abstract class ShunChai : CardHandler
         return VerifierResult.Success;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.ImmediateTool; }
-    }
+    public override CardCategory Category => CardCategory.ImmediateTool;
 }

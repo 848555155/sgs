@@ -325,7 +325,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
     }
 
     #region Server Callbacks
-    public void NotifyKicked()
+    public Task NotifyKicked()
     {
         LobbyView.Instance.NotifyKeyEvent(Application.Current.TryFindResource("Lobby.Event.SelfKicked") as string);
         CurrentRoom = null;
@@ -335,7 +335,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         });
     }
 
-    public void NotifyGameStart(string connectionString, LoginToken token)
+    public Task NotifyGameStart(string connectionString, LoginToken token)
     {
         GameServerConnectionString = connectionString;
         _loginToken = token;
@@ -345,7 +345,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         });
     }
 
-    public void NotifyRoomUpdate(int id, Room room)
+    public Task NotifyRoomUpdate(string id, Room room)
     {
         Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {
@@ -369,7 +369,7 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
 
     private readonly List<KeyValuePair<string, string>> _chatCache;
 
-    public void NotifyChat(Account act, string message)
+    public Task NotifyChat(Account act, string message)
     {
         Application.Current.Dispatcher.BeginInvoke((ThreadStart)delegate ()
         {

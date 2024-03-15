@@ -18,13 +18,10 @@ public class TianMing : TriggerSkill
         return TianMingEffect;
     }
 
-    private class TianMingVerifier : CardUsageVerifier
+    private class TianMingVerifier(int count) : CardUsageVerifier
     {
-        private readonly int discardCount;
-        public TianMingVerifier(int count)
-        {
-            discardCount = count;
-        }
+        private readonly int discardCount = count;
+
         public override VerifierResult FastVerify(Player source, ISkill skill, List<Card> cards, List<Player> players)
         {
             if (players != null && players.Count > 1 || skill != null)
@@ -59,13 +56,10 @@ public class TianMing : TriggerSkill
     private bool TianMingProcess(Player player)
     {
         int discardedCount = Math.Min(player.HandCards().Count + player.Equipments().Count, 2);
-        ISkill skill;
-        List<Card> cards;
-        List<Player> players;
         CardUsagePrompt prompt = new CardUsagePrompt("TianMing");
         CardUsagePrompt otherPrompt = new CardUsagePrompt("TianMingOther", discardedCount);
         CardUsagePrompt otherIsNakedPrompt = new CardUsagePrompt("TianMingOtherIsNaked");
-        if (player.AskForCardUsage(player == Owner ? prompt : (discardedCount == 0 ? otherIsNakedPrompt : otherPrompt), new TianMingVerifier(discardedCount), out skill, out cards, out players))
+        if (player.AskForCardUsage(player == Owner ? prompt : (discardedCount == 0 ? otherIsNakedPrompt : otherPrompt), new TianMingVerifier(discardedCount), out var skill, out var cards, out var players))
         {
             if (player == Owner)
             {
@@ -107,7 +101,7 @@ public class TianMing : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return a.ReadonlyCard.Type is Sha; },
+            (p, e, a) => a.ReadonlyCard.Type is Sha,
             Run,
             TriggerCondition.OwnerIsTarget
         )

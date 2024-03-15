@@ -7,52 +7,26 @@ namespace Sanguosha.Core.UI;
 
 public class CardsAndTargetsVerifier : ICardUsageVerifier
 {
-    private int minPlayers;
+    protected int MinPlayers { get; set; }
 
-    protected int MinPlayers
-    {
-        get { return minPlayers; }
-        set { minPlayers = value; }
-    }
-    private int maxPlayers;
+    protected int MaxPlayers { get; set; }
 
-    protected int MaxPlayers
-    {
-        get { return maxPlayers; }
-        set { maxPlayers = value; }
-    }
-    private int minCards;
+    protected int MinCards { get; set; }
 
-    protected int MinCards
-    {
-        get { return minCards; }
-        set { minCards = value; }
-    }
-    private int maxCards;
-
-    protected int MaxCards
-    {
-        get { return maxCards; }
-        set { maxCards = value; }
-    }
-    private bool discarding;
+    protected int MaxCards { get; set; }
 
     /// <summary>
     /// Cards must pass "Game.CanDiscardCard" verification
     /// </summary>
-    protected bool Discarding
-    {
-        get { return discarding; }
-        set { discarding = value; }
-    }
+    protected bool Discarding { get; set; }
 
     public CardsAndTargetsVerifier()
     {
-        minPlayers = 0;
-        maxPlayers = int.MaxValue;
-        minCards = 0;
-        maxCards = int.MaxValue;
-        discarding = false;
+        MinPlayers = 0;
+        MaxPlayers = int.MaxValue;
+        MinCards = 0;
+        MaxCards = int.MaxValue;
+        Discarding = false;
         Helper = new UiHelper();
     }
 
@@ -78,7 +52,7 @@ public class CardsAndTargetsVerifier : ICardUsageVerifier
         {
             return VerifierResult.Fail;
         }
-        if (cards != null && cards.Count > maxCards)
+        if (cards != null && cards.Count > MaxCards)
         {
             return VerifierResult.Fail;
         }
@@ -86,7 +60,7 @@ public class CardsAndTargetsVerifier : ICardUsageVerifier
         {
             foreach (Card c in cards)
             {
-                if (discarding && !Game.CurrentGame.PlayerCanDiscardCard(source, c))
+                if (Discarding && !Game.CurrentGame.PlayerCanDiscardCard(source, c))
                 {
                     return VerifierResult.Fail;
                 }
@@ -96,7 +70,7 @@ public class CardsAndTargetsVerifier : ICardUsageVerifier
                 }
             }
         }
-        if (players != null && players.Count > maxPlayers)
+        if (players != null && players.Count > MaxPlayers)
         {
             return VerifierResult.Fail;
         }
@@ -120,12 +94,12 @@ public class CardsAndTargetsVerifier : ICardUsageVerifier
             return VerifierResult.Partial;
         }
         int count = players == null ? 0 : players.Count;
-        if (count < minPlayers)
+        if (count < MinPlayers)
         {
             return VerifierResult.Partial;
         }
         count = cards == null ? 0 : cards.Count;
-        if (count < minCards)
+        if (count < MinCards)
         {
             return VerifierResult.Partial;
         }
