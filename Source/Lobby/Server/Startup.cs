@@ -2,7 +2,6 @@
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Sanguosha.Lobby.Core;
@@ -61,12 +60,6 @@ public class Startup(IConfiguration configuration)
         app.UseEndpoints(endpoint =>
         {
             endpoint.MapGrpcService<LobbyService>();
-            endpoint.MapGet("/register", async (AccountContext context) =>
-              {
-                  await context.Accounts.AddAsync(new Account() { });
-                  return true;
-              });
-            endpoint.MapGet("/refreshToken", ([FromQuery] string name) => GenerateJwtToken(name));
             endpoint.MapGet("/", () => "这是游戏的服务器端，看到这个表示启动成功了");
         });
     }

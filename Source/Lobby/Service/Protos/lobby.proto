@@ -7,7 +7,7 @@ package LobbyCore;
 option csharp_namespace = "Sanguosha.Lobby.Core";
 
 service Lobby {
-  rpc start (stream LobbyRequest) returns(stream NotifyMessage);
+  rpc Start (stream ServerMessage) returns(stream ClientMessage);
   rpc Login (LoginRequest) returns (LoginReply);
   rpc Logout (google.protobuf.Empty) returns (google.protobuf.Empty);
   rpc GetRooms (google.protobuf.BoolValue) returns (RoomsReply);
@@ -30,6 +30,20 @@ service Lobby {
   rpc NotifyGameStart (google.protobuf.Empty) returns (stream NotifyGameStartReply);
   rpc NotifyChat (google.protobuf.Empty) returns (stream NotifyChatReply);
   rpc Notify(google.protobuf.Empty) returns (stream NotifyMessage);
+}
+
+message ServerMessage
+{
+    oneof ServerMessageTypes {
+        google.protobuf.Empty logout = 1;
+    }
+}
+
+message ClientMessage
+{
+    oneof ClientMessage {
+        google.protobuf.Empty logout = 1;
+    }
 }
 
 message NotifyMessage

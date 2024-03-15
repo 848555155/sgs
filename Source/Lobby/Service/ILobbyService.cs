@@ -133,9 +133,7 @@ public interface IGameClient
 
     Task<bool> Ping();
 
-    Task NotifyCloseConnection();
 }
-
 internal static class Helper
 {
     public static IEnumerable<Type> GetKnownTypes(ICustomAttributeProvider provider)

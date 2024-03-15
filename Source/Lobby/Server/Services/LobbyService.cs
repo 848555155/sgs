@@ -1,6 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
@@ -16,11 +17,13 @@ namespace Sanguosha.Lobby.Server;
 public partial class LobbyService(
     AccountContext accountContext,
     LobbyManager lobbyManager,
+    IPasswordHasher<Account> passwordHasher,
     ILogger<LobbyService> logger
     ) : LobbyBase
 {
     private readonly AccountContext accountContext = accountContext;
     private readonly LobbyManager lobbyManager = lobbyManager;
+    private readonly IPasswordHasher<Account> passwordHasher = passwordHasher;
     private readonly ILogger<LobbyService> logger = logger;
 
 
@@ -48,45 +51,21 @@ public partial class LobbyService(
     [AllowAnonymous]
     public override async Task<LoginReply> Login(LoginRequest request, ServerCallContext context)
     {
-        int version = request.Version;
-        string username = request.Username;
-        string hash = request.Hash;
-        Account retAccount = null;
-
+        var username = request.Username;
+        var password = request.Hash;
+        LobbyPlayer currentAccount;
+        string? reconnectionString = null;
         var reconnectionToken = new LoginToken();
-        string reconnectionString = null;
-        if (version != Misc.ProtocolVersion)
+        var authenticatedAccount = await accountContext.Accounts
+            .Where(account => account.UserName.Contains(request.Username))
+            .FirstOrDefaultAsync();
+        if (authenticatedAccount is null || passwordHasher.VerifyHashedPassword(authenticatedAccount, authenticatedAccount.Password, password) != PasswordVerificationResult.Success)
+            return Result(LoginStatus.InvalidUsernameAndPassword, null, null, null);
+        if (lobbyManager.loggedInAccounts.TryGetValue(username, out var disconnected))
         {
-            retAccount = null;
-            return Result(LoginStatus.OutdatedVersion, retAccount);
-        }
-
-        var authenticatedAccount = await Authenticate(username, hash);
-        if (authenticatedAccount == null)
-        {
-            retAccount = null;
-            return Result(LoginStatus.InvalidUsernameAndPassword, retAccount);
-        }
-        LobbyPlayer disconnected = null;
-        if (lobbyManager.loggedInAccounts.ContainsKey(username))
-        {
-            disconnected = lobbyManager.loggedInAccounts[username];
-            try
-            {
-                // if (ping.Ping())
-                // {
-                //     reconnectionString = null;
-                //     retAccount = null;
-                //     return Result(LoginStatus.InvalidUsernameAndPassword, retAccount);
-                // }
-                
-            }
-            catch (Exception)
-            {
-            }
             currentAccount = disconnected;
             var room = disconnected.CurrentRoom;
-            if (room != null)
+            if (room is not null)
             {
                 if (room.Room.State == RoomState.Gaming
                     && !disconnected.Account.IsDead)
@@ -105,35 +84,15 @@ public partial class LobbyService(
             var acc = new LobbyPlayer(authenticatedAccount, context);
             lobbyManager.loggedInAccounts.TryAdd(username, acc);
             currentAccount = acc;
-            // hack
-            
-            var roomresult = lobbyManager.rooms.Values
-                .Where(r => r.Room.Seats.Any(st => st.Account == authenticatedAccount));
+            var roomresult = lobbyManager.rooms.Values.Where(r => r.Room.Seats.Any(st => st.Account == authenticatedAccount));
             if (roomresult.Any())
             {
                 acc.CurrentRoom = roomresult.First();
             }
         }
         logger.LogInformation("{username} logged in", username);
-        var faultHandler = () =>
-        {
-            try
-            {
-                if (currentAccount.CurrentRoom.Room.State == RoomState.Gaming) return;
-                _Logout(currentAccount);
-            }
-            catch (Exception)
-            {
-            }
-        };
 
-        context.CancellationToken.Register(faultHandler);
-
-        retAccount = currentAccount.Account;
-        _Unspectate(currentAccount);
-        currentAccount.OpContext = context;
-        currentAccount.LastAction = DateTime.Now;
-        return Result(LoginStatus.Success, retAccount, reconnectionString, reconnectionToken.TokenString.ToString());
+        return Result(LoginStatus.Success, authenticatedAccount, reconnectionString, reconnectionToken.TokenString.ToString());
     }
 
 
@@ -173,7 +132,7 @@ public partial class LobbyService(
 
     public override async Task<Empty> Logout(Empty request, ServerCallContext context)
     {
-        if (currentAccount == null) 
+        if (currentAccount == null)
             return new Empty();
         logger.LogTrace("{UserName} logged out", currentAccount.Account.UserName);
         _Logout(currentAccount);
@@ -258,7 +217,7 @@ public partial class LobbyService(
                 currentAccount.LastAction = DateTime.Now;
                 seat.Account = currentAccount.Account;
                 seat.State = SeatState.GuestTaken;
-                _NotifyRoomLayoutChanged(clientRoom);
+                await _NotifyRoomLayoutChanged(clientRoom);
                 logger.LogInformation("Seat {SeatNo}", seatNo);
                 _Unspectate(currentAccount);
                 room = clientRoom;
@@ -653,7 +612,7 @@ public partial class LobbyService(
             {
                 try
                 {
-                   await  clientAccount.NotifyKicked();
+                    await clientAccount.NotifyKicked();
                 }
                 catch (Exception)
                 {
@@ -851,13 +810,29 @@ public partial class LobbyService(
     private LoginStatusReply Result(LoginStatus loginStatus) => new() { LoginStatus = loginStatus };
     private RoomOperationResultReplay Result(RoomOperationResult roomOperationResult) => new() { RoomOperationResult = roomOperationResult };
 
-    private EnterRoomReply Result(RoomOperationResult roomOperationResult, Room room = null) => new() { RoomOperationResult = roomOperationResult, Room = room };
+    private EnterRoomReply Result(RoomOperationResult roomOperationResult, Room? room = null) => new() { RoomOperationResult = roomOperationResult, Room = room };
 
-    private LoginReply Result(LoginStatus loginStatus, Account retAccount, string connectionString = "", string tokenString = "") => new()
+    private LoginReply Result(LoginStatus loginStatus, Account? retAccount = null, string? connectionString = null, string? tokenString = null) => new()
     {
         Status = loginStatus,
         RetAccount = retAccount,
         ReconnectionString = connectionString,
         TokenString = tokenString
     };
+
+    public override async Task Start(IAsyncStreamReader<ServerMessage> requestStream, IServerStreamWriter<ClientMessage> responseStream, ServerCallContext context)
+    {
+        await foreach (var message in requestStream.ReadAllAsync())
+        {
+            switch (message.ServerMessageTypesCase)
+            {
+                case ServerMessage.ServerMessageTypesOneofCase.Logout:
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        
+    }
 }
