@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
 using Grpc.Net.Client;
 using Microsoft.Win32;
 using Sanguosha.Core.Games;
@@ -16,6 +17,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -29,7 +31,7 @@ public partial class Login : Page, IDisposable
 {
     public static int DefaultLobbyPort = 6080;
 
-    private static readonly string[] _dictionaryNames = new string[] { "Cards.xaml", "Skills.xaml", "Game.xaml" };
+    private static readonly string[] _dictionaryNames = ["Cards.xaml", "Skills.xaml", "Game.xaml"];
 
     private void _LoadResources(string folderPath)
     {
@@ -144,6 +146,8 @@ public partial class Login : Page, IDisposable
             try
             {
                 LobbyViewModel.Instance.Connection.Logout(new Empty());
+
+                notifyTokenSource.Cancel();
                 LobbyViewModel.Instance.Connection = null;
             }
             catch (Exception)
@@ -184,6 +188,9 @@ public partial class Login : Page, IDisposable
     }
 
     public static Mutex appMutex = null;
+    private string loginToken = string.Empty;
+    private CancellationTokenSource notifyTokenSource;
+
 
     private void _startClient()
     {
@@ -230,44 +237,58 @@ public partial class Login : Page, IDisposable
         {
             try
             {
-                ea.Result = LoginStatus.UnknownFailure;
+                ea.Result = new LoginReply() { Status = LoginStatus.UnknownFailure };
 
                 _LogOut();
                 var lobbyModel = LobbyViewModel.Instance;
-                var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
-                server = new Lobby.Core.Lobby.LobbyClient(channel);
-                // todo change to GRPC
-                //var binding = new NetTcpBinding();
-                //binding.Security.Mode = SecurityMode.None;
-                //var endpoint = new EndpointAddress(string.Format("net.tcp://{0}/GameService", _hostName));
-                //_channelFactory = new DuplexChannelFactory<ILobbyService>(typeof(LobbyViewModel), binding, endpoint);
-                //server = _channelFactory.CreateChannel();
-
-                //_channelFactory.Faulted += channelFactory_Faulted;
-                Account ret;
-                var stat = server.Login(new()
                 {
-                    Version = Misc.ProtocolVersion,
-                    Username = _userName,
-                    Hash = _passWd
-                });
-                ret = stat.RetAccount;
-                reconnect = stat.ReconnectionString;
-                token = stat.TokenString is not null ? new() { TokenString = Guid.Parse(stat.TokenString) }: new LoginToken();
-                if (stat.Status == LoginStatus.Success)
-                {
-                    LobbyViewModel.Instance.CurrentAccount = ret;
-
-                    if (reconnect != null)
+                    var credentials = CallCredentials.FromInterceptor((context, metadata) =>
                     {
-                        Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
+                        if (!string.IsNullOrEmpty(loginToken))
+                            metadata.Add("Authorization", $"Bearer {loginToken}");
+                        return Task.CompletedTask;
+                    });
+
+                    var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"), new GrpcChannelOptions()
+                    {
+                        Credentials = ChannelCredentials.Create(new SslCredentials(), credentials)
+                    });
+                    server = new Lobby.Core.Lobby.LobbyClient(channel);
+                    // todo change to GRPC
+                    //var binding = new NetTcpBinding();
+                    //binding.Security.Mode = SecurityMode.None;
+                    //var endpoint = new EndpointAddress(string.Format("net.tcp://{0}/GameService", _hostName));
+                    //_channelFactory = new DuplexChannelFactory<ILobbyService>(typeof(LobbyViewModel), binding, endpoint);
+                    //server = _channelFactory.CreateChannel();
+
+                    //_channelFactory.Faulted += channelFactory_Faulted;
+                    Account ret;
+                    var stat = server.Login(new()
+                    {
+                        Version = Misc.ProtocolVersion,
+                        Username = _userName,
+                        Hash = _passWd
+                    });
+                    ret = stat.RetAccount;
+                    reconnect = stat.ReconnectionString;
+                    token = stat.TokenString is not null ? new() { TokenString = Guid.Parse(stat.TokenString) } : new LoginToken();
+                    loginToken = stat.LoginToken;
+
+                    if (stat.Status == LoginStatus.Success)
+                    {
+                        LobbyViewModel.Instance.CurrentAccount = ret;
+
+                        if (reconnect != null)
                         {
-                            MainGame.BackwardNavigationService = this.NavigationService;
-                            busyIndicator.BusyContent = Resources["Busy.Reconnecting"];
-                        });
+                            Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
+                            {
+                                MainGame.BackwardNavigationService = this.NavigationService;
+                                busyIndicator.BusyContent = Resources["Busy.Reconnecting"];
+                            });
+                        }
                     }
+                    ea.Result = stat;
                 }
-                ea.Result = stat;
             }
             catch (Exception e)
             {
@@ -275,10 +296,10 @@ public partial class Login : Page, IDisposable
             }
         };
 
-        worker.RunWorkerCompleted += (o, ea) =>
+        worker.RunWorkerCompleted += async (o, ea) =>
         {
             bool success = false;
-            if ((LoginStatus)ea.Result == LoginStatus.Success)
+            if (((LoginReply)ea.Result).Status == LoginStatus.Success)
             {
                 LobbyView lobby = LobbyView.Instance;
                 LobbyView.Instance.OnNavigateBack += lobby_OnNavigateBack;
@@ -293,20 +314,22 @@ public partial class Login : Page, IDisposable
                 }
                 else
                 {
-                    lobbyModel.NotifyGameStart(reconnect, token);
+                    await lobbyModel.NotifyGameStart(reconnect, token);
                     busyIndicator.IsBusy = true;
                 }
-
+                notifyTokenSource = new CancellationTokenSource();
+                var t = notifyTokenSource.Token;
+                await Notify(t);
                 success = true;
             }
             if (!success)
             {
-                if ((LoginStatus)ea.Result == LoginStatus.InvalidUsernameAndPassword)
+                if (((LoginReply)ea.Result).Status == LoginStatus.InvalidUsernameAndPassword)
                 {
                     MessageBox.Show("Invalid Username and Password");
                     busyIndicator.IsBusy = false;
                 }
-                else if ((LoginStatus)ea.Result == LoginStatus.OutdatedVersion)
+                else if (((LoginReply)ea.Result).Status == LoginStatus.OutdatedVersion)
                 {
                     // MessageBox.Show("Outdated version. Please update");
                     busyIndicator.BusyContent = Resources["Busy.Updating"];
@@ -445,14 +468,12 @@ public partial class Login : Page, IDisposable
             _Warn("Please select an IP address");
             return;
         }
-        int portNumber;
-        if (!int.TryParse(tab1Port.Text, out portNumber))
+        if (!int.TryParse(tab1Port.Text, out var portNumber))
         {
             _Warn("Please enter a legal port number");
             return;
         }
-        IPAddress publicIP;
-        if (!IPAddress.TryParse(tab1PublicIP.Text, out publicIP))
+        if (!IPAddress.TryParse(tab1PublicIP.Text, out var publicIP))
         {
             publicIP = serverIp;
         }
@@ -789,6 +810,32 @@ public partial class Login : Page, IDisposable
                 _channelFactory.Abort();
             }
             _channelFactory = null;
+        }
+    }
+
+    private async Task Notify(CancellationToken token)
+    {
+        var instance = LobbyViewModel.Instance;
+        using var call = instance.Connection.Notify(new Empty(), cancellationToken: token);
+        await foreach (var message in call.ResponseStream.ReadAllAsync(cancellationToken: token))
+        {
+            switch (message.MessageCase)
+            {
+                case NotifyMessage.MessageOneofCase.RoomUpdate:
+                    await instance.NotifyRoomUpdate(message.RoomUpdate.Id, message.RoomUpdate.Room);
+                    break;
+                case NotifyMessage.MessageOneofCase.GameStart:
+                    await instance.NotifyGameStart(message.GameStart.ConnectionString, new LoginToken() { TokenString= Guid.Parse(message.GameStart.Token) });
+                    break;
+                case NotifyMessage.MessageOneofCase.Kicked:
+                    await instance.NotifyKicked();
+                    break;
+                case NotifyMessage.MessageOneofCase.Chat:
+                    await instance.NotifyChat(message.Chat.Account, message.Chat.Message);
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }

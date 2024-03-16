@@ -1,0 +1,109 @@
+Log starting
+LobbyServer Information: 0 : Server initialized with capacity 2
+    ThreadId=14
+    DateTime=2024-03-16T12:48:11.6034883Z
+LobbyServer Information: 0 : Listener Started on 127.0.0.1 : 59411
+    ThreadId=14
+    DateTime=2024-03-16T12:48:11.6760248Z
+LobbyServer Information: 0 : Reconnection listener Started on 127.0.0.1 : 59411
+    ThreadId=20
+    DateTime=2024-03-16T12:48:11.7091764Z
+LobbyServer Information: 0 : Client connected
+    ThreadId=10
+    DateTime=2024-03-16T12:48:11.7140931Z
+LobbyServer Information: 0 : Client connected
+    ThreadId=16
+    DateTime=2024-03-16T12:48:11.7157268Z
+LobbyServer Information: 0 : AddStream() : Add stream for 53740413
+    ThreadId=10
+    DateTime=2024-03-16T12:48:12.9766831Z
+LobbyServer Information: 0 : AddStream() : Add stream for 24004906
+    ThreadId=16
+    DateTime=2024-03-16T12:48:13.0334863Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(6451435) to client 26998456
+    ThreadId=18
+    DateTime=2024-03-16T12:48:13.0379313Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(21647132) to client 36736776
+    ThreadId=17
+    DateTime=2024-03-16T12:48:13.0409437Z
+LobbyServer Information: 0 : Write() : add chunk for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:13.0443563Z
+LobbyServer Information: 0 : Write() : write data for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:13.0472750Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(34717384) to client 60644701
+    ThreadId=19
+    DateTime=2024-03-16T12:48:13.0510319Z
+LobbyServer Information: 0 : Write() : add chunk for 13273752
+    ThreadId=19
+    DateTime=2024-03-16T12:48:13.0530522Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(64538993) to client 36736776
+    ThreadId=17
+    DateTime=2024-03-16T12:48:13.0551037Z
+LobbyServer Information: 0 : Write() : add chunk for 53740413
+    ThreadId=18
+    DateTime=2024-03-16T12:48:13.0578939Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(1432091) to client 60644701
+    ThreadId=19
+    DateTime=2024-03-16T12:48:13.0603007Z
+LobbyServer Information: 0 : Write() : add chunk for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:13.0652905Z
+LobbyServer Information: 0 : Write() : write data for 53740413
+    ThreadId=18
+    DateTime=2024-03-16T12:48:13.0671010Z
+LobbyServer Information: 0 : Write() : add chunk for 13273752
+    ThreadId=19
+    DateTime=2024-03-16T12:48:13.0697049Z
+LobbyServer Information: 0 : Write() : write data for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:13.0720566Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(65615241) to client 26998456
+    ThreadId=18
+    DateTime=2024-03-16T12:48:13.0776118Z
+LobbyServer Information: 0 : Write() : add chunk for 53740413
+    ThreadId=18
+    DateTime=2024-03-16T12:48:13.0842369Z
+LobbyServer Information: 0 : Write() : write data for 53740413
+    ThreadId=18
+    DateTime=2024-03-16T12:48:13.0872182Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(13726014) to client 36736776
+    ThreadId=17
+    DateTime=2024-03-16T12:48:36.5754377Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(19208783) to client 26998456
+    ThreadId=18
+    DateTime=2024-03-16T12:48:36.5904545Z
+LobbyServer Information: 0 : Write() : add chunk for 53740413
+    ThreadId=18
+    DateTime=2024-03-16T12:48:36.5931685Z
+LobbyServer Information: 0 : Write() : add chunk for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:36.5948576Z
+LobbyServer Information: 0 : Write() : write data for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:36.5967009Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(48890572) to client 60644701
+    ThreadId=19
+    DateTime=2024-03-16T12:48:36.5989741Z
+LobbyServer Information: 0 : Write() : add chunk for 13273752
+    ThreadId=19
+    DateTime=2024-03-16T12:48:36.6014843Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(62474978) to client 36736776
+    ThreadId=17
+    DateTime=2024-03-16T12:48:42.7507470Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(2681320) to client 26998456
+    ThreadId=18
+    DateTime=2024-03-16T12:48:42.7636723Z
+LobbyServer Information: 0 : Write() : add chunk for 53740413
+    ThreadId=18
+    DateTime=2024-03-16T12:48:42.7721932Z
+LobbyServer Information: 0 : Write() : add chunk for 24004906
+    ThreadId=17
+    DateTime=2024-03-16T12:48:42.7774905Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(713423) to client 60644701
+    ThreadId=19
+    DateTime=2024-03-16T12:48:42.7821268Z
+LobbyServer Information: 0 : Write() : add chunk for 13273752
+    ThreadId=19
+    DateTime=2024-03-16T12:48:42.7841372Z

@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -10,8 +11,6 @@ namespace Sanguosha.Lobby.Server;
 
 public class Startup(IConfiguration configuration)
 {
-    public static readonly JwtSecurityTokenHandler JwtTokenHandler = new();
-    public static readonly SymmetricSecurityKey SecurityKey = new([.. Guid.NewGuid().ToByteArray(), .. Guid.NewGuid().ToByteArray()]);
     public IConfiguration Configuration { get; } = configuration;
     public void ConfigureServices(IServiceCollection services)
     {
@@ -32,12 +31,16 @@ public class Startup(IConfiguration configuration)
             {
                 options.TokenValidationParameters = new TokenValidationParameters()
                 {
-                    ValidateIssuer = false,
-                    ValidateAudience = false,
-                    ValidateIssuerSigningKey = false,
-                    ValidateLifetime = false,
-                    ClockSkew = TimeSpan.FromSeconds(5),
-                    RequireExpirationTime = false,
+                    ValidateIssuer = true,
+                    ValidIssuer = "SanguoshaServer",
+                    ValidateAudience = true,
+                    ValidAudience = "SanguoshaClients",
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey([.. Guid.Empty.ToByteArray(), .. Guid.Empty.ToByteArray()]),
+                    //ValidAlgorithms = ["HmacSha256"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.FromSeconds(30),
+                    RequireExpirationTime = true,
                 };
             });
     }
@@ -54,8 +57,8 @@ public class Startup(IConfiguration configuration)
             app.UseHsts();
         }
         app.UseRouting();
-        app.UseAuthorization();
         app.UseAuthentication();
+        app.UseAuthorization();
         app.UseEndpoints(endpoint =>
         {
             endpoint.MapGrpcService<LobbyService>();
@@ -63,15 +66,4 @@ public class Startup(IConfiguration configuration)
         });
     }
 
-    protected string GenerateJwtToken(string? name)
-    {
-        if (string.IsNullOrEmpty(name))
-        {
-            throw new InvalidOperationException("Name is not specified.");
-        }
-        var claims = new[] { new Claim(ClaimTypes.Name, name) };
-        var credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
-        var token = new JwtSecurityToken("SanguoshaServer", "SanguoshaClients", claims, expires: DateTime.Now.AddDays(1), signingCredentials: credentials);
-        return JwtTokenHandler.WriteToken(token);
-    }
 }

@@ -3,10 +3,13 @@ using Grpc.Core;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Net;
+using System.Security.Claims;
 using static Sanguosha.Lobby.Core.Lobby;
 
 namespace Sanguosha.Lobby.Server;
@@ -26,25 +29,11 @@ public partial class LobbyService(
 
 
 
-    public static IPAddress HostingIp { get; set; }
+    public static IPAddress HostingIp { get; set; } = IPAddress.Parse("127.0.0.1");
 
-    public static IPAddress PublicIp { get; set; }
+    public static IPAddress PublicIp { get; set; } = IPAddress.Parse("127.0.0.1");
 
     public static bool CheatEnabled { get; set; }
-
-
-    private LobbyPlayer? currentAccount;
-
-    private async Task<Account> Authenticate(string username, string password)
-    {
-        var result = from a in accountContext.Accounts where a.UserName.Equals(username) select a;
-        if (!await result.AnyAsync())
-            return null;
-        var account = await result.FirstAsync();
-        if (!account.Password.Equals(password))
-            return null;
-        return await result.FirstAsync();
-    }
 
     [AllowAnonymous]
     public override async Task<LoginReply> Login(LoginRequest request, ServerCallContext context)
@@ -58,8 +47,8 @@ public partial class LobbyService(
             .FirstOrDefaultAsync();
         if (authenticatedAccount is null)
             return Result(LoginStatus.InvalidUsernameAndPassword, null, null, null);
-        var password = passwordHasher.HashPassword(authenticatedAccount, request.Hash);
-        if (passwordHasher.VerifyHashedPassword(authenticatedAccount, authenticatedAccount.Password, password) != PasswordVerificationResult.Success)
+        //var password = passwordHasher.HashPassword(authenticatedAccount, request.Hash);
+        if (passwordHasher.VerifyHashedPassword(authenticatedAccount, authenticatedAccount.Password, request.Hash) != PasswordVerificationResult.Success)
             return Result(LoginStatus.InvalidUsernameAndPassword, null, null, null);
         if (lobbyManager.loggedInAccounts.TryGetValue(username, out var disconnected))
         {
@@ -92,7 +81,7 @@ public partial class LobbyService(
         }
         logger.LogInformation("{username} logged in", username);
 
-        return Result(LoginStatus.Success, authenticatedAccount, reconnectionString, reconnectionToken.TokenString.ToString());
+        return Result(LoginStatus.Success, authenticatedAccount, reconnectionString, reconnectionToken.TokenString.ToString(), GenerateJwtToken(authenticatedAccount.UserName));
     }
 
 
@@ -132,11 +121,11 @@ public partial class LobbyService(
 
     public override async Task<Empty> Logout(Empty request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         if (currentAccount == null)
             return new Empty();
         logger.LogTrace("{UserName} logged out", currentAccount.Account.UserName);
         await _Logout(currentAccount);
-        currentAccount = null;
         return new Empty();
     }
 
@@ -144,7 +133,6 @@ public partial class LobbyService(
     public override async Task<RoomsReply> GetRooms(BoolValue request, ServerCallContext context)
     {
         var notReadyRoomsOnly = request.Value;
-        if (currentAccount == null) return null;
         var result = new RoomsReply();
         result.Rooms.AddRange((from r in lobbyManager.rooms.Values
                                where !notReadyRoomsOnly || r.Room.State == RoomState.Waiting
@@ -155,6 +143,7 @@ public partial class LobbyService(
     public override async Task<Room> CreateRoom(CreateRoomRequest request, ServerCallContext context)
     {
         var settings = request.Settings;
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         if (currentAccount == null) return null;
         if (currentAccount.CurrentRoom != null)
         {
@@ -183,6 +172,7 @@ public partial class LobbyService(
     public override async Task<EnterRoomReply> EnterRoom(EnterRoomRequest request, ServerCallContext context)
     {
         string roomId = request.RoomId;
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         //bool spectate, string password
         Room room = null;
         if (currentAccount == null)
@@ -311,6 +301,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> ExitRoom(Empty request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         return Result(await _ExitRoom(currentAccount));
     }
 
@@ -357,6 +348,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> ChangeSeat(Int32Value request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         var newSeat = request.Value;
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
@@ -466,6 +458,7 @@ public partial class LobbyService(
     public override async Task<RoomOperationResultReplay> StartGame(Empty request, ServerCallContext context)
     {
 
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
         if (currentAccount.CurrentRoom == null)
@@ -548,6 +541,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> Ready(Empty request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
         if (currentAccount.CurrentRoom == null)
@@ -566,6 +560,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> CancelReady(Empty request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
         if (currentAccount.CurrentRoom == null)
@@ -584,6 +579,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> Kick(Int32Value request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         var seatNo = request.Value;
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
@@ -630,6 +626,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> OpenSeat(Int32Value request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         var seatNo = request.Value;
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
@@ -653,6 +650,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> CloseSeat(Int32Value request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         var seatNo = request.Value;
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
@@ -677,6 +675,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> Chat(StringValue request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         var message = request.Value;
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
@@ -745,6 +744,7 @@ public partial class LobbyService(
 
     public override async Task<RoomOperationResultReplay> Spectate(StringValue request, ServerCallContext context)
     {
+        var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
         string roomId = request.Value;
         if (currentAccount == null)
             return Result(RoomOperationResult.NotAutheticated);
@@ -814,12 +814,13 @@ public partial class LobbyService(
 
     private EnterRoomReply Result(RoomOperationResult roomOperationResult, Room? room = null) => new() { RoomOperationResult = roomOperationResult, Room = room };
 
-    private LoginReply Result(LoginStatus loginStatus, Account? retAccount = null, string? connectionString = null, string? tokenString = null) => new()
+    private LoginReply Result(LoginStatus loginStatus, Account? retAccount = null, string? connectionString = null, string? tokenString = null, string? loginToken = null) => new()
     {
         Status = loginStatus,
         RetAccount = retAccount,
         ReconnectionString = connectionString,
-        TokenString = tokenString
+        TokenString = tokenString,
+        LoginToken = loginToken
     };
 
     public override async Task Start(IAsyncStreamReader<ServerMessage> requestStream, IServerStreamWriter<ClientMessage> responseStream, ServerCallContext context)
@@ -835,6 +836,20 @@ public partial class LobbyService(
             }
         }
 
-        
+
+    }
+    
+    public static readonly JwtSecurityTokenHandler JwtTokenHandler = new();
+    public static readonly SymmetricSecurityKey SecurityKey = new([.. Guid.Empty.ToByteArray(), .. Guid.Empty.ToByteArray()]);
+    protected string GenerateJwtToken(string? name)
+    {
+        if (string.IsNullOrEmpty(name))
+        {
+            throw new InvalidOperationException("Name is not specified.");
+        }
+        var claims = new[] { new Claim(ClaimTypes.Name, name) };
+        var credentials = new SigningCredentials(SecurityKey, SecurityAlgorithms.HmacSha256);
+        var token = new JwtSecurityToken("SanguoshaServer", "SanguoshaClients", claims, DateTime.Now, DateTime.Now.AddDays(1), credentials);
+        return JwtTokenHandler.WriteToken(token);
     }
 }

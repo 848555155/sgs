@@ -11,6 +11,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json;
 using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
@@ -28,7 +29,8 @@ public partial class MainGame : Page
 {
     public MainGame()
     {
-        this.InitializeComponent();
+        //this.InitializeComponent();
+        this.LoadViewFromUri("/Controls;component/views/pages/maingame.xaml");
         ctrlGetCard.OnCardSelected += new CardSelectedHandler(ctrlGetCard_OnCardSelected);
         ctrlGetSkill.OnSkillNameSelected += new SkillNameSelectedHandler(ctrlGetSkill_OnSkillNameSelected);
         gameEndEventHandler = gameView_OnGameCompleted;
@@ -100,12 +102,14 @@ public partial class MainGame : Page
         {
             var pkt = NetworkClient.Receive();
             Trace.Assert(pkt is ConnectionResponse);
-            if ((pkt as ConnectionResponse).Settings.GameType == GameType.Pk1V1) _game = new Pk1v1Game();
-            if ((pkt as ConnectionResponse).Settings.GameType == GameType.RoleGame) _game = new RoleGame();
-
-            if (pkt is ConnectionResponse)
+            if (pkt is ConnectionResponse connectionResponse)
             {
-                _game.Settings = ((ConnectionResponse)pkt).Settings;
+                var gameSettings = JsonSerializer.Deserialize<GameSettings>(connectionResponse.Settings);
+                if (gameSettings.GameType == GameType.Pk1V1)
+                    _game = new Pk1v1Game();
+                if (gameSettings.GameType == GameType.RoleGame)
+                    _game = new RoleGame();
+                _game.Settings = gameSettings;
                 NetworkClient.SelfId = ((ConnectionResponse)pkt).SelfId;
             }
             else

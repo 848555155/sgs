@@ -13,8 +13,7 @@ public partial class SeatView : UserControl
 {
     public SeatView()
     {
-        this.InitializeComponent();
-
+        this.LoadViewFromUri("/Controls;component/views/lobby/seatview.xaml");
         // Insert code required on object creation below this point.
     }
 

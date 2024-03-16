@@ -1,17 +1,24 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Sanguosha.Lobby.Core;
 
 namespace Sanguosha.Lobby.Server;
 
 public class AccountContext(DbContextOptions<AccountContext> options) : DbContext(options)
 {
-    public DbSet<Core.Account> Accounts { get; set; }
+    public DbSet<Account> Accounts { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
-        modelBuilder.Entity<Core.Account>()
+        modelBuilder.Entity<Account>()
+            .ToTable("Accounts", schema: "Auth");
+        modelBuilder.Entity<Account>()
             .HasKey(a => a.UserName);
-        modelBuilder.Entity<Core.Account>()
+        modelBuilder.Entity<Account>()
+            .Property(a => a.UserName)
+            .HasColumnName("user_name");
+        modelBuilder.Entity<Account>()
             .Property(a => a.Password)
-            .IsRequired();
+            .IsRequired()
+            .HasColumnName("password");
     }
 }

@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Net;
 using System.Net.Sockets;
+using System.Text.Json;
 
 namespace Sanguosha.Core.Network;
 
@@ -142,7 +143,7 @@ public class Server
         }
         try
         {
-            var packet = new ConnectionResponse() { SelfId = indexC, Settings = game.Settings };
+            var packet = new ConnectionResponse() { SelfId = indexC, Settings = JsonSerializer.Serialize(game.Settings) };
             Serializer.SerializeWithLengthPrefix<GameDataPacket>(stream, packet, PrefixStyle.Base128);
             stream.Flush();
         }

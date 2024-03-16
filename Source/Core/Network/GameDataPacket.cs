@@ -451,7 +451,7 @@ public class ConnectionRequest : GameResponse
 public class ConnectionResponse : GameUpdate
 {
     [ProtoMember(1)]
-    public GameSettings Settings { get; set; }
+    public string Settings { get; set; }
     [ProtoMember(2)]
     public int SelfId { get; set; }
 }

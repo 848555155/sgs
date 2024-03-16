@@ -56,7 +56,7 @@
                 <EasingDoubleKeyFrame KeyTime="0:0:0.633" Value="300"/>
                 <EasingDoubleKeyFrame KeyTime="0:0:1.167" Value="0"/>
             </DoubleAnimationUsingKeyFrames>
-            <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="firedImage">
+            <!--<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="firedImage">
                 <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="{x:Static Visibility.Visible}"/>
             </ObjectAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Height)" Storyboard.TargetName="firedImage">
@@ -67,7 +67,7 @@
             </ThicknessAnimationUsingKeyFrames>
             <DoubleAnimationUsingKeyFrames Storyboard.TargetProperty="(FrameworkElement.Width)" Storyboard.TargetName="firedImage">
                 <EasingDoubleKeyFrame KeyTime="0:0:1.2" Value="410"/>
-            </DoubleAnimationUsingKeyFrames>
+            </DoubleAnimationUsingKeyFrames>-->
             <ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="(UIElement.Visibility)" Storyboard.TargetName="grid">
                 <DiscreteObjectKeyFrame KeyTime="0:0:1.2" Value="{x:Static Visibility.Visible}"/>
                 <DiscreteObjectKeyFrame KeyTime="0:0:2.1" Value="{x:Static Visibility.Visible}"/>
@@ -125,7 +125,7 @@
                         <GradientStop Color="#FF5A5A5A" Offset="0.647"/>
                     </LinearGradientBrush>
                 </Grid.OpacityMask>
-                <Sanguosha_UI_Animations:FiredImage x:Name="firedImage" FadeFactor ="3" Source="/Resources;component/Images/System/logoFrame.png"  Visibility="Hidden" />
+                <!--<Sanguosha_UI_Animations:FiredImage x:Name="firedImage" FadeFactor ="3" Source="/Resources;component/Images/System/logoFrame.png"  Visibility="Hidden" />-->
             </Grid>
             <Image x:Name="image2" Height="22" Source="/Resources;component/Images/System/logoUnderLine.png" Stretch="Fill" VerticalAlignment="Bottom" HorizontalAlignment="Center" Width="410" RenderTransformOrigin="0.5,0.5" Opacity="0">
                 <Image.RenderTransform>

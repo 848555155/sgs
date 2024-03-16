@@ -1,0 +1,314 @@
+Log starting
+LobbyServer Information: 0 : Server initialized with capacity 2
+    ThreadId=19
+    DateTime=2024-03-16T12:42:58.3224570Z
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+LobbyServer Information: 0 : Listener Started on 127.0.0.1 : 59272
+    ThreadId=18
+    DateTime=2024-03-16T12:42:58.3574151Z
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.NotifyMessage' to 57 byte message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.NotifyMessage' to 57 byte message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.RoomOperationResultReplay' to 0 byte message.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending DATA frame for stream ID 5 with length 62 and flags NONE.
+LobbyServer Information: 0 : Reconnection listener Started on 127.0.0.1 : 59272
+    ThreadId=23
+    DateTime=2024-03-16T12:42:58.4151976Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending DATA frame for stream ID 5 with length 62 and flags NONE.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executed endpoint 'gRPC - /LobbyCore.Lobby/StartGame'
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received PING frame for stream ID 0 with length 8 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending HEADERS frame for stream ID 33 with length 34 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending DATA frame for stream ID 33 with length 5 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending PING frame for stream ID 0 with length 8 and flags ACK.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending HEADERS frame for stream ID 33 with length 1 and flags END_STREAM, END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" received PING frame for stream ID 0 with length 8 and flags NONE.
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request finished HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/StartGame - 200 - application/grpc 330.0556ms
+LobbyServer Information: 0 : Client connected
+    ThreadId=24
+    DateTime=2024-03-16T12:42:59.0847779Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending PING frame for stream ID 0 with length 8 and flags ACK.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" received HEADERS frame for stream ID 35 with length 492 and flags END_HEADERS.
+LobbyServer Information: 0 : Client connected
+    ThreadId=15
+    DateTime=2024-03-16T12:42:59.1263373Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" received DATA frame for stream ID 35 with length 5 and flags NONE.
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request starting HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - application/grpc -
+Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware: Trace: All hosts are allowed.
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: 3 candidate(s) found for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" received DATA frame for stream ID 35 with length 0 and flags END_STREAM.
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - /LobbyCore.Lobby/GetRooms' with route pattern '/LobbyCore.Lobby/GetRooms' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented method for LobbyCore.Lobby' with route pattern 'LobbyCore.Lobby/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented service' with route pattern '{unimplementedService}/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Debug: Request matched endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Trace: The endpoint does not specify the IRequestSizeLimitMetadata.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: Successfully validated the token.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: AuthenticationScheme: Bearer was successfully authenticated.
+Microsoft.AspNetCore.Authorization.DefaultAuthorizationService: Debug: Authorization was successful.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executing endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Reading message.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON8T", Request id "0HN25MQ1SON8T:00000023": started reading request body.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON8T", Request id "0HN25MQ1SON8T:00000023": done reading request body.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Deserializing 0 byte message to 'Google.Protobuf.WellKnownTypes.BoolValue'.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Received message.
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.RoomsReply' to 106 byte message.
+LobbyServer Information: 0 : AddStream() : Add stream for 15489097
+    ThreadId=15
+    DateTime=2024-03-16T12:42:59.3975351Z
+LobbyServer Information: 0 : AddStream() : Add stream for 1746961
+    ThreadId=24
+    DateTime=2024-03-16T12:42:59.4109680Z
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executed endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(36865354) to client 46547408
+    ThreadId=20
+    DateTime=2024-03-16T12:42:59.4491162Z
+LobbyServer Information: 0 : Write() : add chunk for 15489097
+    ThreadId=20
+    DateTime=2024-03-16T12:42:59.4675055Z
+LobbyServer Information: 0 : Write() : write data for 15489097
+    ThreadId=20
+    DateTime=2024-03-16T12:42:59.4757477Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(64215605) to client 46547408
+    ThreadId=20
+    DateTime=2024-03-16T12:42:59.4914605Z
+LobbyServer Information: 0 : Write() : add chunk for 15489097
+    ThreadId=20
+    DateTime=2024-03-16T12:42:59.4957448Z
+LobbyServer Information: 0 : Write() : write data for 15489097
+    ThreadId=20
+    DateTime=2024-03-16T12:42:59.5261260Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(4186222) to client 53774414
+    ThreadId=22
+    DateTime=2024-03-16T12:42:59.5324631Z
+LobbyServer Information: 0 : Write() : add chunk for 34964627
+    ThreadId=22
+    DateTime=2024-03-16T12:42:59.5503348Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(30484843) to client 53774414
+    ThreadId=22
+    DateTime=2024-03-16T12:42:59.5585071Z
+LobbyServer Information: 0 : Write() : add chunk for 34964627
+    ThreadId=22
+    DateTime=2024-03-16T12:42:59.5634593Z
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request finished HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - 200 - application/grpc 317.3958ms
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending HEADERS frame for stream ID 35 with length 34 and flags END_HEADERS.
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(3196068) to client 16014673
+    ThreadId=21
+    DateTime=2024-03-16T12:42:59.5894532Z
+LobbyServer Information: 0 : Write() : add chunk for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:42:59.6028250Z
+LobbyServer Information: 0 : Write() : write data for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:42:59.6090660Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(16019832) to client 16014673
+    ThreadId=21
+    DateTime=2024-03-16T12:42:59.6202755Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received HEADERS frame for stream ID 19 with length 492 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending DATA frame for stream ID 35 with length 111 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON8T" sending HEADERS frame for stream ID 35 with length 1 and flags END_STREAM, END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received DATA frame for stream ID 19 with length 5 and flags NONE.
+LobbyServer Information: 0 : Write() : add chunk for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:42:59.7548526Z
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request starting HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - application/grpc -
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received DATA frame for stream ID 19 with length 0 and flags END_STREAM.
+LobbyServer Information: 0 : Write() : write data for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:42:59.9383104Z
+Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware: Trace: All hosts are allowed.
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: 3 candidate(s) found for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - /LobbyCore.Lobby/GetRooms' with route pattern '/LobbyCore.Lobby/GetRooms' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented method for LobbyCore.Lobby' with route pattern 'LobbyCore.Lobby/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented service' with route pattern '{unimplementedService}/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Debug: Request matched endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Trace: The endpoint does not specify the IRequestSizeLimitMetadata.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: Successfully validated the token.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: AuthenticationScheme: Bearer was successfully authenticated.
+Microsoft.AspNetCore.Authorization.DefaultAuthorizationService: Debug: Authorization was successful.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executing endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Reading message.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON92", Request id "0HN25MQ1SON92:00000013": started reading request body.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON92", Request id "0HN25MQ1SON92:00000013": done reading request body.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Deserializing 0 byte message to 'Google.Protobuf.WellKnownTypes.BoolValue'.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Received message.
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.RoomsReply' to 106 byte message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executed endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request finished HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - 200 - application/grpc 604.2347ms
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending HEADERS frame for stream ID 19 with length 34 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending DATA frame for stream ID 19 with length 111 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending HEADERS frame for stream ID 19 with length 1 and flags END_STREAM, END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received HEADERS frame for stream ID 21 with length 492 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received DATA frame for stream ID 21 with length 5 and flags NONE.
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request starting HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - application/grpc -
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received DATA frame for stream ID 21 with length 0 and flags END_STREAM.
+Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware: Trace: All hosts are allowed.
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: 3 candidate(s) found for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - /LobbyCore.Lobby/GetRooms' with route pattern '/LobbyCore.Lobby/GetRooms' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented method for LobbyCore.Lobby' with route pattern 'LobbyCore.Lobby/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented service' with route pattern '{unimplementedService}/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Debug: Request matched endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Trace: The endpoint does not specify the IRequestSizeLimitMetadata.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: Successfully validated the token.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: AuthenticationScheme: Bearer was successfully authenticated.
+Microsoft.AspNetCore.Authorization.DefaultAuthorizationService: Debug: Authorization was successful.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executing endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Reading message.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON92", Request id "0HN25MQ1SON92:00000015": started reading request body.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON92", Request id "0HN25MQ1SON92:00000015": done reading request body.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Deserializing 0 byte message to 'Google.Protobuf.WellKnownTypes.BoolValue'.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Received message.
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.RoomsReply' to 106 byte message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executed endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request finished HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - 200 - application/grpc 154.3806ms
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending HEADERS frame for stream ID 21 with length 34 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending DATA frame for stream ID 21 with length 111 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending HEADERS frame for stream ID 21 with length 1 and flags END_STREAM, END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received PING frame for stream ID 0 with length 8 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending PING frame for stream ID 0 with length 8 and flags ACK.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8T" reset.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8S" reset.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON8T" is closed. The last processed stream ID was 35.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON8S" is closed. The last processed stream ID was 1.
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(22508458) to client 46547408
+    ThreadId=20
+    DateTime=2024-03-16T12:43:05.0835603Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(16478929) to client 16014673
+    ThreadId=21
+    DateTime=2024-03-16T12:43:05.1440969Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(16518145) to client 53774414
+    ThreadId=22
+    DateTime=2024-03-16T12:43:05.1468410Z
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8T" sending RST because: "The client closed the connection."
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: The connection queue processing loop for 0HN25MQ1SON8S completed.
+Microsoft.AspNetCore.Server.Kestrel.BadRequests: Debug: Connection id "0HN25MQ1SON8T" request processing ended abnormally.
+
+Microsoft.AspNetCore.Connections.ConnectionResetException: 远程主机强迫关闭了一个现有的连接。
+ ---> System.Net.Sockets.SocketException (10054): 远程主机强迫关闭了一个现有的连接。
+   --- End of inner exception stack trace ---
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.DuplexPipeStream.ReadAsyncInternal(Memory`1 destination, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReadAsyncInternal[TIOAdapter](Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.IO.Pipelines.StreamPipeReader.<ReadInternalAsync>g__Core|40_0(StreamPipeReader reader, Nullable`1 minimumSize, CancellationTokenSource tokenSource, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2.Http2Connection.CopyPipeAsync(PipeReader reader, PipeWriter writer)
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2.Http2Connection.ProcessRequestsAsync[TContext](IHttpApplication`1 application)
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8S" sending FIN because: "The Socket transport's send loop completed gracefully."
+LobbyServer Information: 0 : Write() : add chunk for 15489097
+    ThreadId=20
+    DateTime=2024-03-16T12:43:05.4613463Z
+LobbyServer Information: 0 : Write() : add chunk for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:43:05.4866201Z
+LobbyServer Information: 0 : Write() : add chunk for 34964627
+    ThreadId=22
+    DateTime=2024-03-16T12:43:05.5612114Z
+Microsoft.AspNetCore.Server.Kestrel.Connections: Debug: Connection id "0HN25MQ1SON8S" stopped.
+LobbyServer Information: 0 : Write() : write data for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:43:05.5867041Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received HEADERS frame for stream ID 23 with length 492 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received DATA frame for stream ID 23 with length 5 and flags NONE.
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request starting HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - application/grpc -
+Microsoft.AspNetCore.HostFiltering.HostFilteringMiddleware: Trace: All hosts are allowed.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received DATA frame for stream ID 23 with length 0 and flags END_STREAM.
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: 3 candidate(s) found for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - /LobbyCore.Lobby/GetRooms' with route pattern '/LobbyCore.Lobby/GetRooms' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented method for LobbyCore.Lobby' with route pattern 'LobbyCore.Lobby/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.Matching.DfaMatcher: Debug: Endpoint 'gRPC - Unimplemented service' with route pattern '{unimplementedService}/{unimplementedMethod}' is valid for the request path '/LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Debug: Request matched endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Routing.EndpointRoutingMiddleware: Trace: The endpoint does not specify the IRequestSizeLimitMetadata.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: Successfully validated the token.
+Microsoft.AspNetCore.Authentication.JwtBearer.JwtBearerHandler: Debug: AuthenticationScheme: Bearer was successfully authenticated.
+Microsoft.AspNetCore.Authorization.DefaultAuthorizationService: Debug: Authorization was successful.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executing endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Reading message.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON92", Request id "0HN25MQ1SON92:00000017": started reading request body.
+Microsoft.AspNetCore.Server.Kestrel: Debug: Connection id "0HN25MQ1SON92", Request id "0HN25MQ1SON92:00000017": done reading request body.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Deserializing 0 byte message to 'Google.Protobuf.WellKnownTypes.BoolValue'.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Received message.
+Grpc.AspNetCore.Server.ServerCallHandler: Debug: Sending message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Serialized 'Sanguosha.Lobby.Core.RoomsReply' to 106 byte message.
+Grpc.AspNetCore.Server.ServerCallHandler: Trace: Message sent.
+Microsoft.AspNetCore.Routing.EndpointMiddleware: Information: Executed endpoint 'gRPC - /LobbyCore.Lobby/GetRooms'
+Microsoft.AspNetCore.Hosting.Diagnostics: Information: Request finished HTTP/2 POST https://localhost:50456/LobbyCore.Lobby/GetRooms - 200 - application/grpc 240.2425ms
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending HEADERS frame for stream ID 23 with length 34 and flags END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending DATA frame for stream ID 23 with length 111 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending HEADERS frame for stream ID 23 with length 1 and flags END_STREAM, END_HEADERS.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" received PING frame for stream ID 0 with length 8 and flags NONE.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Trace: Connection id "0HN25MQ1SON92" sending PING frame for stream ID 0 with length 8 and flags ACK.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON90" reset.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON91" reset.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON90" is closed. The last processed stream ID was 1.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON91" sending FIN because: "The Socket transport's send loop completed gracefully."
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON91" is closed. The last processed stream ID was 1.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: The connection queue processing loop for 0HN25MQ1SON90 completed.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8U" reset.
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(34170761) to client 46547408
+    ThreadId=20
+    DateTime=2024-03-16T12:43:11.7321917Z
+LobbyServer Information: 0 : Write() : add chunk for 15489097
+    ThreadId=20
+    DateTime=2024-03-16T12:43:11.7518100Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: The connection queue processing loop for 0HN25MQ1SON91 completed.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON90" sending FIN because: "The Socket transport's send loop completed gracefully."
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON8U" is closed. The last processed stream ID was 1.
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(57338541) to client 16014673
+    ThreadId=21
+    DateTime=2024-03-16T12:43:11.7841124Z
+LobbyServer Information: 0 : ServerGamer : Send OnlineStatusUpdate(59792559) to client 53774414
+    ThreadId=22
+    DateTime=2024-03-16T12:43:11.8010018Z
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8V" reset.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON92" reset.
+Microsoft.AspNetCore.Server.Kestrel.Connections: Debug: Connection id "0HN25MQ1SON91" stopped.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON8V" is closed. The last processed stream ID was 1.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8V" sending FIN because: "The Socket transport's send loop completed gracefully."
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON8U" sending FIN because: "The Socket transport's send loop completed gracefully."
+LobbyServer Information: 0 : Write() : add chunk for 1746961
+    ThreadId=21
+    DateTime=2024-03-16T12:43:11.8997739Z
+LobbyServer Information: 0 : Write() : add chunk for 34964627
+    ThreadId=22
+    DateTime=2024-03-16T12:43:11.9152077Z
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: The connection queue processing loop for 0HN25MQ1SON8U completed.
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: The connection queue processing loop for 0HN25MQ1SON8V completed.
+Microsoft.AspNetCore.Server.Kestrel.BadRequests: Debug: Connection id "0HN25MQ1SON92" request processing ended abnormally.
+
+Microsoft.AspNetCore.Connections.ConnectionResetException: 远程主机强迫关闭了一个现有的连接。
+ ---> System.Net.Sockets.SocketException (10054): 远程主机强迫关闭了一个现有的连接。
+   --- End of inner exception stack trace ---
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.DuplexPipeStream.ReadAsyncInternal(Memory`1 destination, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.EnsureFullTlsFrameAsync[TIOAdapter](CancellationToken cancellationToken, Int32 estimatedSize)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.Net.Security.SslStream.ReadAsyncInternal[TIOAdapter](Memory`1 buffer, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at System.IO.Pipelines.StreamPipeReader.<ReadInternalAsync>g__Core|40_0(StreamPipeReader reader, Nullable`1 minimumSize, CancellationTokenSource tokenSource, CancellationToken cancellationToken)
+   at System.Runtime.CompilerServices.PoolingAsyncValueTaskMethodBuilder`1.StateMachineBox`1.System.Threading.Tasks.Sources.IValueTaskSource<TResult>.GetResult(Int16 token)
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2.Http2Connection.CopyPipeAsync(PipeReader reader, PipeWriter writer)
+   at System.IO.Pipelines.Pipe.GetReadResult(ReadResult& result)
+   at System.IO.Pipelines.Pipe.GetReadAsyncResult()
+   at Microsoft.AspNetCore.Server.Kestrel.Core.Internal.Http2.Http2Connection.ProcessRequestsAsync[TContext](IHttpApplication`1 application)
+Microsoft.AspNetCore.Server.Kestrel.Http2: Debug: Connection id "0HN25MQ1SON92" is closed. The last processed stream ID was 23.
+Microsoft.AspNetCore.Server.Kestrel.Connections: Debug: Connection id "0HN25MQ1SON90" stopped.
+Microsoft.AspNetCore.Server.Kestrel.Connections: Debug: Connection id "0HN25MQ1SON8U" stopped.
+Microsoft.AspNetCore.Server.Kestrel.Connections: Debug: Connection id "0HN25MQ1SON8V" stopped.
+Microsoft.AspNetCore.Server.Kestrel.Transport.Sockets: Debug: Connection id "0HN25MQ1SON92" sending RST because: "The client closed the connection."

@@ -33,7 +33,7 @@ public class DeadRoomCleanupService(ILogger<DeadRoomCleanupService> logger, Lobb
                 {
                     if (rm.Value.Room.Seats.Any(st => st.Account == acc.Value.Account)
                         || !rm.Value.Room.Seats.Any(st => st.State == SeatState.Host)
-                        || rm.Value.Room.Seats.Any(st => !lobbyManager.loggedInAccounts.ContainsKey(st.Account!.UserName))
+                        || rm.Value.Room.Seats.Any(st => !lobbyManager.loggedInAccounts.ContainsKey(st.Account.UserName))
                         )
                     {
                         lobbyManager.rooms.Remove(rm.Key, out var _);

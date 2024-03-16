@@ -88,6 +88,7 @@ message LoginReply
 	google.protobuf.StringValue reconnection_string = 3;
 	// TokenString type change from guid to string
 	google.protobuf.StringValue token_string = 4;
+    string login_token = 5;
 }
 
 message RoomsReply
@@ -98,14 +99,14 @@ message RoomsReply
 message CreateRoomRequest
 {
 	RoomSettings settings = 1;
-	string password = 2;
+	google.protobuf.StringValue password = 2;
 }
 
 message EnterRoomRequest
 {
 	string room_id = 1;
 	bool spectate = 2;
-	string password = 3;
+	google.protobuf.StringValue password = 3;
 }
 
 message EnterRoomReply
@@ -152,9 +153,46 @@ enum LoginStatus
     UnknownFailure = 3;
 }
 
+enum SeatState
+{
+    Closed = 0;
+    Empty = 1;
+    GuestTaken= 2;
+    GuestReady= 3;
+    Host= 4;
+    Gaming = 5;
+}
+
+message Seat
+{
+    SeatState state = 1;
+    Account account = 2;
+}
+
+enum RoomType
+{
+    Role = 0;
+}
+
+enum RoomState
+{
+    Waiting = 0;
+    RoomStateGaming = 1;
+}
+
+
 message Room
 {
-
+    string id = 1;
+    string name = 2;
+    RoomType type = 3;
+    RoomState state = 4;
+    bool spectator_disabled = 5;
+    bool chat_disabled = 6;
+    repeated Seat seats = 7;
+    google.protobuf.StringValue ip_address = 8;
+    int32 ip_port = 9;
+    RoomSettings settings = 10;
 }
 
 enum EnabledPackages // Change this to long if more package types are added!

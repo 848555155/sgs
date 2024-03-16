@@ -105,8 +105,8 @@ public partial class MainPlayerView : PlayerViewBase
             {
                 deathIcon.BeginAnimation(OpacityProperty, null);
                 deathIcon.Opacity = 0.0d;
-                deathEffect.BeginAnimation(Effects.MonochromeEffect.StrengthProperty, null);
-                deathEffect.Strength = 0.0d;
+                //deathEffect.BeginAnimation(Effects.MonochromeEffect.StrengthProperty, null);
+                //deathEffect.Strength = 0.0d;
                 deathAnimation.Stop();
                 deathAnimation.Remove(this);
             }
