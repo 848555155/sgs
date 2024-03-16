@@ -84,10 +84,10 @@ message LoginRequest
 message LoginReply
 {
 	LoginStatus status = 1;
-	optional Account retAccount =  2;
-	optional string reconnection_string = 3;
+	Account retAccount =  2;
+	google.protobuf.StringValue reconnection_string = 3;
 	// TokenString type change from guid to string
-	optional string token_string = 4;
+	google.protobuf.StringValue token_string = 4;
 }
 
 message RoomsReply

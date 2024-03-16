@@ -5,10 +5,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
-using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Net;
-using System.ServiceModel;
 using static Sanguosha.Lobby.Core.Lobby;
 
 namespace Sanguosha.Lobby.Server;
@@ -52,14 +50,16 @@ public partial class LobbyService(
     public override async Task<LoginReply> Login(LoginRequest request, ServerCallContext context)
     {
         var username = request.Username;
-        var password = request.Hash;
         LobbyPlayer currentAccount;
         string? reconnectionString = null;
         var reconnectionToken = new LoginToken();
         var authenticatedAccount = await accountContext.Accounts
             .Where(account => account.UserName.Contains(request.Username))
             .FirstOrDefaultAsync();
-        if (authenticatedAccount is null || passwordHasher.VerifyHashedPassword(authenticatedAccount, authenticatedAccount.Password, password) != PasswordVerificationResult.Success)
+        if (authenticatedAccount is null)
+            return Result(LoginStatus.InvalidUsernameAndPassword, null, null, null);
+        var password = passwordHasher.HashPassword(authenticatedAccount, request.Hash);
+        if (passwordHasher.VerifyHashedPassword(authenticatedAccount, authenticatedAccount.Password, password) != PasswordVerificationResult.Success)
             return Result(LoginStatus.InvalidUsernameAndPassword, null, null, null);
         if (lobbyManager.loggedInAccounts.TryGetValue(username, out var disconnected))
         {
@@ -784,7 +784,9 @@ public partial class LobbyService(
         {
             return Result(LoginStatus.InvalidUsernameAndPassword);
         }
-        await accountContext.Accounts.AddAsync(new Account() { UserName = userName, Password = p });
+        var account = new Account() { UserName = userName, Password = p };
+        account.Password = passwordHasher.HashPassword(account, account.Password);
+        await accountContext.Accounts.AddAsync(account);
         await accountContext.SaveChangesAsync();
         return Result(LoginStatus.Success);
     }

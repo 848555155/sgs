@@ -226,7 +226,7 @@ public partial class Login : Page, IDisposable
 
         BackgroundWorker worker = new BackgroundWorker();
 
-        worker.DoWork += (o, ea) =>
+        worker.DoWork += async (o, ea) =>
         {
             try
             {
@@ -234,7 +234,7 @@ public partial class Login : Page, IDisposable
 
                 _LogOut();
                 var lobbyModel = LobbyViewModel.Instance;
-                var channel = GrpcChannel.ForAddress(string.Format("http://localhost:50456"));
+                var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
                 server = new Lobby.Core.Lobby.LobbyClient(channel);
                 // todo change to GRPC
                 //var binding = new NetTcpBinding();
@@ -253,7 +253,7 @@ public partial class Login : Page, IDisposable
                 });
                 ret = stat.RetAccount;
                 reconnect = stat.ReconnectionString;
-                token = new() { TokenString = Guid.Parse(stat.TokenString) };
+                token = stat.TokenString is not null ? new() { TokenString = Guid.Parse(stat.TokenString) }: new LoginToken();
                 if (stat.Status == LoginStatus.Success)
                 {
                     LobbyViewModel.Instance.CurrentAccount = ret;
@@ -336,7 +336,7 @@ public partial class Login : Page, IDisposable
         //var channelFactory = new DuplexChannelFactory<ILobbyService>(typeof(LobbyViewModel), binding, endpoint);
         //LobbyViewModel.Instance.Connection = channelFactory.CreateChannel();
 
-        var channel = GrpcChannel.ForAddress(string.Format("http://localhost:50456"));
+        var channel = GrpcChannel.ForAddress(string.Format("https://localhost:50456"));
         LobbyViewModel.Instance.Connection = new Lobby.Core.Lobby.LobbyClient(channel);
 
         Account ret;

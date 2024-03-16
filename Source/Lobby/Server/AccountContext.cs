@@ -10,5 +10,8 @@ public class AccountContext(DbContextOptions<AccountContext> options) : DbContex
     {
         modelBuilder.Entity<Core.Account>()
             .HasKey(a => a.UserName);
+        modelBuilder.Entity<Core.Account>()
+            .Property(a => a.Password)
+            .IsRequired();
     }
 }
