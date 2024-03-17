@@ -67,6 +67,7 @@
     <Resource Include="Views\Resources\Miscellaneous\FireMap.png" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
     <PackageReference Include="Extended.Wpf.Toolkit" Version="4.6.0" />
     <PackageReference Include="NetCore5.0.Microsoft.Expression.Drawing" Version="1.0.0" />
     <PackageReference Include="Microsoft.Xaml.Behaviors.Wpf" Version="1.1.77" />

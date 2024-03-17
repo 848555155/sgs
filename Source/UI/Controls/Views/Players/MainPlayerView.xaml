@@ -9,7 +9,8 @@
              xmlns:anim="clr-namespace:Sanguosha.UI.Animations;assembly=Animations"
              xmlns:ei="http://schemas.microsoft.com/xaml/behaviors" xmlns:i="http://schemas.microsoft.com/xaml/behaviors" 
              xmlns:Sanguosha_UI_Effects="clr-namespace:Sanguosha.UI.Effects;assembly=Effects" xmlns:System="clr-namespace:System;assembly=mscorlib" 
-             x:Class="Sanguosha.UI.Controls.MainPlayerView"
+    d:DataContext="{d:DesignInstance Type=local:PlayerViewModel}"
+    x:Class="Sanguosha.UI.Controls.MainPlayerView"
              mc:Ignorable="d"
              Height="170"
              d:DesignWidth="900">

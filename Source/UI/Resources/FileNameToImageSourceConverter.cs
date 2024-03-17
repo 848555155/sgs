@@ -43,9 +43,8 @@ public class FileNameToImageSourceConverter : IMultiValueConverter
         if (resource != null)
         {
             if (CropRect == null) return resource;
-            else if (resource is BitmapSource)
+            else if (resource is BitmapSource bitmap)
             {
-                BitmapSource bitmap = resource as BitmapSource;
                 var result = new CroppedBitmap(bitmap, CropRect);
                 result.Freeze();
                 return result;

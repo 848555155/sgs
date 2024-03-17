@@ -23,6 +23,7 @@ public partial class MainPlayerView : PlayerViewBase
     public MainPlayerView()
     {
         InitializeComponent();
+        
         this.DataContextChanged += new DependencyPropertyChangedEventHandler(PlayerInfoView_DataContextChanged);
         _OnPropertyChanged = new PropertyChangedEventHandler(model_PropertyChanged);
         handCardArea.OnHandCardMoved += handCardArea_OnHandCardMoved;
@@ -122,7 +123,7 @@ public partial class MainPlayerView : PlayerViewBase
 
     public override void UpdateImpersonateStatus(bool isPrimaryHero)
     {
-        Sanguosha.UI.Resources.FileNameToImageSourceConverter converter = new UI.Resources.FileNameToImageSourceConverter();
+        Resources.FileNameToImageSourceConverter converter = new Resources.FileNameToImageSourceConverter();
 
         var hero = isPrimaryHero ? PlayerModel.Hero1Model : PlayerModel.Hero2Model;
 
@@ -134,7 +135,7 @@ public partial class MainPlayerView : PlayerViewBase
             converter.StringFormat = "Resources/Images/Heroes/Full/{0}.png";
             converter.ResourceKeyFormat = "Hero.{0}.Image";
             converter.CropRect = new Int32Rect(71, 28, 145, 145);
-            ImageSource source = converter.Convert(new object[] { this, hero.ImpersonatedHeroName }, typeof(ImageSource), null, null) as ImageSource;
+            ImageSource source = converter.Convert([this, hero.ImpersonatedHeroName], typeof(ImageSource), null, null) as ImageSource;
             if (isPrimaryHero)
                 impersonateEffect.Texture2 = new ImageBrush(source);
             else

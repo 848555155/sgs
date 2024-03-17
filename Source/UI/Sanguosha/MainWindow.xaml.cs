@@ -12,10 +12,10 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
-#if !DEBUG
-        automaticUpdater.ForceCheckForUpdate();
-        automaticUpdater.ReadyToBeInstalled += (o, e) => { automaticUpdater.InstallNow(); };
-#endif
+//#if !DEBUG
+//        automaticUpdater.ForceCheckForUpdate();
+//        automaticUpdater.ReadyToBeInstalled += (o, e) => { automaticUpdater.InstallNow(); };
+//#endif
         Controls.LobbyView.GlobalNavigationService = this.MainFrame.NavigationService;
         this.MainFrame.NavigationService.Navigated += NavigationService_Navigated;
         MainFrame.Navigate(Login.Instance);
