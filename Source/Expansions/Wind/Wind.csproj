@@ -6,21 +6,14 @@
     <RootNamespace>Sanguosha.Expansions.Wind</RootNamespace>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <OutputPath>..\..\..\bin\Debug\</OutputPath>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <OutputPath>..\..\..\bin\Release\</OutputPath>
-    <DefineConstants>
-    </DefineConstants>
-  </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Core\Core.csproj" />
     <ProjectReference Include="..\Basic\Basic.csproj" />
     <ProjectReference Include="..\Battle\Battle.csproj" />
   </ItemGroup>
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="if not exist $(TargetDir)\Resources\Texts mkdir  $(TargetDir)\Resources\Texts
-copy $(ProjectDir)\*.xaml $(TargetDir)\Resources\Texts" Condition="$([MSBuild]::IsOSPlatform('Windows'))"/>
-  </Target>
+  <ItemGroup>
+    <None Include="Resources\**">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
 </Project>
