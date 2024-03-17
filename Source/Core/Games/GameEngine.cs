@@ -38,14 +38,24 @@ public class GameEngine
 
     public static void LoadExpansions(string folderPath)
     {
+        List<string> packags = ["Assassin", "Basic", "Battle", "Fire", "Hills", "OverKnightFame11", "OverKnightFame11", "OverKnightFame11", "PK1v1", "SP", "StarSP", "Wind", "Woods"];
+        // should not load all assembly because bug of sqlclient
         Trace.TraceInformation("LOADING CARDSETS FROM : " + folderPath);
-        var files = (from f in Directory.GetFiles(folderPath) where f.EndsWith(".dll") select f).OrderBy(
-                    (a) => { int idx = Properties.Settings.Default.LoadSequence.IndexOf(Path.GetFileNameWithoutExtension(a).ToLower()); if (idx < 0) return int.MaxValue; return idx; });
+
+        var list = (from f in Directory.GetFiles(folderPath) where f.EndsWith(".dll") select f).ToList();
+        var files = (from f in Directory.GetFiles(folderPath) where f.EndsWith(".dll") select f)
+            .Where(f => packags.Any(p => f.EndsWith(p + ".dll")))
+            .OrderBy(
+                    (a) =>
+                    { 
+                        int idx = Properties.Settings.Default.LoadSequence.IndexOf(Path.GetFileNameWithoutExtension(a).ToLower()); 
+                        return idx < 0 ? int.MaxValue : idx; 
+                    });
         foreach (var file in files)
         {
             try
             {
-                Assembly assembly = Assembly.LoadFile(Path.GetFullPath(file));
+                Assembly assembly = Assembly.LoadFrom(Path.GetFullPath(file));
                 var types = assembly.GetTypes();
                 foreach (var type in types)
                 {
