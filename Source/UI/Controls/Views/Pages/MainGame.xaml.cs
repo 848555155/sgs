@@ -125,13 +125,15 @@ public partial class MainGame : Page
         Game.CurrentGameOverride = _game;
         if (_networkClient == null)
         {
-            _game.Settings = new GameSettings();
-            _game.Settings.Accounts = new List<Account>();
-            _game.Settings.NumberOfDefectors = 1;
-            _game.Settings.NumHeroPicks = 3;
-            _game.Settings.DualHeroMode = false;
-            _game.Settings.TotalPlayers = 8;
-            _game.Settings.TimeOutSeconds = 15;
+            _game.Settings = new GameSettings
+            {
+                Accounts = new List<Account>(),
+                NumberOfDefectors = 1,
+                NumHeroPicks = 3,
+                DualHeroMode = false,
+                TotalPlayers = 8,
+                TimeOutSeconds = 15
+            };
             for (int i = 0; i < 8; i++)
             {
                 _game.Settings.Accounts.Add(new Account() { UserName = "Robot" + i });

@@ -1238,7 +1238,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
 
         if (currentUsageVerifier.Helper.IsActionStage)
         {
-            cancelCardUsageCommand.CanExecuteStatus = (cards.Count != 0 || players.Count != 0 || command != null);
+            cancelCardUsageCommand.CanExecuteStatus = cards.Count != 0 || players.Count != 0 || command != null;
         }
 
         if (command != null)
@@ -1723,7 +1723,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
                                            int timeOutSeconds,
                                            CardChoiceRearrangeCallback callback)
     {
-        bool isSingleResult = (resultDeckMaximums.Sum() == 1);
+        bool isSingleResult = resultDeckMaximums.Sum() == 1;
 
         var choiceModel = new CardChoiceViewModel();
 

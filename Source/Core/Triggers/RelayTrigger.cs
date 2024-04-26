@@ -86,10 +86,7 @@ public class RelayTrigger : Trigger
         if (!CheckConditions(gameEvent, eventArgs)) return;
         if (CanExecute(Owner, gameEvent, eventArgs))
         {
-            if (Execute != null)
-            {
-                Execute(Owner, gameEvent, eventArgs);
-            }
+            Execute?.Invoke(Owner, gameEvent, eventArgs);
         }
     }
 }

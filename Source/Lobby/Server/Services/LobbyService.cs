@@ -40,7 +40,7 @@ public partial class LobbyService(
     {
         var username = request.Username;
         LobbyPlayer currentAccount;
-        string? reconnectionString = null;
+        string reconnectionString = string.Empty;
         var reconnectionToken = new LoginToken();
         var authenticatedAccount = await accountContext.Accounts
             .Where(account => account.UserName.Contains(request.Username))
@@ -144,7 +144,6 @@ public partial class LobbyService(
     {
         var settings = request.Settings;
         var currentAccount = lobbyManager.loggedInAccounts[context.GetHttpContext().User.Identity?.Name!];
-        if (currentAccount == null) return null;
         if (currentAccount.CurrentRoom != null)
         {
             return null;

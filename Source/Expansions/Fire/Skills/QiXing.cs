@@ -38,8 +38,7 @@ public class QiXing : TriggerSkill
         List<Player> players;
         if (!Game.CurrentGame.UiProxies[Owner].AskForCardUsage(new CardUsagePrompt("QiXing", 7), new QiXingVerifier(7), out skill, out cards, out players))
         {
-            cards = new List<Card>();
-            cards.AddRange(Game.CurrentGame.Decks[Owner, DeckType.Hand].GetRange(0, 7));
+            cards = [.. Game.CurrentGame.Decks[Owner, DeckType.Hand].GetRange(0, 7)];
         }
         CardsMovement move = new CardsMovement();
         move.Cards = new List<Card>(cards);
@@ -86,13 +85,13 @@ public class QiXing : TriggerSkill
         { AskForConfirmation = false };
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return Game.CurrentGame.Decks[Owner, QiXingDeck].Count > 0; },
+            (p, e, a) => Game.CurrentGame.Decks[Owner, QiXingDeck].Count > 0,
             AfterDraw,
             TriggerCondition.OwnerIsSource
         );
         var trigger3 = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { p[Player.DealAdjustment] += 7; },
+            (p, e, a) => p[Player.DealAdjustment] += 7,
             TriggerCondition.OwnerIsSource
         )
         { AskForConfirmation = false, IsAutoNotify = false };

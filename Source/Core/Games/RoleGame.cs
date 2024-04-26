@@ -505,7 +505,7 @@ public class RoleGame : Game
 
             foreach (Player pp in game.Players)
             {
-                game.HandCardVisibility.Add(pp, new List<Player>() { pp });
+                game.HandCardVisibility.Add(pp, [pp]);
             }
 
             int numberOfDefectors = game.Players.Count > 2 ? game.Settings.NumberOfDefectors : 1;
@@ -604,8 +604,8 @@ public class RoleGame : Game
 
             if (game.IsClient)
             {
-                int count = game.Decks[null, RoleDeckType].Count;
-                game.Decks[null, RoleDeckType].Clear();
+                int count = game.Decks[RoleDeckType].Count;
+                game.Decks[RoleDeckType].Clear();
                 while (count-- > 0)
                 {
                     var c = new Card(SuitType.None, 0, new UnknownRoleCardHandler())
@@ -615,7 +615,7 @@ public class RoleGame : Game
                     };
                     game.Decks[null, RoleDeckType].Add(c);
                 }
-                game.SyncImmutableCardAll(game.Decks[null, RoleDeckType][0]);
+                game.SyncImmutableCardAll(game.Decks[RoleDeckType][0]);
             }
             else
             {
@@ -629,7 +629,7 @@ public class RoleGame : Game
                 }
             }
 
-            int i = 0;
+            int i;
             for (i = 0; i < game.Players.Count; i++)
             {
                 game.SyncImmutableCard(game.Players[i], game.Decks[null, RoleDeckType][i]);
@@ -640,7 +640,7 @@ public class RoleGame : Game
             foreach (Player p in game.Players)
             {
                 CardsMovement move = new CardsMovement();
-                move.Cards = new List<Card>() { game.Decks[null, RoleDeckType][i] };
+                move.Cards = [game.Decks[null, RoleDeckType][i]];
                 move.To = new DeckPlace(p, RoleDeckType);
                 moves.Add(move);
                 i++;
@@ -664,7 +664,7 @@ public class RoleGame : Game
 
             GameDelays.Delay(GameDelays.RoleDistribute);
 
-            game.NotificationProxy.NotifyLogEvent(new LogEvent("HerosInitialization"), new List<Player>());
+            game.NotificationProxy.NotifyLogEvent(new LogEvent("HerosInitialization"), []);
             if (!game.IsClient) GameDelays.Delay(GameDelays.ServerSideCompensation);
 
             //hero allocation
@@ -684,7 +684,7 @@ public class RoleGame : Game
                 }
             }
             int numHeroes = CurrentGame.Settings.DualHeroMode ? 2 : 1;
-            List<Card> rulerDraw = new List<Card>();
+            List<Card> rulerDraw = [];
             int toDraw = 12 + (CurrentGame.Settings.DualHeroMode ? 3 : 0);
             for (int rc = 0; rc < toDraw; rc++)
             {
@@ -693,7 +693,7 @@ public class RoleGame : Game
             }
             game.SyncImmutableCards(game.Players[rulerId], rulerDraw);
             DeckType tempHero = DeckType.Register("TempHero");
-            game.Decks[null, tempHero].AddRange(rulerDraw);
+            game.Decks[tempHero].AddRange(rulerDraw);
             Trace.TraceInformation("Ruler is {0}", rulerId);
             game.Players[rulerId].Role = Role.Ruler;
             List<DeckPlace> sourceDecks = [new DeckPlace(null, tempHero)];
@@ -733,7 +733,7 @@ public class RoleGame : Game
                 Trace.TraceInformation("Assign {0} to player {1}", hero2.Name, rulerId);
                 CurrentGame.Players[rulerId].Hero2 = hero2;
             }
-            CurrentGame.Players[rulerId].MaxHealth = CurrentGame.Players[rulerId].Health = (game as RoleGame).GetMaxHealth(CurrentGame.Players[rulerId]);
+            CurrentGame.Players[rulerId].MaxHealth = CurrentGame.Players[rulerId].Health = game.GetMaxHealth(CurrentGame.Players[rulerId]);
 
             int optionalHeros = game.Settings.NumHeroPicks;
             toDraw = optionalHeros + (CurrentGame.Settings.DualHeroMode ? Math.Max(6 - optionalHeros, 0) : 0);
@@ -914,7 +914,7 @@ public class RoleGame : Game
                 CurrentGame.HandleGodHero(p);
             }
 
-            game.Shuffle(game.Decks[null, DeckType.Dealing]);
+            game.Shuffle(game.Decks[DeckType.Dealing]);
 
             Player current = game.CurrentPlayer = game.Players[rulerId];
 
@@ -970,14 +970,13 @@ public class RoleGame : Game
                                                                       false);
                     continue;
                 }
-                GameEventArgs args = new GameEventArgs() { Source = currentPlayer };
                 Trace.TraceInformation("Main game loop running {0}:{1}", currentPlayer.Id, game.CurrentPhase);
                 try
                 {
                     var phaseEvent = PhaseEvents[game.CurrentPhaseEventIndex];
                     if (phaseEvent.ContainsKey(game.CurrentPhase))
                     {
-                        game.Emit(PhaseEvents[game.CurrentPhaseEventIndex][game.CurrentPhase], args);
+                        game.Emit(PhaseEvents[game.CurrentPhaseEventIndex][game.CurrentPhase], new GameEventArgs() { Source = currentPlayer });
                     }
                 }
                 catch (TriggerResultException e)
@@ -1219,8 +1218,8 @@ public class RoleGame : Game
     {
         public override void Run(GameEvent gameEvent, GameEventArgs eventArgs)
         {
-            CurrentGame.Shuffle(CurrentGame.Decks[null, DeckType.Discard]);
-            foreach (var c in CurrentGame.Decks[null, DeckType.Discard])
+            CurrentGame.Shuffle(CurrentGame.Decks[DeckType.Discard]);
+            foreach (var c in CurrentGame.Decks[DeckType.Discard])
             {
                 if (CurrentGame.IsClient && !CurrentGame.IsPanorama)
                 {

@@ -20,10 +20,7 @@ public class JianXiong : TriggerSkill
                 Trace.Assert(a.Cards != null);
                 return a.Cards.Count > 0;
             },
-            (p, e, a) =>
-            {
-                Game.CurrentGame.HandleCardTransferToHand(null, Owner, new List<Card>(a.Cards));
-            },
+            (p, e, a) => Game.CurrentGame.HandleCardTransferToHand(null, Owner, new List<Card>(a.Cards)),
             TriggerCondition.OwnerIsTarget
         );
         Triggers.Add(GameEvent.AfterDamageInflicted, trigger);

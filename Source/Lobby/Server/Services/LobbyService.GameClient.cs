@@ -1,5 +1,6 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
+using Microsoft.AspNetCore.SignalR;
 using Sanguosha.Lobby.Core;
 
 namespace Sanguosha.Lobby.Server;

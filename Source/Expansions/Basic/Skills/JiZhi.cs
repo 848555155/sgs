@@ -13,8 +13,8 @@ public class JiZhi : TriggerSkill
     public JiZhi()
     {
         Triggers.Add(GameEvent.PlayerUsedCard, new AutoNotifyPassiveSkillTrigger(this,
-            (p, e, a) => { return CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.ImmediateTool); },
-            (p, e, a) => { Game.CurrentGame.DrawCards(p, 1); },
+            (p, e, a) => CardCategoryManager.IsCardCategory(a.Card.Type.Category, CardCategory.ImmediateTool),
+            (p, e, a) => Game.CurrentGame.DrawCards(p, 1),
             TriggerCondition.OwnerIsSource
         )
         { Type = TriggerType.Skill });

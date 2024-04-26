@@ -43,10 +43,7 @@ public class TuXi : TriggerSkill
             return VerifierResult.Success;
         }
 
-        public override IList<CardHandler> AcceptableCardTypes
-        {
-            get { return new List<CardHandler>(); }
-        }
+        public override IList<CardHandler> AcceptableCardTypes => [];
     }
 
     private void GetTheirCards(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
@@ -65,11 +62,10 @@ public class TuXi : TriggerSkill
             {
                 if (p.HandCards().Count == 0) continue;
                 List<List<Card>> answer;
-                if (!Game.CurrentGame.UiProxies[Owner].AskForCardChoice(new CardChoicePrompt("TuXi"), new List<DeckPlace>() { new DeckPlace(p, DeckType.Hand) },
-                    new List<string>() { "TuXi" }, new List<int>() { 1 }, new RequireOneCardChoiceVerifier(true), out answer))
+                if (!Game.CurrentGame.UiProxies[Owner].AskForCardChoice(new CardChoicePrompt("TuXi"), [new DeckPlace(p, DeckType.Hand)],
+                    ["TuXi"], [1], new RequireOneCardChoiceVerifier(true), out answer))
                 {
-                    answer = new List<List<Card>>();
-                    answer.Add(Game.CurrentGame.PickDefaultCardsFrom(new List<DeckPlace>() { new DeckPlace(p, DeckType.Hand) }));
+                    answer = [Game.CurrentGame.PickDefaultCardsFrom([new DeckPlace(p, DeckType.Hand)])];
                 }
                 move.Cards = answer[0];
                 move.To = new DeckPlace(p, TuXiDeck);

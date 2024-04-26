@@ -14,7 +14,7 @@ public class QiaoBian : TriggerSkill
 {
     protected override int GenerateSpecialEffectHintIndex(Player source, List<Player> targets)
     {
-        return (int)(Game.CurrentGame.CurrentPhase) - (int)(TurnPhase.Start);
+        return (int)Game.CurrentGame.CurrentPhase - (int)TurnPhase.Start;
     }
 
     private class DrawVerifier : CardsAndTargetsVerifier
@@ -209,15 +209,15 @@ public class QiaoBian : TriggerSkill
         Game.CurrentGame.HandleCardDiscard(player, cards);
         Player source = players[0];
         Player dest = players[1];
-        List<DeckPlace> places = new List<DeckPlace>();
-        places.Add(new DeckPlace(source, DeckType.Equipment));
-        places.Add(new DeckPlace(source, DeckType.DelayedTools));
-        places.Add(new DeckPlace(dest, DeckType.Equipment));
-        places.Add(new DeckPlace(dest, DeckType.DelayedTools));
-        List<string> resultDeckPlace = new List<string>();
-        resultDeckPlace.Add("QiaoBian");
-        List<int> resultDeckMax = new List<int>();
-        resultDeckMax.Add(1);
+        List<DeckPlace> places =
+        [
+            new DeckPlace(source, DeckType.Equipment),
+            new DeckPlace(source, DeckType.DelayedTools),
+            new DeckPlace(dest, DeckType.Equipment),
+            new DeckPlace(dest, DeckType.DelayedTools),
+        ];
+        List<string> resultDeckPlace = ["QiaoBian"];
+        List<int> resultDeckMax = [1];
         List<List<Card>> answer;
         if (Game.CurrentGame.UiProxies[player].AskForCardChoice(new CardChoicePrompt("QiaoBian", Owner), places, resultDeckPlace, resultDeckMax, new QiaoBianMoveVerifier(source, dest), out answer))
         {

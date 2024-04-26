@@ -7,23 +7,10 @@ namespace Sanguosha.Core.UI;
 
 public class UiHelper
 {
-    public UiHelper()
-    {
-        OtherDecksUsed = new List<DeckType>();
-        OtherGlobalCardDeckUsed = new Dictionary<DeckPlace, int?>();
-    }
-
-    private bool isPlayerRepeatable;
     /// <summary>
     /// Whether a player can be targeted more than once (e.g. 业炎).
     /// </summary>
-    public bool IsPlayerRepeatable
-    {
-        get { return isPlayerRepeatable; }
-        set { isPlayerRepeatable = value; }
-    }
-
-    private bool isActionStage;
+    public bool IsPlayerRepeatable { get; set; }
 
     /// <summary>
     /// Whether it is related to the action stage.
@@ -31,84 +18,31 @@ public class UiHelper
     /// <remarks>
     /// 出牌阶段和求闪/桃阶段，取消和结束按钮的作用不同，故设置此参数。
     /// </remarks>
-    public bool IsActionStage
-    {
-        get { return isActionStage; }
-        set { isActionStage = value; }
-    }
+    public bool IsActionStage { get; set; }
 
-    private bool hasNoConfirmation;
     /// <summary>
     /// Whether "Confirm" button needs to be clicked to invoke the skill (e.g. 苦肉，乱舞).
     /// </summary>        
-    public bool HasNoConfirmation
-    {
-        get { return hasNoConfirmation; }
-        set { hasNoConfirmation = value; }
-    }
+    public bool HasNoConfirmation { get; set; }
 
-    private bool noCardReveal;
     /// <summary>
     /// 不展示卡牌使用 (e.g. 遗计, card usage only）
     /// </summary>
-    public bool NoCardReveal
-    {
-        get { return noCardReveal; }
-        set { noCardReveal = value; }
-    }
+    public bool NoCardReveal { get; set; }
 
-    /// <summary>
-    /// 展示卡牌 (card choice only)
-    /// </summary>
-    private bool revealCards;
-
-    public bool RevealCards
-    {
-        get { return revealCards; }
-        set { revealCards = value; }
-    }
-
-    private List<bool> additionalFineGrainedCardChoiceRevealPolicy;
+    public bool RevealCards { get; set; }
 
     /// <summary></summary>
     /// <seealso cref="Sanguosha.Expansions.OverKnightFame11.Skills.XinZhan"/>
-    public List<bool> AdditionalFineGrainedCardChoiceRevealPolicy
-    {
-        get { return additionalFineGrainedCardChoiceRevealPolicy; }
-        set { additionalFineGrainedCardChoiceRevealPolicy = value; }
-    }
+    public List<bool> AdditionalFineGrainedCardChoiceRevealPolicy { get; set; } = [];
 
-    private List<DeckType> otherDecksUsed;
+    public List<DeckType> OtherDecksUsed { get; set; } = [];
 
-    public List<DeckType> OtherDecksUsed
-    {
-        get { return otherDecksUsed; }
-        set { otherDecksUsed = value; }
-    }
+    public Dictionary<DeckPlace, int?> OtherGlobalCardDeckUsed { get; set; } = [];
 
-    private Dictionary<DeckPlace, int?> otherGlobalCardDeckUsed;
+    public int ExtraTimeOutSeconds { get; set; }
 
-    public Dictionary<DeckPlace, int?> OtherGlobalCardDeckUsed
-    {
-        get { return otherGlobalCardDeckUsed; }
-        set { otherGlobalCardDeckUsed = value; }
-    }
-
-    private int extraTimeOutSeconds;
-
-    public int ExtraTimeOutSeconds
-    {
-        get { return extraTimeOutSeconds; }
-        set { extraTimeOutSeconds = value; }
-    }
-
-    private bool showToAll;
-
-    public bool ShowToAll
-    {
-        get { return showToAll; }
-        set { showToAll = value; }
-    }
+    public bool ShowToAll { get; set; }
 
 }
 
@@ -177,54 +111,55 @@ public abstract class CardUsageVerifier : ICardUsageVerifier
 
         if (Properties.Settings.Default.IsUsing386) return initialResult;
 
-        if (skill != null)
+        if (skill == null)
         {
-            if (initialResult == VerifierResult.Success)
-            {
-                return VerifierResult.Success;
-            }
-            bool NothingWorks = true;
-            List<Card> tryList = new List<Card>();
-            if (cards != null)
-            {
-                tryList.AddRange(cards);
-            }
-            var cardsToTry = new List<Card>(Game.CurrentGame.Decks[source, DeckType.Hand].Concat(Game.CurrentGame.Decks[source, DeckType.Equipment]));
+            return initialResult;
+        }
+        if (initialResult == VerifierResult.Success)
+        {
+            return VerifierResult.Success;
+        }
+        bool NothingWorks = true;
+        List<Card> tryList = new List<Card>();
+        if (cards != null)
+        {
+            tryList.AddRange(cards);
+        }
+        var cardsToTry = new List<Card>(Game.CurrentGame.Decks[source, DeckType.Hand].Concat(Game.CurrentGame.Decks[source, DeckType.Equipment]));
 
-            foreach (var dk in skill.Helper.OtherDecksUsed)
-            {
-                cardsToTry.AddRange(Game.CurrentGame.Decks[source, dk]);
-            }
+        foreach (var dk in skill.Helper.OtherDecksUsed)
+        {
+            cardsToTry.AddRange(Game.CurrentGame.Decks[source, dk]);
+        }
 
-            foreach (Card c in cardsToTry)
+        foreach (Card c in cardsToTry)
+        {
+            tryList.Add(c);
+            if (FastVerify(source, skill, tryList, players) != VerifierResult.Fail)
             {
-                tryList.Add(c);
-                if (FastVerify(source, skill, tryList, players) != VerifierResult.Fail)
-                {
-                    NothingWorks = false;
-                    break;
-                }
-                tryList.Remove(c);
+                NothingWorks = false;
+                break;
             }
-            List<Player> tryList2 = new List<Player>();
-            if (players != null)
+            tryList.Remove(c);
+        }
+        List<Player> tryList2 = [];
+        if (players != null)
+        {
+            tryList2.AddRange(players);
+        }
+        foreach (Player p in Game.CurrentGame.Players)
+        {
+            tryList2.Add(p);
+            if (FastVerify(source, skill, cards, tryList2) != VerifierResult.Fail)
             {
-                tryList2.AddRange(players);
+                NothingWorks = false;
+                break;
             }
-            foreach (Player p in Game.CurrentGame.Players)
-            {
-                tryList2.Add(p);
-                if (FastVerify(source, skill, cards, tryList2) != VerifierResult.Fail)
-                {
-                    NothingWorks = false;
-                    break;
-                }
-                tryList2.Remove(p);
-            }
-            if (NothingWorks)
-            {
-                return VerifierResult.Fail;
-            }
+            tryList2.Remove(p);
+        }
+        if (NothingWorks)
+        {
+            return VerifierResult.Fail;
         }
         return initialResult;
     }

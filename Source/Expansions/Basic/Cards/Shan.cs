@@ -21,23 +21,14 @@ public class Shan : CardHandler
         }
     }
 
-    protected override bool IgnoreDeath
-    {
-        get
-        {
-            return false;
-        }
-    }
+    protected override bool IgnoreDeath => false;
 
     public override VerifierResult Verify(Player source, ICard card, List<Player> targets, bool isLooseVerify)
     {
         return VerifierResult.Fail;
     }
 
-    public override CardCategory Category
-    {
-        get { return CardCategory.Basic; }
-    }
+    public override CardCategory Category => CardCategory.Basic;
 }
 
 public class ShaCancelling : Trigger
@@ -48,7 +39,7 @@ public class ShaCancelling : Trigger
         {
             return;
         }
-        if (!(eventArgs.ReadonlyCard.Type is Sha))
+        if (eventArgs.ReadonlyCard.Type is not Sha)
         {
             return;
         }

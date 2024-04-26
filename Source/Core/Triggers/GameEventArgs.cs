@@ -8,12 +8,6 @@ namespace Sanguosha.Core.Triggers;
 
 public class GameEventArgs
 {
-    public GameEventArgs()
-    {
-        Targets = new List<Player>();
-        Cards = new List<Card>();
-    }
-
     public void CopyFrom(GameEventArgs another)
     {
         Source = another.Source;
@@ -25,11 +19,11 @@ public class GameEventArgs
 
     public Player Source { get; set; }
 
-    public List<Player> Targets { get; set; }
+    public List<Player> Targets { get; set; } = [];
 
     public List<Player> UiTargets { get; set; }
 
-    public List<Card> Cards { get; set; }
+    public List<Card> Cards { get; set; } = [];
 
     public ISkill Skill { get; set; }
 
@@ -59,35 +53,19 @@ public class HealthChangedEventArgs : GameEventArgs
     /// <summary>
     /// Gets/sets the health change value.
     /// </summary>
-    public int Delta
-    {
-        get;
-        set;
-    }
+    public int Delta { get; set; }
 }
 
 public class DamageEventArgs : GameEventArgs
 {
-    public Player OriginalTarget
-    {
-        get;
-        set;
-    }
+    public Player OriginalTarget { get; set; }
 
     /// <summary>
     /// Gets/sets the magnitude of damage
     /// </summary>
-    public int Magnitude
-    {
-        get;
-        set;
-    }
+    public int Magnitude { get; set; }
 
-    public DamageElement Element
-    {
-        get;
-        set;
-    }
+    public DamageElement Element { get; set; }
 
 }
 
@@ -111,28 +89,12 @@ public class PinDianCompleteEventArgs : GameEventArgs
 public class SkillSetChangedEventArgs : GameEventArgs
 {
 
-    public bool IsLosingSkill
-    {
-        get;
-        set;
-    }
+    public bool IsLosingSkill { get; set; }
 
-    public List<ISkill> Skills
-    {
-        get;
-        set;
-    } = [];
+    public List<ISkill> Skills { get; set; } = [];
 }
 
 public class PlayerIsAboutToUseOrPlayCardEventArgs : GameEventArgs
 {
-    public PlayerIsAboutToUseOrPlayCardEventArgs()
-    {
-    }
-
-    public ICardUsageVerifier Verifier
-    {
-        get;
-        set;
-    }
+    public ICardUsageVerifier Verifier { get; set; }
 }

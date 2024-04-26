@@ -15,9 +15,9 @@ public abstract class Aoe : CardHandler
 
     protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
-        SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()); }, false, RequiredCard);
+        var v1 = new SingleCardUsageVerifier((c) => RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()), false, RequiredCard);
         List<Player> sourceList = [source];
-        GameEventArgs args = new GameEventArgs
+        var args = new GameEventArgs
         {
             Source = dest,
             Targets = sourceList,

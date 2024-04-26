@@ -188,8 +188,8 @@ public class JieDaoShaRen : CardHandler
             {
                 return VerifierResult.Fail;
             }
-            if ((new Sha()).VerifyCore(targets[0], sha,
-                 new List<Player>() { targets[1] }) != VerifierResult.Success)
+            if (new Sha().VerifyCore(targets[0], sha,
+                 [targets[1]]) != VerifierResult.Success)
             {
                 return VerifierResult.Fail;
             }

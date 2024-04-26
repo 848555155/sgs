@@ -177,7 +177,7 @@ public class CardItem
         if (DeckPlaceItem.ToDeckPlace().DeckType != DeckType.Equipment && DeckPlaceItem.ToDeckPlace().DeckType != DeckType.DelayedTools && CardId >= 0 && Game.CurrentGame.IsClient)
         {
             cardDeck[PlaceInDeck].Id = CardId;
-            cardDeck[PlaceInDeck].Type = (CardHandler)(GameEngine.CardSet[CardId].Type.Clone());
+            cardDeck[PlaceInDeck].Type = (CardHandler)GameEngine.CardSet[CardId].Type.Clone();
             cardDeck[PlaceInDeck].Suit = GameEngine.CardSet[CardId].Suit;
             cardDeck[PlaceInDeck].Rank = GameEngine.CardSet[CardId].Rank;
             var bp = DeckPlaceItem.ToDeckPlace().Player;

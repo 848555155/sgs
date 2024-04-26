@@ -13,7 +13,7 @@ public class ConsoleUiProxy : IPlayerProxy
     {
         Player p = HostPlayer;
         Console.Write("I AM PLAYER {0}({1}): ", p.Id, p.Hero.Name);
-        cards = new List<Card>();
+        cards = [];
         VerifierResult r = verifier.FastVerify(HostPlayer, null, null, null);
         skill = null;
         Console.Write("Ask for card usage, {0}: ", prompt);

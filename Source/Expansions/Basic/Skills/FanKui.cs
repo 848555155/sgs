@@ -15,7 +15,7 @@ public class FanKui : TriggerSkill
 {
     public void OnAfterDamageInflicted(Player owner, GameEvent gameEvent, GameEventArgs eventArgs)
     {
-        NotifySkillUse(new List<Player>() { eventArgs.Source });
+        NotifySkillUse([eventArgs.Source]);
         List<DeckPlace> deck = [new DeckPlace(eventArgs.Source, DeckType.Hand), new DeckPlace(eventArgs.Source, DeckType.Equipment)];
         List<int> max = [1];
         List<List<Card>> result;

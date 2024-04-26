@@ -23,16 +23,16 @@ public class KeJi : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return Game.CurrentGame.CurrentPhase == TurnPhase.Play && Game.CurrentGame.CurrentPlayer == p && a.Card != null && a.ReadonlyCard != null && a.ReadonlyCard.Type is Sha; },
-            (p, e, a) => { p[KeJiFailed] = 1; },
+            (p, e, a) => Game.CurrentGame.CurrentPhase == TurnPhase.Play && Game.CurrentGame.CurrentPlayer == p && a.Card != null && a.ReadonlyCard != null && a.ReadonlyCard.Type is Sha,
+            (p, e, a) => p[KeJiFailed] = 1,
             TriggerCondition.OwnerIsSource
         )
         { IsAutoNotify = false, AskForConfirmation = false };
 
         var trigger2 = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return p[KeJiFailed] == 0 && !Game.CurrentGame.PhasesSkipped.Contains(TurnPhase.Discard); },
-            (p, e, a) => { Game.CurrentGame.PhasesSkipped.Add(TurnPhase.Discard); },
+            (p, e, a) => p[KeJiFailed] == 0 && !Game.CurrentGame.PhasesSkipped.Contains(TurnPhase.Discard),
+            (p, e, a) => Game.CurrentGame.PhasesSkipped.Add(TurnPhase.Discard),
             TriggerCondition.OwnerIsSource
         );
         Triggers.Add(GameEvent.PlayerUsedCard, trigger);

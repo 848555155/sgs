@@ -16,7 +16,7 @@ public class CangJi : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return p.Equipments().Count > 0; },
+            (p, e, a) => p.Equipments().Count > 0,
             (p, e, a) =>
             {
                 CardsMovement move = new CardsMovement();

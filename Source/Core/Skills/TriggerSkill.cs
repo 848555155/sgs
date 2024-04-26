@@ -49,9 +49,9 @@ public abstract class TriggerSkill : PassiveSkill
 
     protected bool AskForSkillUse()
     {
-        return (Game.CurrentGame.UiProxies[Owner].AskForMultipleChoice(
+        return Game.CurrentGame.UiProxies[Owner].AskForMultipleChoice(
                 new MultipleChoicePrompt(Prompt.SkillUseYewNoPrompt, this), Prompt.YesNoChoices, out var answer)
-                && answer == 1);
+                && answer == 1;
     }
 
     protected bool AskForSkillUse(ICardUsageVerifier verifier, out List<Card> cards, out List<Player> players, Prompt prompt = null)
@@ -221,7 +221,7 @@ public abstract class TriggerSkill : PassiveSkill
     protected override void InstallTriggers(Players.Player owner)
     {
         Trace.Assert(!_isTriggerInstalled,
-            string.Format("Trigger already installed for skill {0}", this.GetType().FullName));
+            string.Format("Trigger already installed for skill {0}", GetType().FullName));
         foreach (var pair in Triggers)
         {
             pair.Value.Owner = owner;
@@ -235,7 +235,7 @@ public abstract class TriggerSkill : PassiveSkill
     protected override void UninstallTriggers(Players.Player owner)
     {
         Trace.Assert(_isTriggerInstalled,
-            string.Format("Trigger not installed yet for skill {0}", this.GetType().FullName));
+            string.Format("Trigger not installed yet for skill {0}", GetType().FullName));
         _isTriggerInstalled = false;
         foreach (var pair in Triggers)
         {

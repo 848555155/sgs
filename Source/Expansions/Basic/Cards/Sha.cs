@@ -136,7 +136,7 @@ public class Sha : CardHandler
         CompositeCard card = null;
         if (skill != null)
         {
-            List<Card> dummyCards = new List<Card>() { new Card() { Type = shaType, Place = new DeckPlace(null, DeckType.None) } };
+            List<Card> dummyCards = [new Card() { Type = shaType, Place = new DeckPlace(null, DeckType.None) }];
             (skill as CardTransformSkill).TryTransform(dummyCards, null, out card);
             //虚拟的杀是不能有子卡的。
             card.Subcards.Clear();
@@ -147,7 +147,7 @@ public class Sha : CardHandler
         {
             foreach (Player p in Game.CurrentGame.AlivePlayers)
             {
-                if (p != source && v1.FastVerify(source, skill, cards, new List<Player>() { p }) != VerifierResult.Fail)
+                if (p != source && v1.FastVerify(source, skill, cards, [p]) != VerifierResult.Fail)
                 {
                     args.Targets.Add(p);
                     break;
@@ -168,19 +168,7 @@ public class Sha : CardHandler
 
 public class ShaEventArgs : GameEventArgs
 {
-    private List<bool> rangeApproval;
+    public List<bool> RangeApproval { get; set; }
 
-    public List<bool> RangeApproval
-    {
-        get { return rangeApproval; }
-        set { rangeApproval = value; }
-    }
-
-    private List<bool> targetApproval;
-
-    public List<bool> TargetApproval
-    {
-        get { return targetApproval; }
-        set { targetApproval = value; }
-    }
+    public List<bool> TargetApproval { get; set; }
 }

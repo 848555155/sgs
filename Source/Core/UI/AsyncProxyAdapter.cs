@@ -49,14 +49,8 @@ public class AsyncProxyAdapter : IPlayerProxy
 
     public Player HostPlayer
     {
-        get
-        {
-            return proxy.HostPlayer;
-        }
-        set
-        {
-            proxy.HostPlayer = value;
-        }
+        get => proxy.HostPlayer;
+        set => proxy.HostPlayer = value;
     }
 
     private int _GetActualTimeoutSecond(UiHelper helper)

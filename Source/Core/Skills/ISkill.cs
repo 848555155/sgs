@@ -14,3 +14,4 @@ public interface ISkill : ICloneable
     bool IsEnforced { get; }
     UiHelper Helper { get; }
 }
+

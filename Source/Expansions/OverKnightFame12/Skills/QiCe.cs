@@ -48,10 +48,7 @@ public class QiCe : CardTransformSkill, IAdditionalTypedSkill
         return true;
     }
 
-    public override List<CardHandler> PossibleResults
-    {
-        get { return new List<CardHandler>(); }
-    }
+    public override List<CardHandler> PossibleResults => [];
 
     public CardHandler AdditionalType { get; set; }
 }

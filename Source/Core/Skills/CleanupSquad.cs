@@ -14,13 +14,13 @@ public class CleanupSquad : Trigger
 
     public void CalldownCleanupCrew(ISkill skill, DeckType deck)
     {
-        if (!deckCleanup.ContainsKey(skill)) deckCleanup.Add(skill, new List<DeckType>());
+        if (!deckCleanup.ContainsKey(skill)) deckCleanup.Add(skill, []);
         deckCleanup[skill].Add(deck);
     }
 
     public void CalldownCleanupCrew(ISkill skill, PlayerAttribute attr)
     {
-        if (!markCleanup.ContainsKey(skill)) markCleanup.Add(skill, new List<PlayerAttribute>());
+        if (!markCleanup.ContainsKey(skill)) markCleanup.Add(skill, []);
         markCleanup[skill].Add(attr);
     }
 

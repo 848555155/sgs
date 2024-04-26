@@ -31,11 +31,11 @@ public abstract partial class Game
         DamageElement ironShackledDamageElement = DamageElement.None;
         readonlyCard ??= new ReadOnlyCard(new Card() { Place = new DeckPlace(null, null) });
         damageArgs.ReadonlyCard = readonlyCard;
-        if (card is CompositeCard)
+        if (card is CompositeCard compositeCard)
         {
-            if ((card as CompositeCard).Subcards != null)
+            if (compositeCard.Subcards != null)
             {
-                damageArgs.Cards = new List<Card>((card as CompositeCard).Subcards);
+                damageArgs.Cards = new List<Card>(compositeCard.Subcards);
             }
         }
         else if (card is Card)
@@ -631,8 +631,7 @@ public abstract partial class Game
             }
             int minimum;
             int numShouldDiscard = status ? toDiscard : numCanBeDiscarded;
-            if (!atOnce) minimum = 1;
-            else minimum = numShouldDiscard;
+            minimum = !atOnce ? 1 : numShouldDiscard;
             bool answered = false;
             cards = [];
             if (minimum < numCanBeDiscarded)

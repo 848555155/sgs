@@ -9,8 +9,5 @@ public class AlwaysTrueChoiceVerifier : ICardChoiceVerifier
         return VerifierResult.Success;
     }
 
-    public UiHelper Helper
-    {
-        get { return null; }
-    }
+    public UiHelper Helper => null;
 }

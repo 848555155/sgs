@@ -50,12 +50,10 @@ public class FanJian : ActiveSkill
         List<DeckPlace> decks = [new DeckPlace(Owner, DeckType.Hand)];
         List<int> max = [1];
         List<string> decknames = ["FanJianChoice"];
-        List<List<Card>> answer;
         Card theCard;
-        int suitAnswer;
-        Game.CurrentGame.UiProxies[arg.Targets[0]].AskForMultipleChoice(new MultipleChoicePrompt("FanJian", Owner), Prompt.SuitChoices, out suitAnswer);
+        Game.CurrentGame.UiProxies[arg.Targets[0]].AskForMultipleChoice(new MultipleChoicePrompt("FanJian", Owner), Prompt.SuitChoices, out int suitAnswer);
         suit = (SuitType)suitAnswer;
-        if (!Game.CurrentGame.UiProxies[arg.Targets[0]].AskForCardChoice(new CardChoicePrompt("FanJian", Owner), decks, decknames, max, new RequireOneCardChoiceVerifier(), out answer))
+        if (!Game.CurrentGame.UiProxies[arg.Targets[0]].AskForCardChoice(new CardChoicePrompt("FanJian", Owner), decks, decknames, max, new RequireOneCardChoiceVerifier(), out List<List<Card>> answer))
         {
             Trace.TraceInformation("Invalid answer from user");
             theCard = Game.CurrentGame.Decks[Owner, DeckType.Hand][0];

@@ -25,7 +25,7 @@ public class DummyShaVerifier : CardUsageVerifier
         {
             return VerifierResult.Fail;
         }
-        List<Player> newList = new List<Player>(players);
+        var newList = new List<Player>(players);
         if (target != null)
         {
             if (!newList.Contains(target))

@@ -82,27 +82,20 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public List<CardHandler> AvailableCards { get; private set; }
 
-    private readonly List<DelayedTriggerRegistration> triggersToRegister;
+    private readonly List<DelayedTriggerRegistration> triggersToRegister = [];
 
-    public Dictionary<Player, List<Player>> HandCardVisibility { get; set; }
+    public Dictionary<Player, List<Player>> HandCardVisibility { get; set; }= [];
 
     public Game()
     {
-        CardSet = new List<Card>();
-        OriginalCardSet = new List<Card>();
-        triggers = new Dictionary<GameEvent, List<Trigger>>();
-        Decks = new DeckContainer();
-        Players = new List<Player>();
-        CardHandlers = new Dictionary<string, CardHandler>();
-        UiProxies = new Dictionary<Player, IPlayerProxy>();
-        triggersToRegister = new List<DelayedTriggerRegistration>();
         DyingPlayers = new Stack<Player>();
-        HandCardVisibility = new Dictionary<Player, List<Player>>();
         Settings = new GameSettings();
-        cleanupSquad = new CleanupSquad();
-        cleanupSquad.Priority = -1;
-        PhasesSkipped = new List<TurnPhase>();
-        AvailableRoles = new List<Role>();
+        cleanupSquad = new CleanupSquad
+        {
+            Priority = -1
+        };
+        PhasesSkipped = [];
+        AvailableRoles = [];
         HandCardSwitcher = new HandCardSwitcher();
     }
 
@@ -588,16 +581,16 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <summary>
     /// All eligible card copied verbatim from the game engine. All cards in this set are known cards.
     /// </summary>
-    public List<Card> OriginalCardSet { get; }
+    public List<Card> OriginalCardSet { get; } = [];
 
     /// <summary>
     /// Current state of all cards used in the game. Some of the cards can be unknown in the client side.
     /// The collection is empty before Run() is called.
     /// </summary>
-    public List<Card> CardSet { get; }
+    public List<Card> CardSet { get; } = [];
 
     private Card unknownCard;
-    private readonly Dictionary<GameEvent, List<Trigger>> triggers;
+    private readonly Dictionary<GameEvent, List<Trigger>> triggers = [];
 
     public void RegisterTrigger(GameEvent gameEvent, Trigger trigger)
     {
@@ -719,7 +712,7 @@ public abstract partial class Game : INotifyPropertyChanged
         }
     }
 
-    public Dictionary<Player, IPlayerProxy> UiProxies { get; set; }
+    public Dictionary<Player, IPlayerProxy> UiProxies { get; set; } = [];
 
     public IGlobalUiProxy GlobalProxy { get; set; }
 
@@ -764,11 +757,11 @@ public abstract partial class Game : INotifyPropertyChanged
     /// <summary>
     /// Card usage handler for a given card's type name.
     /// </summary>
-    public Dictionary<string, CardHandler> CardHandlers { get; set; }
+    public Dictionary<string, CardHandler> CardHandlers { get; set; } = [];
 
-    public DeckContainer Decks { get; set; }
+    public DeckContainer Decks { get; set; } = new();
 
-    public List<Player> Players { get; set; }
+    public List<Player> Players { get; set; } = [];
 
     public List<Player> AlivePlayers
     {
@@ -941,7 +934,7 @@ public abstract partial class Game : INotifyPropertyChanged
                 }
                 card[Card.IsLastHandCard] = isLastHandCard;
 
-                if (IsClient && !IsPanorama && (move.To.DeckType == DeckType.Hand && GameClient.SelfId != move.To.Player.Id))
+                if (IsClient && !IsPanorama && move.To.DeckType == DeckType.Hand && GameClient.SelfId != move.To.Player.Id)
                 {
                     card.Id = -1;
                 }
@@ -997,16 +990,18 @@ public abstract partial class Game : INotifyPropertyChanged
     public void DrawCards(Player player, int num)
     {
         if (player.IsDead || num <= 0) return;
-        List<Card> cardsDrawn = new List<Card>();
+        List<Card> cardsDrawn = [];
 
         for (int i = 0; i < num; i++)
         {
             SyncImmutableCard(player, PeekCard(0));
             cardsDrawn.Add(DrawCard());
         }
-        CardsMovement move = new CardsMovement();
-        move.Cards = cardsDrawn;
-        move.To = new DeckPlace(player, DeckType.Hand);
+        var move = new CardsMovement
+        {
+            Cards = cardsDrawn,
+            To = new DeckPlace(player, DeckType.Hand)
+        };
         MoveCards(move, false, GameDelays.Draw);
         PlayerAcquiredCard(player, cardsDrawn);
     }
@@ -1040,7 +1035,12 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public Player PhasesOwner
     {
-        get { if (currentPhase == TurnPhase.Inactive) return null; return currentPlayer.IsDead ? null : currentPlayer; }
+        get 
+        { 
+            if (currentPhase == TurnPhase.Inactive) 
+                return null; 
+            return currentPlayer.IsDead ? null : currentPlayer; 
+        }
     }
 
     private TurnPhase currentPhase;
@@ -1306,7 +1306,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public bool PlayerCanDiscardCard(Player p, Card c)
     {
-        if (c.Type is Equipment && (c.Type as Equipment).InUse) return false;
+        if (c.Type is Equipment equipment && equipment.InUse) return false;
         var arg = new GameEventArgs
         {
             Source = p,
@@ -1357,9 +1357,11 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public bool PlayerCanPlayCard(Player p, ICard c)
     {
-        GameEventArgs arg = new GameEventArgs();
-        arg.Source = p;
-        arg.Card = c;
+        var arg = new GameEventArgs
+        {
+            Source = p,
+            Card = c
+        };
         try
         {
             Emit(GameEvent.PlayerCanPlayCard, arg);

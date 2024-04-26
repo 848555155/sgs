@@ -53,8 +53,7 @@ public class GuHuoSkillCommand : SkillCommand
     {
         get
         {
-            var skill = Skill as IAdditionalTypedSkill;
-            if (skill != null)
+            if (Skill is IAdditionalTypedSkill skill)
             {
                 return skill.AdditionalType;
             }
@@ -62,8 +61,7 @@ public class GuHuoSkillCommand : SkillCommand
         }
         set
         {
-            var skill = Skill as IAdditionalTypedSkill;
-            if (skill != null)
+            if (Skill is IAdditionalTypedSkill skill)
             {
                 if (skill.AdditionalType != value)
                 {

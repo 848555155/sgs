@@ -1,5 +1,8 @@
 ﻿namespace Sanguosha.Core.Games;
 
+/// <summary>
+/// 每个回合各个阶段
+/// </summary>
 public enum TurnPhase
 {
     Inactive = -1,

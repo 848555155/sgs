@@ -447,17 +447,21 @@ public partial class GameView : UserControl, INotificationProxy
                 gridRoot.Children.Remove(_privateDeckChoiceWindow);
             }
 
-            _privateDeckChoiceWindow = new ChildWindow();
-            _privateDeckChoiceWindow.Template = Resources["BlackWindowStyle"] as ControlTemplate;
-            _privateDeckChoiceWindow.MaxWidth = 800;
-            _privateDeckChoiceWindow.HorizontalContentAlignment = HorizontalAlignment.Center;
-            _privateDeckChoiceWindow.CloseButtonVisibility = Visibility.Collapsed;
-            _privateDeckChoiceWindow.WindowStartupLocation = Xceed.Wpf.Toolkit.WindowStartupLocation.Center;
+            _privateDeckChoiceWindow = new ChildWindow
+            {
+                Template = Resources["BlackWindowStyle"] as ControlTemplate,
+                MaxWidth = 800,
+                HorizontalContentAlignment = HorizontalAlignment.Center,
+                CloseButtonVisibility = Visibility.Collapsed,
+                WindowStartupLocation = Xceed.Wpf.Toolkit.WindowStartupLocation.Center
+            };
             string title = LogFormatter.Translate(new CardChoicePrompt("SpecialDeck", model.CurrentSpecialDeck.DeckPlace));
             _privateDeckChoiceWindow.Caption = title;
 
-            var box = new PrivateDeckBox();
-            box.DataContext = model.CurrentSpecialDeck.Cards;
+            var box = new PrivateDeckBox
+            {
+                DataContext = model.CurrentSpecialDeck.Cards
+            };
             _privateDeckChoiceWindow.Content = box;
 
             gridRoot.Children.Add(_privateDeckChoiceWindow);
@@ -888,7 +892,7 @@ public partial class GameView : UserControl, INotificationProxy
                 card.PlaceOverride = null;
                 if (!cardsRemoved.ContainsKey(place))
                 {
-                    cardsRemoved.Add(place, new List<Card>());
+                    cardsRemoved.Add(place, []);
                 }
                 cardsRemoved[place].Add(card);
                 if (move.To.DeckType == DeckType.Equipment)
@@ -1343,7 +1347,7 @@ public partial class GameView : UserControl, INotificationProxy
         if (ViewModelBase.IsDetached) return;
         Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
-            gameLogs.AppendLogEvent(players == null ? Game.CurrentGame.Players : players, custom, useUICard);
+            gameLogs.AppendLogEvent(players ?? Game.CurrentGame.Players, custom, useUICard);
             rtbLog.ScrollToEnd();
             if (isKeyEvent) _AppendKeyEventLog(custom, useUICard);
         });
@@ -1379,8 +1383,7 @@ public partial class GameView : UserControl, INotificationProxy
         Application.Current.Dispatcher.Invoke((ThreadStart)delegate ()
         {
             if (cardChoiceWindow == null) return;
-            var box = cardChoiceWindow.Content as CardArrangeBox;
-            if (box == null) return;
+            if (cardChoiceWindow.Content is not CardArrangeBox box) return;
             box.MoveCard(arrange);
         });
     }

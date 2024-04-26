@@ -5,6 +5,9 @@
     <Nullable>enable</Nullable>
     <StartupObject />
     <OutputType>Exe</OutputType>
+    <IsPackable>true</IsPackable>
+    <PackageId>Sanguosha.Lobby.Server</PackageId>
+    <Version>0.0.1-alpha.1</Version>
     <RootNamespace>Sanguosha.Lobby.Server</RootNamespace>
     <AssemblyName>LobbyServer</AssemblyName>
     <AssemblyTitle>LobbyServer</AssemblyTitle>

@@ -15,20 +15,14 @@ public class KongCheng : TriggerSkill
     {
         var notifier = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return a.Cards.Any(c => c.HistoryPlace1.DeckType == DeckType.Hand); },
+            (p, e, a) => a.Cards.Any(c => c.HistoryPlace1.DeckType == DeckType.Hand),
             (p, e, a) => { },
             TriggerCondition.OwnerIsSource | TriggerCondition.SourceHasNoHandCards
         );
 
         Triggers.Add(GameEvent.PlayerCanBeTargeted, new RelayTrigger(
-            (p, e, a) =>
-            {
-                return (a.Card.Type is Sha) || (a.Card.Type is JueDou);
-            },
-            (p, e, a) =>
-            {
-                throw new TriggerResultException(TriggerResult.Fail);
-            },
+            (p, e, a) => (a.Card.Type is Sha) || (a.Card.Type is JueDou),
+            (p, e, a) => throw new TriggerResultException(TriggerResult.Fail),
             TriggerCondition.OwnerIsTarget | TriggerCondition.OwnerHasNoHandCards
             ));
         Triggers.Add(GameEvent.CardsLost, notifier);

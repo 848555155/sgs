@@ -70,13 +70,10 @@ public class GuanShiFu : Weapon
         public Equipment ParentEquipment { get; set; }
         protected void Run(Player Owner, GameEvent gameEvent, GameEventArgs eventArgs)
         {
-            ISkill skill;
-            List<Card> cards;
-            List<Player> players;
             ParentEquipment.InUse = true;
             if (Game.CurrentGame.UiProxies[Owner].AskForCardUsage(new CardUsagePrompt("GuanShiFu"),
                 new GuanShiFuVerifier(),
-                out skill, out cards, out players))
+                out ISkill skill, out List<Card> cards, out List<Player> players))
             {
                 ParentEquipment.InUse = false;
                 NotifySkillUse([]);

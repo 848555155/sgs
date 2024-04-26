@@ -12,10 +12,10 @@ public class GameEvent
         Shuffle = new GameEvent("Shuffle");
         GameStart = new GameEvent("GameStart");
 
-        PhaseBeginEvents = new Dictionary<TurnPhase, GameEvent>();
-        PhaseProceedEvents = new Dictionary<TurnPhase, GameEvent>();
-        PhaseEndEvents = new Dictionary<TurnPhase, GameEvent>();
-        PhaseOutEvents = new Dictionary<TurnPhase, GameEvent>();
+        PhaseBeginEvents = [];
+        PhaseProceedEvents = [];
+        PhaseEndEvents = [];
+        PhaseOutEvents = [];
 
         foreach (TurnPhase phase in
             Enum.GetValues(typeof(TurnPhase)).Cast<TurnPhase>())

@@ -16,7 +16,7 @@ public class WeiDi : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return a.Source == ruler && a.Source != Owner; },
+            (p, e, a) => a.Source == ruler && a.Source != Owner,
             (p, e, a) =>
             {
                 bool canInvoke = true;
@@ -39,7 +39,7 @@ public class WeiDi : TriggerSkill
 
         IsEnforced = true;
         ruler = null;
-        theSkills = new Dictionary<ISkill, ISkill>();
+        theSkills = [];
     }
     protected override void InstallTriggers(Player owner)
     {

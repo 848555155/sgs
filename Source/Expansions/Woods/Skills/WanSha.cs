@@ -15,8 +15,8 @@ public class WanSha : TriggerSkill
     {
         var trigger = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) => { return Game.CurrentGame.CurrentPlayer == Owner && a.Source != Owner && Game.CurrentGame.DyingPlayers.Count > 0 && Game.CurrentGame.DyingPlayers.Last() != a.Source && a.Card.Type is Tao; },
-            (p, e, a) => { throw new TriggerResultException(TriggerResult.Fail); },
+            (p, e, a) => Game.CurrentGame.CurrentPlayer == Owner && a.Source != Owner && Game.CurrentGame.DyingPlayers.Count > 0 && Game.CurrentGame.DyingPlayers.Last() != a.Source && a.Card.Type is Tao,
+            (p, e, a) => throw new TriggerResultException(TriggerResult.Fail),
             TriggerCondition.Global
         )
         { IsAutoNotify = false };

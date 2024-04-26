@@ -64,9 +64,9 @@ public abstract class PassiveSkill : ISkill
 
     public object Clone()
     {
-        var skill = Activator.CreateInstance(this.GetType()) as PassiveSkill;
-        skill.Owner = this.Owner;
-        skill.IsAutoInvoked = this.IsAutoInvoked;
+        var skill = Activator.CreateInstance(GetType()) as PassiveSkill;
+        skill.Owner = Owner;
+        skill.IsAutoInvoked = IsAutoInvoked;
         return skill;
     }
 

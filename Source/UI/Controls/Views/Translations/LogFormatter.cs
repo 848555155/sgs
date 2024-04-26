@@ -21,8 +21,8 @@ public class LogFormatter
     public static string Translate(Hero hero)
     {
         string key = string.Format("Hero.{0}.Name", hero.Name);
-        string name = Application.Current.TryFindResource(key) as string;
-        if (name == null) return string.Empty;
+        if (Application.Current.TryFindResource(key) is not string name) 
+            return string.Empty;
         return name;
     }
 
@@ -40,44 +40,34 @@ public class LogFormatter
     {
         if (skill == null) return string.Empty;
         string key = string.Format("Skill.{0}.Name", skill.GetType().Name);
-        string name = Application.Current.TryFindResource(key) as string;
-        if (name == null) return string.Empty;
-        return name;
+        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
     }
 
     public static string Translate(ICard card)
     {
         if (card == null) return string.Empty;
         string key = string.Format("Card.{0}.Name", card.Type.Name);
-        string name = Application.Current.TryFindResource(key) as string;
-        if (name == null) return string.Empty;
-        return name;
+        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
     }
 
     public static string Translate(DeckType deckType)
     {
         if (deckType == null) return string.Empty;
         string key = string.Format("Deck.{0}.Name", deckType.Name);
-        string name = Application.Current.TryFindResource(key) as string;
-        if (name == null) return string.Empty;
-        return name;
+        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
     }
 
     public static string Translate(CardHandler cardHandler)
     {
         if (cardHandler == null) return string.Empty;
         string key = string.Format("Card.{0}.Name", cardHandler.Name);
-        string name = Application.Current.TryFindResource(key) as string;
-        if (name == null) return string.Empty;
-        return name;
+        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
     }
 
     public static string Translate(SuitType suitType)
     {
         string key = string.Format("Suit.{0}.Text", suitType.ToString());
-        string name = Application.Current.TryFindResource(key) as string;
-        if (name == null) return string.Empty;
-        return name;
+        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
     }
 
     public static string Translate(DeckPlace deckPlace)

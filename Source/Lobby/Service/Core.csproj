@@ -3,6 +3,9 @@
     <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
+    <IsPackable>true</IsPackable>
+    <PackageId>Sanguosha.Lobby.Core</PackageId>
+    <Version>0.0.1-alpha.1</Version>
     <RootNamespace>Sanguosha.Lobby.Core</RootNamespace>
     <AssemblyName>Lobby.Core</AssemblyName>
     <AssemblyTitle>Lobby</AssemblyTitle>
