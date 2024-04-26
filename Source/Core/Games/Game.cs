@@ -1,4 +1,5 @@
-﻿using Sanguosha.Core.Cards;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Sanguosha.Core.Cards;
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Heroes;
 using Sanguosha.Core.Network;
@@ -8,12 +9,9 @@ using Sanguosha.Core.Triggers;
 using Sanguosha.Core.UI;
 using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
-using System.ComponentModel;
 using System.Diagnostics;
 
-
 namespace Sanguosha.Core.Games;
-
 
 public class GameOverException : SgsException
 {
@@ -62,20 +60,8 @@ public enum DiscardReason
     Judge,
 }
 
-public abstract partial class Game : INotifyPropertyChanged
+public abstract partial class Game : ObservableObject
 {
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    // Create the OnPropertyChanged method to raise the event 
-    protected void OnPropertyChanged(string name)
-    {
-        PropertyChangedEventHandler handler = PropertyChanged;
-        if (handler != null)
-        {
-            handler(this, new PropertyChangedEventArgs(name));
-        }
-    }
-
     private class GameAlreadyStartedException : SgsException { }
 
     public GameSettings Settings { get; set; }
@@ -1025,9 +1011,7 @@ public abstract partial class Game : INotifyPropertyChanged
                     }
                 }
             }
-            if (currentPlayer == value) return;
-            currentPlayer = value;
-            OnPropertyChanged("CurrentPlayer");
+            SetProperty(ref currentPlayer, value);
         }
     }
 
@@ -1037,24 +1021,14 @@ public abstract partial class Game : INotifyPropertyChanged
     {
         get 
         { 
-            if (currentPhase == TurnPhase.Inactive) 
+            if (CurrentPhase == TurnPhase.Inactive) 
                 return null; 
             return currentPlayer.IsDead ? null : currentPlayer; 
         }
     }
 
+    [ObservableProperty]
     private TurnPhase currentPhase;
-
-    public TurnPhase CurrentPhase
-    {
-        get { return currentPhase; }
-        set
-        {
-            if (currentPhase == value) return;
-            currentPhase = value;
-            OnPropertyChanged("CurrentPhase");
-        }
-    }
 
     public int CurrentPhaseEventIndex { get; set; }
 

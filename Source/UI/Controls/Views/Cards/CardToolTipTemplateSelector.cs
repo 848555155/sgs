@@ -19,8 +19,7 @@ public class CardToolTipTemplateSelector : DataTemplateSelector
     {
         if (item == null) return base.SelectTemplate(item, container);
 
-        CardViewModel viewModel = item as CardViewModel;
-        if (viewModel == null)
+        if (item is not CardViewModel viewModel)
         {
             Trace.TraceWarning("Trying to apply card tooltip template on an object that is not CardViewModel");
         }

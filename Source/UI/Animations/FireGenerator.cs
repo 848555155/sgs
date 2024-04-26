@@ -1,16 +1,10 @@
-﻿using System;
-
-namespace Sanguosha.UI.Animations;
+﻿namespace Sanguosha.UI.Animations;
 
 public class FireGenerator
 {
     #region Private Members
 
-    private readonly Random r = new Random();
-
-    private readonly int _width;
-    private readonly int _height;
-    private readonly byte[] _fireData;
+    private readonly Random r = new();
 
     #endregion
 
@@ -18,52 +12,35 @@ public class FireGenerator
 
     public FireGenerator(int width, int height)
     {
-        _width = width;
-        _height = height;
+        Width = width;
+        Height = height;
 
-        _baseAlphaChannel = new byte[_width * _height];
-        _fireData = new byte[_width * _height];
+        BaseAlphaChannel = new byte[Width * Height];
+        FireData = new byte[Width * Height];
     }
 
     #endregion
 
-    public byte[] FireData
-    {
-        get { return _fireData; }
-    }
+    public byte[] FireData { get; }
 
-    public int Height
-    {
-        get { return _height; }
-    }
+    public int Height { get; }
 
-    public int Width
-    {
-        get { return _width; }
-    }
+    public int Width { get; }
 
-    private readonly byte[] _baseAlphaChannel;
-
-    public byte[] BaseAlphaChannel
-    {
-        get
-        {
-            return _baseAlphaChannel;
-        }
-    }
+    public byte[] BaseAlphaChannel { get; }
 
     #region Private Methods
 
     private void GenerateBaseline()
     {
-        for (int x = 0; x < _width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < _height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 int nBytePos = GetBytePos(x, y);
-                if (_baseAlphaChannel[nBytePos] != 0)
+                if (BaseAlphaChannel[nBytePos] != 0)
                 {
-                    _fireData[nBytePos] = GetRandomNumber();
+                    FireData[nBytePos] = GetRandomNumber();
                 }
             }
         }
@@ -72,10 +49,10 @@ public class FireGenerator
     private int fadeFactor;
     public int FadeFactor
     {
-        get { return fadeFactor; }
+        get => fadeFactor;
         set
         {
-            if (fadeFactor < 0 || fadeFactor > 255) return;
+            if (fadeFactor is < 0 or > 255) return;
             fadeFactor = value;
         }
     }
@@ -84,33 +61,33 @@ public class FireGenerator
     {
         GenerateBaseline();
 
-        int centerx = _width / 2;
-        int centery = _height / 2;
-        int radius = Math.Min(_width / 4, _height / 4);
+        int centerx = Width / 2;
+        int centery = Height / 2;
+        int radius = Math.Min(Width / 4, Height / 4);
 
-        for (int y = 0; y < _height - 1; y++)
+        for (int y = 0; y < Height - 1; y++)
         {
-            for (int x = 0; x < _width; x++)
+            for (int x = 0; x < Width; x++)
             {
                 int leftVal;
 
                 if (x == 0)
-                    leftVal = _fireData[GetBytePos(_width - 1, y)];
+                    leftVal = FireData[GetBytePos(Width - 1, y)];
                 else
-                    leftVal = _fireData[GetBytePos(x - 1, y)];
+                    leftVal = FireData[GetBytePos(x - 1, y)];
 
                 int rightVal;
-                if (x == _width - 1)
-                    rightVal = _fireData[GetBytePos(0, y)];
+                if (x == Width - 1)
+                    rightVal = FireData[GetBytePos(0, y)];
                 else
-                    rightVal = _fireData[GetBytePos(x + 1, y)];
+                    rightVal = FireData[GetBytePos(x + 1, y)];
 
-                int belowVal = _fireData[GetBytePos(x, y + 1)];
+                int belowVal = FireData[GetBytePos(x, y + 1)];
 
                 int avg;
 
                 int nBytePos = GetBytePos(x, y);
-                if (_baseAlphaChannel[nBytePos] != 0)
+                if (BaseAlphaChannel[nBytePos] != 0)
                 {/*
                     int sum = 0;
                     int totalWeight = 0;
@@ -134,7 +111,7 @@ public class FireGenerator
                 if (avg < 0 || avg > 255)
                     throw new Exception("Average color calc is out of range 0-255");
 
-                _fireData[GetBytePos(x, y)] = (byte)avg;
+                FireData[GetBytePos(x, y)] = (byte)avg;
             }
         }
     }
@@ -143,16 +120,16 @@ public class FireGenerator
     {
         int randomValue = r.Next(2);
         if (randomValue == 0)
-            return (byte)0;
+            return 0;
         else if (randomValue == 1)
-            return (byte)255;
+            return 255;
         else
             throw new Exception("Random returned out of bounds");
     }
 
     private int GetBytePos(int x, int y)
     {
-        return ((y * _width) + x);
+        return (y * Width) + x;
     }
 
     #endregion

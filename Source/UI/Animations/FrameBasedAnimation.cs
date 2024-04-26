@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -21,24 +19,16 @@ public partial class FrameBasedAnimation : Image, IAnimation
     public static readonly DependencyProperty WrapAroundProperty =
         DependencyProperty.Register("WrapAround", typeof(bool), typeof(FrameBasedAnimation));
 
-    public ImageSource ActiveFrame
-    {
-        get
-        {
-            return Frames[ActiveFrameIndex];
-        }
-    }
+    public ImageSource ActiveFrame => Frames[ActiveFrameIndex];
 
     public int ActiveFrameIndex
     {
-        get { return (int)GetValue(ActiveFrameIndexProperty); }
+        get => (int)GetValue(ActiveFrameIndexProperty);
         set
         {
-            if (value < 0)
-                throw new ArgumentOutOfRangeException("The ActiveFrameIndex can not be negative.");
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
 
-            if (value > MaximumFrameIndex)
-                throw new ArgumentOutOfRangeException("The ActiveFrameIndex can not be greater than MaximumFrameIndex.");
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaximumFrameIndex);
 
             SetValue(ActiveFrameIndexProperty, value);
             Source = ActiveFrame;
@@ -50,7 +40,7 @@ public partial class FrameBasedAnimation : Image, IAnimation
         List<ImageSource> result = new List<ImageSource>();
         for (int i = 0; i < totalNum; i++)
         {
-            BitmapImage image = new BitmapImage();
+            var image = new BitmapImage();
             image.BeginInit();
             image.UriSource = new Uri(string.Format("{0}/{1}.png", folderPath, i));
             image.EndInit();
@@ -65,11 +55,10 @@ public partial class FrameBasedAnimation : Image, IAnimation
 
     public double FramesPerSecond
     {
-        get { return (double)GetValue(FramesPerSecondProperty); }
+        get => (double)GetValue(FramesPerSecondProperty);
         set
         {
-            if (value <= 0)
-                throw new ArgumentOutOfRangeException("FramesPerSecond must be greater than 0.");
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
 
             SetValue(FramesPerSecondProperty, value);
         }
@@ -82,7 +71,7 @@ public partial class FrameBasedAnimation : Image, IAnimation
         {
             // Activate.
             if (!IsActive && value)
-                CompositionTarget.Rendering += new System.EventHandler(CompositionTarget_Rendering);
+                CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
 
             // Deactivate.
             if (IsActive && !value)
@@ -93,22 +82,22 @@ public partial class FrameBasedAnimation : Image, IAnimation
     }
 
     private TimeSpan LastRenderTime { get; set; }
-    public int MaximumFrameIndex { get { return Frames.Count - 1; } }
-    public int TotalFrames { get { return Frames.Count; } }
+    public int MaximumFrameIndex => Frames.Count - 1;
+    public int TotalFrames => Frames.Count;
 
     public bool WrapAround
     {
-        get { return (bool)GetValue(WrapAroundProperty); }
-        set { SetValue(WrapAroundProperty, value); }
+        get => (bool)GetValue(WrapAroundProperty);
+        set => SetValue(WrapAroundProperty, value);
     }
 
     public FrameBasedAnimation()
     {
         Visibility = Visibility.Hidden;
-        Frames = new List<ImageSource>();
+        Frames = [];
         FramesPerSecond = 30;
-        this.Loaded += FrameBasedAnimation_Loaded;
-        this.Unloaded += FrameBasedAnimation_Unloaded;
+        Loaded += FrameBasedAnimation_Loaded;
+        Unloaded += FrameBasedAnimation_Unloaded;
     }
 
     private void FrameBasedAnimation_Loaded(object sender, RoutedEventArgs e)
@@ -170,10 +159,6 @@ public partial class FrameBasedAnimation : Image, IAnimation
         if (!IsActive) return;
         IsActive = false;
         Visibility = Visibility.Hidden;
-        EventHandler handler = Completed;
-        if (handler != null)
-        {
-            handler(this, new EventArgs());
-        }
+        Completed?.Invoke(this, new EventArgs());
     }
 }

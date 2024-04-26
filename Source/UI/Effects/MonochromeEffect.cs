@@ -45,9 +45,11 @@ public class MonochromeEffect : ShaderEffect
     /// </summary>
     public MonochromeEffect()
     {
-        var pixelShader = new PixelShader();
-        pixelShader.UriSource = Global.MakePackUri("ShaderSource/Monochrome.ps");
-        this.PixelShader = pixelShader;
+        var pixelShader = new PixelShader
+        {
+            UriSource = Global.MakePackUri("ShaderSource/Monochrome.ps")
+        };
+        PixelShader = pixelShader;
 
         UpdateShaderValue(InputProperty);
         UpdateShaderValue(FilterColorProperty);
@@ -61,14 +63,14 @@ public class MonochromeEffect : ShaderEffect
     /// </summary>
     public Color FilterColor
     {
-        get { return (Color)GetValue(FilterColorProperty); }
-        set { SetValue(FilterColorProperty, value); }
+        get => (Color)GetValue(FilterColorProperty);
+        set => SetValue(FilterColorProperty, value);
     }
 
     public double Strength
     {
-        get { return (double)GetValue(StrengthProperty); }
-        set { SetValue(StrengthProperty, value); }
+        get => (double)GetValue(StrengthProperty);
+        set => SetValue(StrengthProperty, value);
     }
 
     /// <summary>
@@ -77,18 +79,14 @@ public class MonochromeEffect : ShaderEffect
     [System.ComponentModel.BrowsableAttribute(false)]
     public Brush Input
     {
-        get { return (Brush)GetValue(InputProperty); }
-        set { SetValue(InputProperty, value); }
+        get => (Brush)GetValue(InputProperty);
+        set => SetValue(InputProperty, value);
     }
 
     private static object CoerceStrength(DependencyObject d, object value)
     {
-        MonochromeEffect effect = (MonochromeEffect)d;
-        double newStrength = (double)value;
-        if (newStrength < 0.0 || newStrength > 1.0)
-        {
-            return effect.Strength;
-        }
-        return newStrength;
+        var effect = (MonochromeEffect)d;
+        var newStrength = (double)value;
+        return newStrength is < 0.0 or > 1.0 ? effect.Strength : newStrength;
     }
 }

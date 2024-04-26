@@ -487,7 +487,7 @@
                     <RowDefinition Height="auto" MinHeight="26" />
                 </Grid.RowDefinitions>
                 <Grid Grid.RowSpan="2" Height="122" VerticalAlignment="Top">
-                    <Image x:Name="heroPhoto2" DataContext="{Binding Hero2Model}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{res:ImageBinding CropRect=71\,28\,145\,145, Path=Name, ResourceKeyFormat=Hero.{0}.Image, StringFormat=Resources/Images/Heroes/Full/{0}.png}" MouseLeftButtonDown="HeroPhoto_MouseLeftButtonDown" MouseRightButtonDown="HeroPhoto_MouseRightButtonDown">
+                        <Image x:Name="heroPhoto2" DataContext="{Binding Hero2Model}" Stretch="UniformToFill" HorizontalAlignment="Center" VerticalAlignment="Top" Source="{res:ImageBinding CropRect=71\,28\,145\,145, Path=Name, ResourceKeyFormat=Hero.{0}.Image, StringFormat=Resources/Images/Heroes/Full/{0}.png}" MouseLeftButtonDown="HeroPhoto_MouseLeftButtonDown" MouseRightButtonDown="HeroPhoto_MouseRightButtonDown">
                         <Image.ToolTip>
                             <ToolTip x:Name="hero2Tip" Content="{Binding}" ContentTemplate="{DynamicResource HeroToolTipTemplate}"/>
                         </Image.ToolTip>

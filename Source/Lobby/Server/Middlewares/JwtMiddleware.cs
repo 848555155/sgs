@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.Caching.Memory;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.Extensions.Caching.Memory;
 namespace Sanguosha.Lobby.Server;
 
 public class JwtMiddleware(IMemoryCache memoryCache): IMiddleware

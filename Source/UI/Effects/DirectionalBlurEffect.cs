@@ -47,8 +47,10 @@ public class DirectionalBlurEffect : ShaderEffect
     /// </summary>
     static DirectionalBlurEffect()
     {
-        pixelShader = new PixelShader();
-        pixelShader.UriSource = Global.MakePackUri("ShaderSource/DirectionalBlur.ps");
+        pixelShader = new PixelShader
+        {
+            UriSource = Global.MakePackUri("ShaderSource/DirectionalBlur.ps")
+        };
     }
 
     /// <summary>
@@ -56,7 +58,7 @@ public class DirectionalBlurEffect : ShaderEffect
     /// </summary>
     public DirectionalBlurEffect()
     {
-        this.PixelShader = pixelShader;
+        PixelShader = pixelShader;
         UpdateShaderValue(InputProperty);
         UpdateShaderValue(AngleProperty);
         UpdateShaderValue(BlurAmountProperty);
@@ -70,8 +72,8 @@ public class DirectionalBlurEffect : ShaderEffect
     [System.ComponentModel.BrowsableAttribute(false)]
     public Brush Input
     {
-        get { return (Brush)GetValue(InputProperty); }
-        set { SetValue(InputProperty, value); }
+        get => (Brush)GetValue(InputProperty);
+        set => SetValue(InputProperty, value);
     }
 
     /// <summary>
@@ -79,8 +81,8 @@ public class DirectionalBlurEffect : ShaderEffect
     /// </summary>
     public double Angle
     {
-        get { return (double)GetValue(AngleProperty); }
-        set { SetValue(AngleProperty, ((value % 360) + 360) % 360); }
+        get => (double)GetValue(AngleProperty);
+        set => SetValue(AngleProperty, ((value % 360) + 360) % 360);
     }
 
     /// <summary>
@@ -88,7 +90,7 @@ public class DirectionalBlurEffect : ShaderEffect
     /// </summary>
     public double BlurAmount
     {
-        get { return (double)GetValue(BlurAmountProperty); }
-        set { SetValue(BlurAmountProperty, value); }
+        get => (double)GetValue(BlurAmountProperty);
+        set => SetValue(BlurAmountProperty, value);
     }
 }

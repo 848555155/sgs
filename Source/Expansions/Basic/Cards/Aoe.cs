@@ -2,7 +2,6 @@
 using Sanguosha.Core.Exceptions;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
-using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 using Sanguosha.Core.UI;
 using System.Diagnostics;
@@ -15,9 +14,9 @@ public abstract class Aoe : CardHandler
 
     protected override void Process(Player source, Player dest, ICard card, ReadOnlyCard readonlyCard, GameEventArgs inResponseTo)
     {
-        var v1 = new SingleCardUsageVerifier((c) => RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()), false, RequiredCard);
+        SingleCardUsageVerifier v1 = new SingleCardUsageVerifier((c) => { return RequiredCard.GetType().IsAssignableFrom(c.Type.GetType()); }, false, RequiredCard);
         List<Player> sourceList = [source];
-        var args = new GameEventArgs
+        GameEventArgs args = new GameEventArgs
         {
             Source = dest,
             Targets = sourceList,

@@ -1,5 +1,4 @@
-﻿using System;
-using System.Windows.Input;
+﻿using System.Windows.Input;
 
 namespace Sanguosha.UI.Controls;
 
@@ -7,28 +6,19 @@ public class SimpleRelayCommand : ViewModelBase, ICommand
 {
     #region Fields
 
-    private readonly Action<object> _execute;
-
-    public Action<object> Executor
-    {
-        get { return _execute; }
-    }
+    public Action<object> Executor { get; }
 
 
     private bool _canExecute;
 
     public bool CanExecuteStatus
     {
-        get { return _canExecute; }
+        get => _canExecute;
         set
         {
             if (_canExecute == value) return;
             _canExecute = value;
-            var handle = CanExecuteChanged;
-            if (handle != null)
-            {
-                handle(this, new EventArgs());
-            }
+            CanExecuteChanged?.Invoke(this, new EventArgs());
         }
     }
 
@@ -38,10 +28,9 @@ public class SimpleRelayCommand : ViewModelBase, ICommand
 
     public SimpleRelayCommand(Action<object> execute)
     {
-        if (execute == null)
-            throw new ArgumentNullException("execute");
+        ArgumentNullException.ThrowIfNull(execute);
 
-        _execute = execute;
+        Executor = execute;
     }
 
     #endregion // Constructors
@@ -57,7 +46,7 @@ public class SimpleRelayCommand : ViewModelBase, ICommand
 
     public virtual void Execute(object parameter)
     {
-        _execute(parameter);
+        Executor(parameter);
     }
 
     #endregion // ICommand Members

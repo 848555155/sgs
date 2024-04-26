@@ -1,7 +1,5 @@
 ﻿using Sanguosha.Core.Games;
 using Sanguosha.UI.Animations;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.Windows;

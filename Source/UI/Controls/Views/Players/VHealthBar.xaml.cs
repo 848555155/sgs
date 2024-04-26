@@ -1,6 +1,4 @@
 ﻿using Sanguosha.UI.Animations;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Windows;
 using System.Windows.Controls;

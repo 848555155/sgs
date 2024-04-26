@@ -1,9 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Sanguosha.Lobby.Core;
-using System;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
-using System.Linq;
 
 namespace Sanguosha.UI.Controls;
 

@@ -1,10 +1,7 @@
 ﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.UI.Animations;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;

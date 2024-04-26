@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows;
 
 namespace Sanguosha.UI.Controls;
@@ -95,12 +92,9 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
     protected virtual void OnPropertyChanged(string propertyName)
     {
         this.VerifyPropertyName(propertyName);
-        if (_isDetached)
+        if (IsDetached)
         {
-            if (_queuedChangedProperties == null)
-            {
-                _queuedChangedProperties = new HashSet<string>();
-            }
+            _queuedChangedProperties ??= [];
             if (!_queuedChangedProperties.Contains(propertyName))
             {
                 _queuedChangedProperties.Add(propertyName);
@@ -112,7 +106,7 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
         }
         else
         {
-            PropertyChangedEventHandler handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = PropertyChanged;
             if (handler != null)
             {
                 if (Application.Current.Dispatcher.CheckAccess())
@@ -165,22 +159,17 @@ public abstract class ViewModelBase : INotifyPropertyChanged, IDisposable
 
     #endregion // IDisposable Members
 
-    private static bool _isDetached = false;
 
-    public static bool IsDetached
-    {
-        get { return _isDetached; }
-        set { _isDetached = value; }
-    }
+    public static bool IsDetached { get; set; } = false;
 
     public static void DetachAll()
     {
-        _isDetached = true;
+        IsDetached = true;
     }
 
     public static void AttachAll()
     {
-        _isDetached = false;
+        IsDetached = false;
         foreach (var vmb in _queuedChangedViewModelBases)
         {
             vmb._UpdateAll();

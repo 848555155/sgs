@@ -1,5 +1,4 @@
 ﻿using Sanguosha.Lobby.Core;
-using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -29,8 +28,7 @@ public partial class SeatView : UserControl
 
     private static void OnControllableChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
     {
-        var seat = d as SeatView;
-        if (seat == null) return;
+        if (d is not SeatView seat) return;
         if (seat.IsControllable)
         {
             seat.gridOpenSeat.Visibility = Visibility.Visible;

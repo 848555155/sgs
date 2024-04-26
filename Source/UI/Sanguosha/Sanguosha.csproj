@@ -44,6 +44,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <TargetZone>LocalIntranet</TargetZone>
+    <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
     <None Update="app.manifest">
@@ -58,7 +59,20 @@
   <ItemGroup>
     <!--<ProjectReference Include="..\..\AutomaticUpdater\AutomaticUpdaterWPF4.csproj" />-->
     <ProjectReference Include="..\..\Core\Core.csproj" />
+    <ProjectReference Include="..\..\Expansions\Assassin\Assassin.csproj" />
+    <ProjectReference Include="..\..\Expansions\Basic\Basic.csproj" />
     <ProjectReference Include="..\..\Expansions\Battle\Battle.csproj" Condition="'$(DesignTime)'=='true' OR ('$(SolutionPath)'!='' AND Exists('$(SolutionPath)') AND '$(BuildingInsideVisualStudio)'!='true' AND '$(BuildingInsideExpressionBlend)'!='true')" />
+    <ProjectReference Include="..\..\Expansions\Battle\Battle.csproj" />
+    <ProjectReference Include="..\..\Expansions\Fire\Fire.csproj" />
+    <ProjectReference Include="..\..\Expansions\Hills\Hills.csproj" />
+    <ProjectReference Include="..\..\Expansions\OverKnightFame11\OverKnightFame11.csproj" />
+    <ProjectReference Include="..\..\Expansions\OverKnightFame12\OverKnightFame12.csproj" />
+    <ProjectReference Include="..\..\Expansions\OverKnightFame13\OverKnightFame13.csproj" />
+    <ProjectReference Include="..\..\Expansions\Pk1v1\Pk1v1.csproj" />
+    <ProjectReference Include="..\..\Expansions\SP\SP.csproj" />
+    <ProjectReference Include="..\..\Expansions\StarSP\StarSP.csproj" />
+    <ProjectReference Include="..\..\Expansions\Wind\Wind.csproj" />
+    <ProjectReference Include="..\..\Expansions\Woods\Woods.csproj" />
     <ProjectReference Include="..\..\Lobby\Server\Server.csproj" />
     <ProjectReference Include="..\..\Lobby\Service\Core.csproj" />
     <ProjectReference Include="..\Animations\Animations.csproj" />

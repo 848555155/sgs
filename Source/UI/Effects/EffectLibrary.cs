@@ -1,6 +1,4 @@
-﻿using System;
-using System.Reflection;
-using System.Text;
+﻿using System.Text;
 
 namespace Sanguosha.UI.Effects;
 
@@ -23,7 +21,7 @@ internal static class Global
         {
             if (_assemblyShortName == null)
             {
-                Assembly a = typeof(Global).Assembly;
+                var a = typeof(Global).Assembly;
 
                 // Pull out the short name.
                 _assemblyShortName = a.ToString().Split(',')[0];

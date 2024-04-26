@@ -1,6 +1,4 @@
 ﻿using Sanguosha.Core.Games;
-using System;
-using System.Collections.Generic;
 using System.Windows.Data;
 
 namespace Sanguosha.UI.Controls;

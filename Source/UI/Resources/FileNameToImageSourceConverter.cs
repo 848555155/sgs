@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO;
 using System.Windows;
 using System.Windows.Data;
@@ -18,10 +17,9 @@ public class FileNameToImageSourceConverter : IMultiValueConverter
             return null;
         }
 
-        var element = values[0] as FrameworkElement;
         var resourceKey = values[1];
 
-        if (element == null || resourceKey == null)
+        if (values[0] is not FrameworkElement element || resourceKey == null)
         {
             return null;
         }
@@ -72,8 +70,7 @@ public class FileNameToImageSourceConverter : IMultiValueConverter
             try
             {
                 object imageObj = (new ImageSourceConverter()).ConvertFromString(fileName);
-                var image = imageObj as ImageSource;
-                if (image != null)
+                if (imageObj is ImageSource image)
                 {
                     if (CropRect == null) return image;
                     else if (image is BitmapSource)
@@ -97,6 +94,10 @@ public class FileNameToImageSourceConverter : IMultiValueConverter
             catch (ArgumentException)
             {
                 Trace.TraceWarning("Image not in expected size: {0}", fileName);
+            }
+            catch (Exception)
+            {
+                
             }
         }
 

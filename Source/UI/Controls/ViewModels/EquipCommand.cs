@@ -1,5 +1,4 @@
 ﻿using Sanguosha.Core.Cards;
-using System;
 using System.Diagnostics;
 using System.Windows.Input;
 

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
+﻿using System.Globalization;
 using System.Text;
 using System.Windows.Documents;
 using System.Windows.Media;
@@ -17,17 +15,13 @@ public static class FlowDocumentExtensions
         {
             if (position.GetPointerContext(LogicalDirection.Forward) == TextPointerContext.ElementEnd)
             {
-                Run run = position.Parent as Run;
-
-                if (run != null)
+                if (position.Parent is Run run)
                 {
                     yield return run;
                 }
                 else
                 {
-                    Paragraph para = position.Parent as Paragraph;
-
-                    if (para != null)
+                    if (position.Parent is Paragraph para)
                     {
                         yield return para;
                     }
@@ -38,26 +32,21 @@ public static class FlowDocumentExtensions
 
     public static FormattedText GetFormattedText(this FlowDocument doc)
     {
-        if (doc == null)
-        {
-            throw new ArgumentNullException("doc");
-        }
-
-        FormattedText output = new FormattedText(
+        ArgumentNullException.ThrowIfNull(doc);
+        var output = new FormattedText(
           GetText(doc),
           CultureInfo.CurrentCulture,
           doc.FlowDirection,
           new Typeface(doc.FontFamily, doc.FontStyle, doc.FontWeight, doc.FontStretch),
           doc.FontSize,
-          doc.Foreground);
+          doc.Foreground,
+          1.25);
 
         int offset = 0;
 
-        foreach (TextElement el in GetRunsAndParagraphs(doc))
+        foreach (var el in GetRunsAndParagraphs(doc))
         {
-            Run run = el as Run;
-
-            if (run != null)
+            if (el is Run run)
             {
                 int count = run.Text.Length;
 
@@ -82,12 +71,11 @@ public static class FlowDocumentExtensions
 
     private static string GetText(FlowDocument doc)
     {
-        StringBuilder sb = new StringBuilder();
+        var sb = new StringBuilder();
 
-        foreach (TextElement el in GetRunsAndParagraphs(doc))
+        foreach (var el in GetRunsAndParagraphs(doc))
         {
-            Run run = el as Run;
-            sb.Append(run == null ? Environment.NewLine : run.Text);
+            sb.Append(el is not Run run ? Environment.NewLine : run.Text);
         }
         return sb.ToString();
     }

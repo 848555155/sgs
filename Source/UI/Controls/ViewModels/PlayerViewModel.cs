@@ -6,13 +6,9 @@ using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
 using Sanguosha.Core.UI;
 using Sanguosha.Lobby.Core;
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
-using System.Threading;
 using System.Windows;
 using System.Windows.Input;
 
@@ -1238,7 +1234,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
 
         if (currentUsageVerifier.Helper.IsActionStage)
         {
-            cancelCardUsageCommand.CanExecuteStatus = cards.Count != 0 || players.Count != 0 || command != null;
+            cancelCardUsageCommand.CanExecuteStatus = (cards.Count != 0 || players.Count != 0 || command != null);
         }
 
         if (command != null)
@@ -1723,7 +1719,7 @@ public class PlayerViewModel : SelectableItem, IAsyncPlayerProxy
                                            int timeOutSeconds,
                                            CardChoiceRearrangeCallback callback)
     {
-        bool isSingleResult = resultDeckMaximums.Sum() == 1;
+        bool isSingleResult = (resultDeckMaximums.Sum() == 1);
 
         var choiceModel = new CardChoiceViewModel();
 

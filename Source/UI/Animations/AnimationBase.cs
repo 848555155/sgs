@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 
@@ -44,11 +43,7 @@ public class AnimationBase : UserControl, IAnimation
         {
             Trace.TraceError("Cannot find animation's parent canvas. Failed to remove animation");
         }
-        var handler = Completed;
-        if (handler != null)
-        {
-            handler(this, new EventArgs());
-        }
+        Completed?.Invoke(this, new EventArgs());
     }
 
     protected virtual void StartMainAnimation()

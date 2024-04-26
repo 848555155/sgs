@@ -1,23 +1,23 @@
-﻿using Sanguosha.Core.Cards;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Heroes;
 using Sanguosha.Core.Network;
 using Sanguosha.Core.Skills;
 using Sanguosha.Core.Triggers;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Diagnostics;
 
 namespace Sanguosha.Core.Players;
 
-public class Player : INotifyPropertyChanged
+public partial class Player : ObservableObject
 {
     public Player()
     {
         isDead = false;
         Id = 0;
-        isMale = false;
-        isFemale = false;
+        IsMale = false;
+        IsFemale = false;
         maxHealth = 0;
         health = 0;
         hero = hero2 = null;
@@ -31,116 +31,35 @@ public class Player : INotifyPropertyChanged
 
     public int Id { get; set; }
 
-    private bool isIronShackled;
-
     /// <summary>
     /// 铁锁
     /// </summary>
-    public bool IsIronShackled
-    {
-        get { return isIronShackled; }
-        set
-        {
-            if (isIronShackled == value) return;
-            isIronShackled = value;
-            OnPropertyChanged("IsIronShackled");
-        }
-    }
-
-    private bool isImprisoned;
+    [ObservableProperty]
+    private bool isIronShackled;
 
     /// <summary>
     /// 翻面
     /// </summary>
-    public bool IsImprisoned
-    {
-        get { return isImprisoned; }
-        set
-        {
-            if (isImprisoned == value) return;
-            isImprisoned = value;
-            OnPropertyChanged("IsImprisoned");
-        }
-    }
+    [ObservableProperty]
+    private bool isImprisoned;
 
+    [ObservableProperty]
     private bool isDead;
 
-    public bool IsDead
-    {
-        get { return isDead; }
-        set
-        {
-            if (isDead == value) return;
-            isDead = value;
-            OnPropertyChanged("IsDead");
-        }
-    }
+    public bool IsMale { get; set; }
 
-    private bool isMale;
+    public bool IsFemale { get; set; }
 
-    public bool IsMale
-    {
-        get { return isMale; }
-        set { isMale = value; }
-    }
-
-    private bool isFemale;
-
-    public bool IsFemale
-    {
-        get { return isFemale; }
-        set { isFemale = value; }
-    }
-
+    [ObservableProperty]
     private int maxHealth;
 
-    public int MaxHealth
-    {
-        get { return maxHealth; }
-        set
-        {
-            if (maxHealth == value)
-            {
-                return;
-            }
-            maxHealth = value;
-            OnPropertyChanged("MaxHealth");
-        }
-    }
-
+    [ObservableProperty]
     private Allegiance allegiance;
 
-    public Allegiance Allegiance
-    {
-        get { return allegiance; }
-        set
-        {
-            if (allegiance == value)
-            {
-                return;
-            }
-            allegiance = value;
-            OnPropertyChanged("Allegiance");
-        }
-    }
-
+    [ObservableProperty]
     private int health;
 
-    public int Health
-    {
-        get { return health; }
-        set
-        {
-            if (health == value)
-            {
-                return;
-            }
-            health = value;
-            OnPropertyChanged("Health");
-        }
-    }
-
-    public int LostHealth => maxHealth - Math.Max(health, 0);
+    public int LostHealth => MaxHealth - Math.Max(Health, 0);
 
     public Dictionary<PlayerAttribute, int> Attributes { get; }
 
@@ -158,70 +77,34 @@ public class Player : INotifyPropertyChanged
                 return;
             }
             Attributes[key] = value;
-            OnPropertyChanged("Attributes");
+            OnPropertyChanged(nameof(Attributes));
         }
     }
 
     private void SetHero(ref Hero hero, Hero value)
     {
-        if (hero != null)
-        {
-            PropertyChangedEventHandler handler = PropertyChanged;
-            hero.PropertyChanged -= handler;
-        }
         hero = value;
         if (hero != null)
         {
-            foreach (ISkill skill in hero.Skills)
+            foreach (var skill in hero.Skills)
             {
                 skill.HeroTag = hero;
                 skill.Owner = this;
             }
             Trace.Assert(hero.Owner == null);
             hero.Owner = this;
-            hero.PropertyChanged += PropertyChanged;
         }
-        OnPropertyChanged("Skills");
+        OnPropertyChanged(nameof(Skills));
     }
 
+    [ObservableProperty]
     private Hero hero;
 
-    public Hero Hero
-    {
-        get { return hero; }
-        set
-        {
-            if (hero == value) return;
-            SetHero(ref hero, value);
-            OnPropertyChanged("Hero");
-        }
-    }
-
+    [ObservableProperty]
     private Hero hero2;
 
-    public Hero Hero2
-    {
-        get { return hero2; }
-        set
-        {
-            if (hero2 == value) return;
-            SetHero(ref hero2, value);
-            OnPropertyChanged("Hero2");
-        }
-    }
-
+    [ObservableProperty]
     private Role role;
-
-    public Role Role
-    {
-        get { return role; }
-        set
-        {
-            if (role == value) return;
-            role = value;
-            OnPropertyChanged("Role");
-        }
-    }
 
     private readonly List<ISkill> additionalSkills;
 
@@ -247,7 +130,7 @@ public class Player : INotifyPropertyChanged
         {
             additionalSkills.Add(skill);
         }
-        OnPropertyChanged("Skills");
+        OnPropertyChanged(nameof(Skills));
     }
 
     public void LoseAdditionalSkill(ISkill skill, bool undeletable = false)
@@ -264,7 +147,7 @@ public class Player : INotifyPropertyChanged
             Trace.Assert(additionalSkills.Contains(skill));
             additionalSkills.Remove(skill);
         }
-        OnPropertyChanged("Skills");
+        OnPropertyChanged(nameof(Skills));
     }
 
 
@@ -328,41 +211,11 @@ public class Player : INotifyPropertyChanged
         }
     }
 
+    [ObservableProperty]
     private OnlineStatus _onlineStatus;
 
-    public OnlineStatus OnlineStatus
-    {
-        get
-        {
-            return _onlineStatus;
-        }
-        set
-        {
-            if (_onlineStatus == value) return;
-            _onlineStatus = value;
-            OnPropertyChanged("OnlineStatus");
-        }
-    }
-
-    public event PropertyChangedEventHandler PropertyChanged;
-
-    // Create the OnPropertyChanged method to raise the event 
-    protected void OnPropertyChanged(string name)
-    {
-        PropertyChangedEventHandler handler = PropertyChanged;
-        if (handler != null)
-        {
-            handler(this, new PropertyChangedEventArgs(name));
-        }
-    }
-
+    [ObservableProperty]
     private bool isTargeted;
-
-    public bool IsTargeted
-    {
-        get { return isTargeted; }
-        set { isTargeted = value; OnPropertyChanged("IsTargeted"); }
-    }
 
     public void LoseAllHeroSkills(Hero h)
     {

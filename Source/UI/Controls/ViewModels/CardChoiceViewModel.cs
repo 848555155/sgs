@@ -1,6 +1,5 @@
 ﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.UI;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -87,7 +86,7 @@ public class CardChoiceViewModel : ViewModelBase
     {
         cardStacks = new ObservableCollection<CardChoiceLineViewModel>();
         MultiChoiceCommands = new ObservableCollection<ICommand>();
-        Answer = new List<List<Card>>();
+        Answer = [];
     }
 
     private string prompt;

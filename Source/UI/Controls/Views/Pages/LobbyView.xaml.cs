@@ -1,10 +1,8 @@
 ﻿using Sanguosha.Core.Network;
 using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
-using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -148,7 +146,7 @@ public partial class LobbyView : Page
                 ea.Result = false;
                 var stream = FileRotator.CreateFile("./Replays", "SGSREPLAY", ".sgs", 10);
 
-                stream.Write(BitConverter.GetBytes((int)0), 0, 4);
+                stream.Write(BitConverter.GetBytes(0), 0, 4);
                 client.RecordStream = stream;
                 client.Start(stream, LobbyModel.LoginToken);
 

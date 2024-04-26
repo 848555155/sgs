@@ -1,5 +1,4 @@
-﻿using System;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Windows;
 using System.Windows.Data;
 
@@ -9,8 +8,7 @@ public class CardToolTipConverter : IValueConverter
 {
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        string convertType = parameter as string;
-        if (convertType == null || value == null) return null;
+        if (parameter is not string convertType || value == null) return null;
         if (convertType == "Name" || convertType == "Description")
         {
             try
@@ -29,11 +27,11 @@ public class CardToolTipConverter : IValueConverter
         }
         else if (convertType == "Suit")
         {
-            return Application.Current.TryFindResource(string.Format("Card.Suit.{0}.SuitText", value.ToString(), convertType)) as string;
+            return Application.Current.TryFindResource(string.Format("Card.Suit.{0}.SuitText", value)) as string;
         }
         else if (convertType == "SuitColor")
         {
-            return Application.Current.TryFindResource(string.Format("Card.Suit.{0}.SuitBrush", value.ToString(), convertType)) as string;
+            return Application.Current.TryFindResource(string.Format("Card.Suit.{0}.SuitBrush", value)) as string;
         }
         return null;
     }

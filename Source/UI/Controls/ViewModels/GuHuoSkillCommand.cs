@@ -1,6 +1,5 @@
 ﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Skills;
-using System;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 
@@ -53,7 +52,8 @@ public class GuHuoSkillCommand : SkillCommand
     {
         get
         {
-            if (Skill is IAdditionalTypedSkill skill)
+            var skill = Skill as IAdditionalTypedSkill;
+            if (skill != null)
             {
                 return skill.AdditionalType;
             }
@@ -61,7 +61,8 @@ public class GuHuoSkillCommand : SkillCommand
         }
         set
         {
-            if (Skill is IAdditionalTypedSkill skill)
+            var skill = Skill as IAdditionalTypedSkill;
+            if (skill != null)
             {
                 if (skill.AdditionalType != value)
                 {

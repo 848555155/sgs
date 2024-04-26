@@ -4,10 +4,7 @@ using Sanguosha.Core.Heroes;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
 using Sanguosha.Core.UI;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -21,8 +18,8 @@ public class LogFormatter
     public static string Translate(Hero hero)
     {
         string key = string.Format("Hero.{0}.Name", hero.Name);
-        if (Application.Current.TryFindResource(key) is not string name) 
-            return string.Empty;
+        string name = Application.Current.TryFindResource(key) as string;
+        if (name == null) return string.Empty;
         return name;
     }
 
@@ -40,34 +37,44 @@ public class LogFormatter
     {
         if (skill == null) return string.Empty;
         string key = string.Format("Skill.{0}.Name", skill.GetType().Name);
-        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
+        string name = Application.Current.TryFindResource(key) as string;
+        if (name == null) return string.Empty;
+        return name;
     }
 
     public static string Translate(ICard card)
     {
         if (card == null) return string.Empty;
         string key = string.Format("Card.{0}.Name", card.Type.Name);
-        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
+        string name = Application.Current.TryFindResource(key) as string;
+        if (name == null) return string.Empty;
+        return name;
     }
 
     public static string Translate(DeckType deckType)
     {
         if (deckType == null) return string.Empty;
         string key = string.Format("Deck.{0}.Name", deckType.Name);
-        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
+        string name = Application.Current.TryFindResource(key) as string;
+        if (name == null) return string.Empty;
+        return name;
     }
 
     public static string Translate(CardHandler cardHandler)
     {
         if (cardHandler == null) return string.Empty;
         string key = string.Format("Card.{0}.Name", cardHandler.Name);
-        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
+        string name = Application.Current.TryFindResource(key) as string;
+        if (name == null) return string.Empty;
+        return name;
     }
 
     public static string Translate(SuitType suitType)
     {
         string key = string.Format("Suit.{0}.Text", suitType.ToString());
-        return Application.Current.TryFindResource(key) is not string name ? string.Empty : name;
+        string name = Application.Current.TryFindResource(key) as string;
+        if (name == null) return string.Empty;
+        return name;
     }
 
     public static string Translate(DeckPlace deckPlace)

@@ -1,5 +1,4 @@
 ﻿using Sanguosha.Core.UI;
-using System;
 using System.Windows;
 using System.Windows.Data;
 
@@ -9,15 +8,16 @@ public class MultiChoiceButtonStyleConverter : IValueConverter
 {
     static MultiChoiceButtonStyleConverter()
     {
-        dict = new ResourceDictionary();
-        dict.Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml");
+        dict = new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml")
+        };
     }
 
     private static readonly ResourceDictionary dict;
     public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
-        OptionPrompt choiceKey = value as OptionPrompt;
-        if (choiceKey == null) return null;
+        if (value is not OptionPrompt choiceKey) return null;
         if (Prompt.SuitChoices.Contains(choiceKey) || Prompt.AllegianceChoices.Contains(choiceKey))
         {
             return dict["MultiChoiceCustomButtonStyle"] as Style;
@@ -38,8 +38,10 @@ public class MultiChoiceKeyConverter : IValueConverter
 {
     static MultiChoiceKeyConverter()
     {
-        dict = new ResourceDictionary();
-        dict.Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml");
+        dict = new ResourceDictionary
+        {
+            Source = new Uri("pack://application:,,,/Controls;component/Views/Buttons/MultiChoiceButton.xaml")
+        };
     }
 
     private static readonly ResourceDictionary dict;

@@ -1,5 +1,4 @@
 ﻿using Sanguosha.Core.UI;
-using System;
 
 namespace Sanguosha.UI.Controls;
 
