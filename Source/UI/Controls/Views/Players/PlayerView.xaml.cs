@@ -1,6 +1,8 @@
 ﻿using Sanguosha.Core.Cards;
 using Sanguosha.Core.Games;
 using Sanguosha.UI.Animations;
+using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Windows;

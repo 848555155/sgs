@@ -1,4 +1,6 @@
-﻿namespace Sanguosha.UI.Controls;
+﻿using System;
+
+namespace Sanguosha.UI.Controls;
 
 using System.ComponentModel;
 using System.Globalization;
@@ -83,7 +85,7 @@ public class OutlinedTextBlock : FrameworkElement
 
     public OutlinedTextBlock()
     {
-        TextDecorations = new TextDecorationCollection();
+        this.TextDecorations = new TextDecorationCollection();
     }
 
     public Brush Fill
@@ -149,8 +151,8 @@ public class OutlinedTextBlock : FrameworkElement
 
     public TextDecorationCollection TextDecorations
     {
-        get { return (TextDecorationCollection)GetValue(TextDecorationsProperty); }
-        set { SetValue(TextDecorationsProperty, value); }
+        get { return (TextDecorationCollection)this.GetValue(TextDecorationsProperty); }
+        set { this.SetValue(TextDecorationsProperty, value); }
     }
 
     public TextTrimming TextTrimming
@@ -167,42 +169,42 @@ public class OutlinedTextBlock : FrameworkElement
 
     protected override void OnRender(DrawingContext drawingContext)
     {
-        EnsureGeometry();
+        this.EnsureGeometry();
 
-        drawingContext.DrawGeometry(Fill, new Pen(Stroke, StrokeThickness), textGeometry);
-        drawingContext.DrawGeometry(Fill, null, textGeometry);
+        drawingContext.DrawGeometry(this.Fill, new Pen(this.Stroke, this.StrokeThickness), this.textGeometry);
+        drawingContext.DrawGeometry(this.Fill, null, this.textGeometry);
     }
 
     protected override Size MeasureOverride(Size availableSize)
     {
-        EnsureFormattedText();
-        if (formattedText == null) return new Size(0, 0);
+        this.EnsureFormattedText();
+        if (this.formattedText == null) return new Size(0, 0);
         // constrain the formatted text according to the available size 
         // the Math.Min call is important - without this constraint (which seems arbitrary, but is the maximum allowable text width), things blow up when availableSize is infinite in both directions 
-        formattedText.MaxTextWidth = Math.Min(3579139, availableSize.Width);
-        formattedText.MaxTextHeight = availableSize.Height;
+        this.formattedText.MaxTextWidth = Math.Min(3579139, availableSize.Width);
+        this.formattedText.MaxTextHeight = availableSize.Height;
 
         // return the desired size 
-        if (UseLayoutRounding)
+        if (this.UseLayoutRounding)
         {
-            return new Size(Math.Ceiling(formattedText.Width), Math.Ceiling(formattedText.Height));
+            return new Size(Math.Ceiling(this.formattedText.Width), Math.Ceiling(this.formattedText.Height));
         }
         else
         {
-            return new Size(formattedText.Width, formattedText.Height);
+            return new Size(this.formattedText.Width, this.formattedText.Height);
         }
     }
 
     protected override Size ArrangeOverride(Size finalSize)
     {
-        EnsureFormattedText();
-        if (formattedText == null) return finalSize;
+        this.EnsureFormattedText();
+        if (this.formattedText == null) return finalSize;
         // update the formatted text with the final size 
-        formattedText.MaxTextWidth = Math.Max(finalSize.Width, 1);
-        formattedText.MaxTextHeight = Math.Max(finalSize.Height, 1);
+        this.formattedText.MaxTextWidth = Math.Max(finalSize.Width, 1);
+        this.formattedText.MaxTextHeight = Math.Max(finalSize.Height, 1);
 
         // need to re-generate the geometry now that the dimensions have changed 
-        textGeometry = null;
+        this.textGeometry = null;
 
         return finalSize;
     }
@@ -229,50 +231,49 @@ public class OutlinedTextBlock : FrameworkElement
 
     private void EnsureFormattedText()
     {
-        if (formattedText != null || Text == null)
+        if (this.formattedText != null || this.Text == null)
         {
             return;
         }
 
-        formattedText = new FormattedText(
-            Text,
+        this.formattedText = new FormattedText(
+            this.Text,
             CultureInfo.CurrentUICulture,
-            FlowDirection,
-            new Typeface(FontFamily, FontStyle, FontWeight, FontStretches.Normal),
-            FontSize,
-            Brushes.Black,
-            1.25);
+            this.FlowDirection,
+            new Typeface(this.FontFamily, this.FontStyle, this.FontWeight, FontStretches.Normal),
+            this.FontSize,
+            Brushes.Black);
 
-        UpdateFormattedText();
+        this.UpdateFormattedText();
     }
 
     private void UpdateFormattedText()
     {
-        if (formattedText == null)
+        if (this.formattedText == null)
         {
             return;
         }
 
-        formattedText.MaxLineCount = TextWrapping == TextWrapping.NoWrap ? 1 : int.MaxValue;
-        formattedText.TextAlignment = TextAlignment;
-        formattedText.Trimming = TextTrimming;
+        this.formattedText.MaxLineCount = this.TextWrapping == TextWrapping.NoWrap ? 1 : int.MaxValue;
+        this.formattedText.TextAlignment = this.TextAlignment;
+        this.formattedText.Trimming = this.TextTrimming;
 
-        formattedText.SetFontSize(FontSize);
-        formattedText.SetFontStyle(FontStyle);
-        formattedText.SetFontWeight(FontWeight);
-        formattedText.SetFontFamily(FontFamily);
-        formattedText.SetFontStretch(FontStretch);
-        formattedText.SetTextDecorations(TextDecorations);
+        this.formattedText.SetFontSize(this.FontSize);
+        this.formattedText.SetFontStyle(this.FontStyle);
+        this.formattedText.SetFontWeight(this.FontWeight);
+        this.formattedText.SetFontFamily(this.FontFamily);
+        this.formattedText.SetFontStretch(this.FontStretch);
+        this.formattedText.SetTextDecorations(this.TextDecorations);
     }
 
     private void EnsureGeometry()
     {
-        if (textGeometry != null || formattedText == null)
+        if (this.textGeometry != null || this.formattedText == null)
         {
             return;
         }
 
-        EnsureFormattedText();
-        textGeometry = formattedText.BuildGeometry(new Point(0, 0));
+        this.EnsureFormattedText();
+        this.textGeometry = this.formattedText.BuildGeometry(new Point(0, 0));
     }
 }

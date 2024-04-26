@@ -1,4 +1,5 @@
 ﻿using System.Collections.Concurrent;
+using Sanguosha.Lobby.Core;
 
 namespace Sanguosha.Lobby.Server;
 

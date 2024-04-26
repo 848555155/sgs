@@ -1,4 +1,6 @@
-﻿namespace Sanguosha.UI.Controls;
+﻿using System;
+
+namespace Sanguosha.UI.Controls;
 
 public class SelectableItem : ViewModelBase
 {

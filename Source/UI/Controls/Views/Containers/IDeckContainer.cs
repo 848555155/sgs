@@ -1,4 +1,5 @@
 ﻿using Sanguosha.Core.Cards;
+using System.Collections.Generic;
 
 namespace Sanguosha.UI.Controls;
 

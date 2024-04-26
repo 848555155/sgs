@@ -2,7 +2,10 @@
 using Sanguosha.Core.Games;
 using Sanguosha.Core.Players;
 using Sanguosha.Core.UI;
+using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Windows.Documents;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -34,7 +37,7 @@ public class GameLogs
     public void AppendLog(ActionLog log)
     {
         var docs = (from pair in Logs
-                    where (log.Targets.Contains(pair.Key) || log.Source == pair.Key)
+                    where log.Targets.Contains(pair.Key) || log.Source == pair.Key
                     select pair.Value).Concat(new List<FlowDocument>() { GlobalLog });
 
         foreach (var doc in docs)
@@ -91,7 +94,7 @@ public class GameLogs
         var reason = reasons.First();
 
         var docs = (from pair in Logs
-                    where (source.Player == pair.Key || dest.Player == pair.Key)
+                    where source.Player == pair.Key || dest.Player == pair.Key
                     select pair.Value).Concat(new List<FlowDocument>() { GlobalLog });
 
         foreach (var doc in docs)

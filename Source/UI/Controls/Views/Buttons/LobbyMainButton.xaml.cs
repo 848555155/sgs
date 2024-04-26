@@ -1,4 +1,5 @@
 ﻿using Sanguosha.Lobby.Core;
+using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -18,8 +19,10 @@ public class CurrentRoomAndSeatToButtonStateConverter : IMultiValueConverter
     public object Convert(object[] values, Type targetType, object parameter, System.Globalization.CultureInfo culture)
     {
         if (values == null || values.Length != 2) return LobbyMainButtonState.Start;
-        if (values[0] is not RoomViewModel room) return LobbyMainButtonState.Start;
-        if (values[1] is not SeatViewModel seat)
+        var room = values[0] as RoomViewModel;
+        var seat = values[1] as SeatViewModel;
+        if (room == null) return LobbyMainButtonState.Start;
+        if (seat == null)
         {
             if (room.State == RoomState.Gaming) return LobbyMainButtonState.Spectate;
         }

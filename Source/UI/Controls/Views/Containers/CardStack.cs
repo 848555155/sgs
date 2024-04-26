@@ -1,4 +1,7 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
@@ -16,7 +19,7 @@ public class CardStack : Canvas
         CardAlignment = HorizontalAlignment.Center;
         IsCardConsumer = false;
         CardCapacity = int.MaxValue;
-        _cards = [];
+        _cards = new List<CardView>();
         this.SizeChanged += new SizeChangedEventHandler(CardStack_SizeChanged);
     }
 
@@ -28,10 +31,21 @@ public class CardStack : Canvas
     #endregion
 
     #region Drag and Drop, Highlighting
+    private CardView _interactingCard;
 
-    public CardView InteractingCard { get; set; }
+    public CardView InteractingCard
+    {
+        get { return _interactingCard; }
+        set { _interactingCard = value; }
+    }
 
-    public CardInteraction CardStatus { get; set; }
+    private CardInteraction _cardInteraction;
+
+    public CardInteraction CardStatus
+    {
+        get { return _cardInteraction; }
+        set { _cardInteraction = value; }
+    }
 
     private int _interactingCardIndex;
 
@@ -39,13 +53,16 @@ public class CardStack : Canvas
     {
         get
         {
-            if (InteractingCard == null || CardStatus != CardInteraction.Drag)
+            if (_interactingCard == null || CardStatus != CardInteraction.Drag)
             {
                 return -1;
             }
             return _interactingCardIndex;
         }
-        private set => _interactingCardIndex = value;
+        private set
+        {
+            _interactingCardIndex = value;
+        }
     }
 
     protected int ComputeDragCardNewIndex()
@@ -77,12 +94,12 @@ public class CardStack : Canvas
     public void RearrangeCards()
     {
         var tmpCards = new List<CardView>(_cards);
-        if (InteractingCard != null && CardStatus == CardInteraction.Drag)
+        if (_interactingCard != null && _cardInteraction == CardInteraction.Drag)
         {
             InteractingCardIndex = ComputeDragCardNewIndex();
             Trace.Assert(InteractingCardIndex >= 0 && InteractingCardIndex <= _cards.Count);
-            tmpCards.Remove(InteractingCard);
-            tmpCards.Insert(InteractingCardIndex, InteractingCard);
+            tmpCards.Remove(_interactingCard);
+            tmpCards.Insert(InteractingCardIndex, _interactingCard);
         }
         RearrangeCards(tmpCards);
     }
@@ -98,7 +115,7 @@ public class CardStack : Canvas
     public void RearrangeCards(IList<CardView> cards)
     {
         int numCards = cards.Count();
-        if (CardStatus == CardInteraction.Drag && cards.Contains(InteractingCard))
+        if (_cardInteraction == CardInteraction.Drag && cards.Contains(_interactingCard))
         {
             numCards--;
         }
@@ -137,23 +154,23 @@ public class CardStack : Canvas
         double posX = startX;
         for (int i = 0; i < cards.Count; i++)
         {
-            if (cards[i] == InteractingCard && CardStatus == CardInteraction.Drag) continue;
+            if (cards[i] == _interactingCard && _cardInteraction == CardInteraction.Drag) continue;
             cards[i].Position = new Point(posX, y);
             posX += step;
         }
         posX -= step;
 
         cards = new List<CardView>(cards.OrderBy(c => c.Position.X));
-        int splitter = cards.IndexOf(InteractingCard);
+        int splitter = cards.IndexOf(_interactingCard);
 
         // Second pass: compute final position
         double leftSpace;
         double rightSpace;
         if (splitter >= 0 && cards.Count > 1)
         {
-            Rect cardRect = new Rect(InteractingCard.Position, new Size(cardWidth, cardHeight));
+            Rect cardRect = new Rect(_interactingCard.Position, new Size(cardWidth, cardHeight));
 
-            if (CardStatus == CardInteraction.Drag)
+            if (_cardInteraction == CardInteraction.Drag)
             {
                 double center = (cardRect.Left + cardRect.Right) / 2.0;
                 double center2;
@@ -210,7 +227,7 @@ public class CardStack : Canvas
         int zindex = GetZIndex(this);
         for (int i = 0; i < cards.Count; i++)
         {
-            if (i == splitter && CardStatus == CardInteraction.Drag) continue;
+            if (i == splitter && _cardInteraction == CardInteraction.Drag) continue;
             var card = cards[i];
             if (!ParentCanvas.Children.Contains(card))
             {
@@ -315,10 +332,10 @@ public class CardStack : Canvas
     {
         foreach (var card in cards)
         {
-            if (card == InteractingCard)
+            if (card == _interactingCard)
             {
-                InteractingCard = null;
-                CardStatus = CardInteraction.None;
+                _interactingCard = null;
+                _cardInteraction = CardInteraction.None;
             }
             UnregisterCardEvents(card);
         }

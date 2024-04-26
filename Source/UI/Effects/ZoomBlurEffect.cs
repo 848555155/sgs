@@ -40,7 +40,7 @@ public class ZoomBlurEffect : ShaderEffect
     {
         var pixelShader = new PixelShader();
         pixelShader.UriSource = Global.MakePackUri("ShaderSource/ZoomBlur.ps");
-        PixelShader = pixelShader;
+        this.PixelShader = pixelShader;
         UpdateShaderValue(InputProperty);
         UpdateShaderValue(CenterProperty);
         UpdateShaderValue(BlurAmountProperty);
@@ -54,8 +54,8 @@ public class ZoomBlurEffect : ShaderEffect
     [System.ComponentModel.BrowsableAttribute(false)]
     public Brush Input
     {
-        get => (Brush)GetValue(InputProperty);
-        set => SetValue(InputProperty, value);
+        get { return (Brush)GetValue(InputProperty); }
+        set { SetValue(InputProperty, value); }
     }
 
     /// <summary>
@@ -63,8 +63,8 @@ public class ZoomBlurEffect : ShaderEffect
     /// </summary>
     public Point Center
     {
-        get => (Point)GetValue(CenterProperty);
-        set => SetValue(CenterProperty, value);
+        get { return (Point)GetValue(CenterProperty); }
+        set { SetValue(CenterProperty, value); }
     }
 
 
@@ -73,7 +73,7 @@ public class ZoomBlurEffect : ShaderEffect
     /// </summary>
     public double BlurAmount
     {
-        get => (double)GetValue(BlurAmountProperty);
-        set => SetValue(BlurAmountProperty, value);
+        get { return (double)GetValue(BlurAmountProperty); }
+        set { SetValue(BlurAmountProperty, value); }
     }
 }

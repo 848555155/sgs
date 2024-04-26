@@ -8,12 +8,16 @@ using Sanguosha.Core.Utils;
 using Sanguosha.Lobby.Core;
 using Sanguosha.Lobby.Server;
 using Sanguosha.UI.Controls;
+using System;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Text;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Navigation;
@@ -303,7 +307,7 @@ public partial class Login : Page, IDisposable
                 lobbyModel.Connection = server;
                 lobbyModel.LoginToken = token;
 
-                if (string.IsNullOrEmpty(reconnect))
+                if (reconnect == null)
                 {
                     this.NavigationService.Navigate(lobby);
                     busyIndicator.IsBusy = false;

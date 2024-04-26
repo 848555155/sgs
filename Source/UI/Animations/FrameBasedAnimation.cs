@@ -1,4 +1,6 @@
-﻿using System.Windows;
+﻿using System;
+using System.Collections.Generic;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
@@ -19,16 +21,24 @@ public partial class FrameBasedAnimation : Image, IAnimation
     public static readonly DependencyProperty WrapAroundProperty =
         DependencyProperty.Register("WrapAround", typeof(bool), typeof(FrameBasedAnimation));
 
-    public ImageSource ActiveFrame => Frames[ActiveFrameIndex];
+    public ImageSource ActiveFrame
+    {
+        get
+        {
+            return Frames[ActiveFrameIndex];
+        }
+    }
 
     public int ActiveFrameIndex
     {
-        get => (int)GetValue(ActiveFrameIndexProperty);
+        get { return (int)GetValue(ActiveFrameIndexProperty); }
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(value);
+            if (value < 0)
+                throw new ArgumentOutOfRangeException("The ActiveFrameIndex can not be negative.");
 
-            ArgumentOutOfRangeException.ThrowIfGreaterThan(value, MaximumFrameIndex);
+            if (value > MaximumFrameIndex)
+                throw new ArgumentOutOfRangeException("The ActiveFrameIndex can not be greater than MaximumFrameIndex.");
 
             SetValue(ActiveFrameIndexProperty, value);
             Source = ActiveFrame;
@@ -40,7 +50,7 @@ public partial class FrameBasedAnimation : Image, IAnimation
         List<ImageSource> result = new List<ImageSource>();
         for (int i = 0; i < totalNum; i++)
         {
-            var image = new BitmapImage();
+            BitmapImage image = new BitmapImage();
             image.BeginInit();
             image.UriSource = new Uri(string.Format("{0}/{1}.png", folderPath, i));
             image.EndInit();
@@ -55,10 +65,11 @@ public partial class FrameBasedAnimation : Image, IAnimation
 
     public double FramesPerSecond
     {
-        get => (double)GetValue(FramesPerSecondProperty);
+        get { return (double)GetValue(FramesPerSecondProperty); }
         set
         {
-            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(value);
+            if (value <= 0)
+                throw new ArgumentOutOfRangeException("FramesPerSecond must be greater than 0.");
 
             SetValue(FramesPerSecondProperty, value);
         }
@@ -71,7 +82,7 @@ public partial class FrameBasedAnimation : Image, IAnimation
         {
             // Activate.
             if (!IsActive && value)
-                CompositionTarget.Rendering += new EventHandler(CompositionTarget_Rendering);
+                CompositionTarget.Rendering += new System.EventHandler(CompositionTarget_Rendering);
 
             // Deactivate.
             if (IsActive && !value)
@@ -82,22 +93,22 @@ public partial class FrameBasedAnimation : Image, IAnimation
     }
 
     private TimeSpan LastRenderTime { get; set; }
-    public int MaximumFrameIndex => Frames.Count - 1;
-    public int TotalFrames => Frames.Count;
+    public int MaximumFrameIndex { get { return Frames.Count - 1; } }
+    public int TotalFrames { get { return Frames.Count; } }
 
     public bool WrapAround
     {
-        get => (bool)GetValue(WrapAroundProperty);
-        set => SetValue(WrapAroundProperty, value);
+        get { return (bool)GetValue(WrapAroundProperty); }
+        set { SetValue(WrapAroundProperty, value); }
     }
 
     public FrameBasedAnimation()
     {
         Visibility = Visibility.Hidden;
-        Frames = [];
+        Frames = new List<ImageSource>();
         FramesPerSecond = 30;
-        Loaded += FrameBasedAnimation_Loaded;
-        Unloaded += FrameBasedAnimation_Unloaded;
+        this.Loaded += FrameBasedAnimation_Loaded;
+        this.Unloaded += FrameBasedAnimation_Unloaded;
     }
 
     private void FrameBasedAnimation_Loaded(object sender, RoutedEventArgs e)
@@ -159,6 +170,10 @@ public partial class FrameBasedAnimation : Image, IAnimation
         if (!IsActive) return;
         IsActive = false;
         Visibility = Visibility.Hidden;
-        Completed?.Invoke(this, new EventArgs());
+        EventHandler handler = Completed;
+        if (handler != null)
+        {
+            handler(this, new EventArgs());
+        }
     }
 }

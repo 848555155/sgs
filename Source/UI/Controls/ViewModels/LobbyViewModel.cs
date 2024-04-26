@@ -1,8 +1,13 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Sanguosha.Lobby.Core;
+using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 
@@ -174,7 +179,13 @@ public class LobbyViewModel : IGameClient, INotifyPropertyChanged
         }
     }
 
-    public string GameServerConnectionString { get; set; }
+    private string _gameServerConnectionString;
+
+    public string GameServerConnectionString
+    {
+        get { return _gameServerConnectionString; }
+        set { _gameServerConnectionString = value; }
+    }
 
     #region Commands
     public ICommand UpdateRoomCommand { get; set; }

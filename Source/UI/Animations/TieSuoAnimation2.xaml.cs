@@ -1,4 +1,5 @@
-﻿using System.Windows.Media;
+﻿using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace Sanguosha.UI.Animations;
 
@@ -19,5 +20,11 @@ public partial class TieSuoAnimation2 : FrameBasedAnimation
         frames = LoadFrames("pack://application:,,,/Animations;component/TieSuoAnimation2", 11);
     }
 
-    public override List<ImageSource> Frames => frames;
+    public override List<ImageSource> Frames
+    {
+        get
+        {
+            return frames;
+        }
+    }
 }

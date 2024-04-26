@@ -1,6 +1,6 @@
-﻿using CommunityToolkit.Mvvm.ComponentModel;
-using Sanguosha.Core.Players;
+﻿using Sanguosha.Core.Players;
 using Sanguosha.Core.Skills;
+using System.ComponentModel;
 
 namespace Sanguosha.Core.Heroes;
 
@@ -14,13 +14,31 @@ public enum Allegiance
     God
 }
 
-public partial class Hero : ObservableObject, ICloneable
+public class Hero : ICloneable
 {
-    [ObservableProperty]
     private Allegiance allegiance;
 
-    [ObservableProperty]
+    public Allegiance Allegiance
+    {
+        get { return allegiance; }
+        set
+        {
+            if (allegiance == value) return;
+            allegiance = value;
+            OnPropertyChanged("Allegiance");
+        }
+    }
+
     private List<ISkill> _skills;
+    public List<ISkill> Skills
+    {
+        get { return _skills; }
+        set
+        {
+            _skills = value;
+            OnPropertyChanged("Skills");
+        }
+    }
 
     public Player Owner { get; set; }
 
@@ -67,6 +85,18 @@ public partial class Hero : ObservableObject, ICloneable
         return hero;
     }
 
+    public event PropertyChangedEventHandler PropertyChanged;
+
+    // Create the OnPropertyChanged method to raise the event 
+    protected void OnPropertyChanged(string name)
+    {
+        PropertyChangedEventHandler handler = PropertyChanged;
+        if (handler != null)
+        {
+            handler(this, new PropertyChangedEventArgs(name));
+        }
+    }
+
     public ISkill LoseSkill(string skillName)
     {
         foreach (var sk in Skills)
@@ -83,7 +113,7 @@ public partial class Hero : ObservableObject, ICloneable
     {
         if (!Skills.Contains(skill)) return null;
         Skills.Remove(skill);
-        OnPropertyChanged(nameof(Skills));
+        OnPropertyChanged("Skills");
         skill.HeroTag = null;
         skill.Owner = null;
         return skill;
@@ -94,7 +124,7 @@ public partial class Hero : ObservableObject, ICloneable
         if (Skills.Count == 0) return;
         var backup = new List<ISkill>(Skills);
         Skills.Clear();
-        OnPropertyChanged(nameof(Skills));
+        OnPropertyChanged("Skills");
         foreach (var sk in backup)
         {
             sk.HeroTag = null;
