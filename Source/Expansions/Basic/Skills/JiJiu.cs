@@ -14,8 +14,10 @@ public class JiJiu : CardTransformSkill
 {
     public override VerifierResult TryTransform(List<Card> cards, List<Player> arg, out CompositeCard card, bool isPlay)
     {
-        card = new CompositeCard();
-        card.Type = new Tao();
+        card = new CompositeCard
+        {
+            Type = new Tao()
+        };
         if (Owner == Game.CurrentGame.PhasesOwner)
         {
             return VerifierResult.Fail;
@@ -36,8 +38,5 @@ public class JiJiu : CardTransformSkill
         return VerifierResult.Success;
     }
 
-    public override List<CardHandler> PossibleResults
-    {
-        get { return new List<CardHandler>() { new Tao() }; }
-    }
+    public override List<CardHandler> PossibleResults => [new Tao()];
 }

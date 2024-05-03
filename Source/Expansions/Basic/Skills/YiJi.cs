@@ -55,24 +55,26 @@ public class YiJi : TriggerSkill
                 Card c1 = Game.CurrentGame.DrawCard();
                 Game.CurrentGame.SyncImmutableCard(Owner, Game.CurrentGame.PeekCard(0));
                 Card c2 = Game.CurrentGame.DrawCard();
-                CardsMovement move = new CardsMovement();
-                move.Cards = new List<Card>() { c1, c2 };
-                move.To = new DeckPlace(Owner, DeckType.Hand);
+                var move = new CardsMovement
+                {
+                    Cards = [c1, c2],
+                    To = new DeckPlace(Owner, DeckType.Hand)
+                };
                 move.Helper.IsFakedMove = true;
                 Game.CurrentGame.MoveCards(move);
-                List<Card> remainingCards = new List<Card>() { c1, c2 };
+                List<Card> remainingCards = [c1, c2];
                 Player giveSecondOneTo = null;
                 while (remainingCards.Count > 0)
                 {
                     if (giveSecondOneTo != null)
                     {
-                        players = new List<Player>() { giveSecondOneTo };
-                        cards = new List<Card>() { remainingCards[0] };
+                        players = [giveSecondOneTo];
+                        cards = [remainingCards[0]];
                     }
                     else if (!Game.CurrentGame.UiProxies[Owner].AskForCardUsage(new CardUsagePrompt("YiJi"), new YiJiVerifier(remainingCards), out skill, out cards, out players))
                     {
-                        players = new List<Player>() { Owner };
-                        cards = new List<Card>() { remainingCards[0] };
+                        players = [Owner];
+                        cards = [remainingCards[0]];
                         giveSecondOneTo = Owner;
                     }
                     else if (cards.Count > 1)

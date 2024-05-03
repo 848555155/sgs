@@ -169,7 +169,7 @@ public abstract partial class Game : INotifyPropertyChanged
 
     public void SyncUnknownLocationCardAll(Card card)
     {
-        foreach (Player p in Players)
+        foreach (var p in Players)
         {
             SyncUnknownLocationCard(p, card);
         }
@@ -374,7 +374,7 @@ public abstract partial class Game : INotifyPropertyChanged
         }
 
         AvailableCards = [];
-        foreach (Card c in OriginalCardSet)
+        foreach (var c in OriginalCardSet)
         {
             bool typeCheck = false;
             foreach (var type in AvailableCards)
@@ -500,7 +500,7 @@ public abstract partial class Game : INotifyPropertyChanged
     private void TallyGameResult(List<Player> winners)
     {
         if (GameServer == null) return;
-        foreach (Player p in Players)
+        foreach (var p in Players)
         {
             int idx = Players.IndexOf(p);
             var account = Settings.Accounts[idx];
@@ -768,7 +768,7 @@ public abstract partial class Game : INotifyPropertyChanged
         get
         {
             var list = new List<Player>();
-            foreach (Player p in Players)
+            foreach (var p in Players)
             {
                 if (!p.IsDead)
                 {
@@ -860,7 +860,7 @@ public abstract partial class Game : INotifyPropertyChanged
             AddAtomicMoves(moves);
             return;
         }
-        foreach (CardsMovement move in moves)
+        foreach (var move in moves)
         {
             var cards = new List<Card>(move.Cards);
             foreach (var card in cards)
@@ -879,11 +879,11 @@ public abstract partial class Game : INotifyPropertyChanged
         NotificationProxy.NotifyCardMovement(moves);
 
         int i = 0;
-        foreach (CardsMovement move in moves)
+        foreach (var move in moves)
         {
             var cards = new List<Card>(move.Cards);
             // Update card's deck mapping
-            foreach (Card card in cards)
+            foreach (var card in cards)
             {
                 Trace.TraceInformation("Card {0}{1}{2} from {3}{4} to {5}{6}.", card.Suit, card.Rank, card.Type.Name.ToString(),
                     card.Place.Player == null ? "G" : card.Place.Player.Id.ToString(), card.Place.DeckType.Name, move.To.Player == null ? "G" : move.To.Player.Id.ToString(), move.To.DeckType.Name);
@@ -1447,7 +1447,7 @@ public abstract partial class Game : INotifyPropertyChanged
             {
                 return VerifierResult.Partial;
             }
-            foreach (Card c in cards)
+            foreach (var c in cards)
             {
                 if (!CurrentGame.PlayerCanDiscardCard(source, c))
                 {

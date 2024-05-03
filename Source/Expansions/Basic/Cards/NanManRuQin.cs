@@ -2,16 +2,9 @@
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
-
 public class NanManRuQin : Aoe
 {
-    public NanManRuQin() => RequiredCard = new Sha();
+    protected override string UsagePromptString => nameof(NanManRuQin);
 
-    protected override string UsagePromptString => "NanManRuQin";
-
-    public override CardHandler RequiredCard
-    {
-        get;
-        protected set;
-    }
+    public override CardHandler RequiredCard { get; protected set; } = new Sha();
 }

@@ -26,12 +26,8 @@ public class RoleCardHandler(Role r) : CardHandler
 
     public override string Name => Role.ToString();
 }
-public class UnknownRoleCardHandler : RoleCardHandler
+public class UnknownRoleCardHandler() : RoleCardHandler(Role.Unknown)
 {
-    public UnknownRoleCardHandler() : base(Role.Unknown)
-    {
-    }
-
     public override string Name => _cardTypeString;
 
     private static readonly string _cardTypeString = "UnknownRole";

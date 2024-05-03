@@ -69,8 +69,6 @@ public abstract class PassiveSkill : ISkill
         skill.IsAutoInvoked = IsAutoInvoked;
         return skill;
     }
-
-
-
+    
     public UiHelper Helper { get; private set; } = new();
 }

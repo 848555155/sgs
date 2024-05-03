@@ -115,7 +115,7 @@ public abstract partial class Game
         {
             List<Player> toProcess = new List<Player>(AlivePlayers);
             SortByOrderOfComputation(CurrentPlayer, toProcess);
-            foreach (Player p in toProcess)
+            foreach (var p in toProcess)
             {
                 if (p.IsIronShackled)
                 {
@@ -600,7 +600,7 @@ public abstract partial class Game
             IPlayerProxy proxy = UiProxies[player];
             List<Card> cards;
             cannotBeDiscarded = 0;
-            foreach (Card c in Decks[player, DeckType.Hand])
+            foreach (var c in Decks[player, DeckType.Hand])
             {
                 if (!PlayerCanDiscardCard(player, c))
                 {

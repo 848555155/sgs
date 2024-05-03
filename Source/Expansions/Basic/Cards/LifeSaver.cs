@@ -32,17 +32,16 @@ public class LifeSaverVerifier : CardUsageVerifier
         ICard card;
         if (skill != null)
         {
-            if (skill is CardTransformSkill)
+            if (skill is CardTransformSkill cardTransformSkill)
             {
-                CompositeCard c;
-                var result = (skill as CardTransformSkill).TryTransform(cards, null, out c);
+                var result = cardTransformSkill.TryTransform(cards, null, out var c);
                 if (result != VerifierResult.Success)
                 {
                     return result;
                 }
                 card = c;
             }
-            else if (skill is SaveLifeSkill)
+            else if (skill is SaveLifeSkill saveLifeSkill)
             {
                 var arg = new GameEventArgs
                 {
@@ -50,7 +49,7 @@ public class LifeSaverVerifier : CardUsageVerifier
                     Targets = players,
                     Cards = cards
                 };
-                return (skill as SaveLifeSkill).Validate(arg);
+                return saveLifeSkill.Validate(arg);
             }
             else return VerifierResult.Fail;
         }
@@ -66,7 +65,7 @@ public class LifeSaverVerifier : CardUsageVerifier
         {
             return VerifierResult.Fail;
         }
-        return card.Type.Verify(source, skill, cards, new List<Player>());
+        return card.Type.Verify(source, skill, cards, []);
     }
 
     public override IList<CardHandler> AcceptableCardTypes => [new LifeSaver()];

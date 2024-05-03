@@ -11,13 +11,8 @@ namespace Sanguosha.Expansions.StarSP.Skills;
 /// <summary>
 /// 言笑–出牌阶段，你可以将一张方片牌置入一名角色的判定区内，判定区内有“言笑”牌的角色下个判定阶段开始时，获得其判定区内的所有牌。
 /// </summary>
-internal class YanXiao : OneToOneCardTransformSkill
+internal class YanXiao : OneToOneCardTransformSkill<YanXiaoPai>
 {
-    public override CardHandler PossibleResult
-    {
-        get { return new YanXiaoPai(); }
-    }
-
     public override bool VerifyInput(Card card, object arg)
     {
         return card.Suit == SuitType.Diamond;

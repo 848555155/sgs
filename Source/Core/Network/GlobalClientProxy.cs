@@ -230,7 +230,7 @@ public class GlobalClientProxy : IGlobalUiProxy
                 var commonResult = from type1 in verifier.AcceptableCardTypes
                                    where transformSkill.PossibleResults.Any(ci => type1.GetType().IsAssignableFrom(ci.GetType()))
                                    select type1;
-                if (commonResult.Count() != 0)
+                if (commonResult.Any())
                 {
                     found = true;
                 }
@@ -238,7 +238,7 @@ public class GlobalClientProxy : IGlobalUiProxy
             var commonResult2 = from type1 in verifier.AcceptableCardTypes
                                 where proxy.HostPlayer.HandCards().Any(ci => type1.GetType().IsAssignableFrom(ci.Type.GetType()))
                                 select type1;
-            if (commonResult2.Count() != 0)
+            if (commonResult2.Any())
             {
                 found = true;
             }

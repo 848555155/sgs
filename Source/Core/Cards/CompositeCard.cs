@@ -34,10 +34,7 @@ public class CompositeCard : ICard
         }
         set
         {
-            foreach (var card in Subcards)
-            {
-                card.Place = value;
-            }
+            Subcards.ForEach(card => card.Place = value);
         }
     }
 

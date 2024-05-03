@@ -27,12 +27,16 @@ public class HuJia : TriggerSkill
             if (player.Allegiance == Allegiance.Wei)
             {
                 bool failToRespond = false;
-                GameEventArgs args = new GameEventArgs();
-                args.Source = player;
-                args.Targets = eventArgs.Targets;
-                args.Card = new CompositeCard();
-                args.Card.Type = new Shan();
-                args.ReadonlyCard = eventArgs.ReadonlyCard;
+                GameEventArgs args = new GameEventArgs
+                {
+                    Source = player,
+                    Targets = eventArgs.Targets,
+                    Card = new CompositeCard
+                    {
+                        Type = new Shan()
+                    },
+                    ReadonlyCard = eventArgs.ReadonlyCard
+                };
                 try
                 {
                     Game.CurrentGame.Emit(GameEvent.PlayerRequireCard, args);
@@ -63,15 +67,16 @@ public class HuJia : TriggerSkill
                     {
                         continue;
                     }
-                    if (result is CompositeCard)
+                    switch (result)
                     {
-                        eventArgs.Cards = new List<Card>((result as CompositeCard).Subcards);
-                        eventArgs.Skill = new CardWrapper(Owner, new Shan());
-                    }
-                    else
-                    {
-                        eventArgs.Cards = new List<Card>() { result as Card };
-                        eventArgs.Skill = null;
+                        case CompositeCard:
+                            eventArgs.Cards = new List<Card>((result as CompositeCard).Subcards);
+                            eventArgs.Skill = new CardWrapper(Owner, new Shan());
+                            break;
+                        default:
+                            eventArgs.Cards = [result as Card];
+                            eventArgs.Skill = null;
+                            break;
                     }
                     noAnswer = false;
                     Trace.TraceInformation("Player {0} Responded HuJia with SHAN, ", player.Id);

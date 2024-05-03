@@ -41,40 +41,32 @@ public class GameEngine
         List<string> packags = ["Assassin", "Basic", "Battle", "Fire", "Hills", "OverKnightFame11", "OverKnightFame11", "OverKnightFame11", "PK1v1", "SP", "StarSP", "Wind", "Woods"];
         // should not load all assembly because bug of sqlclient
         Trace.TraceInformation("LOADING CARDSETS FROM : " + folderPath);
-
-        var list = (from f in Directory.GetFiles(folderPath) where f.EndsWith(".dll") select f).ToList();
         var files = (from f in Directory.GetFiles(folderPath) where f.EndsWith(".dll") select f)
             .Where(f => packags.Any(p => f.EndsWith(p + ".dll")))
             .OrderBy(
                     (a) =>
-                    { 
-                        int idx = Properties.Settings.Default.LoadSequence.IndexOf(Path.GetFileNameWithoutExtension(a).ToLower()); 
-                        return idx < 0 ? int.MaxValue : idx; 
+                    {
+                        int idx = Properties.Settings.Default.LoadSequence.IndexOf(Path.GetFileNameWithoutExtension(a).ToLower());
+                        return idx < 0 ? int.MaxValue : idx;
                     });
         foreach (var file in files)
         {
             try
             {
-                Assembly assembly = Assembly.LoadFrom(Path.GetFullPath(file));
-                var types = assembly.GetTypes();
-                foreach (var type in types)
+                foreach (var exp in Assembly
+                    .LoadFrom(Path.GetFullPath(file))
+                    .GetTypes()
+                    .Where(type => type.IsSubclassOf(typeof(Expansion)))
+                    .Select(Activator.CreateInstance)
+                    .Cast<Expansion>())
                 {
-                    if (type.IsSubclassOf(typeof(Expansion)))
+                    if (Expansions.ContainsKey(exp.GetType().FullName) && !Expansions.ContainsValue(exp))
                     {
-                        if (Activator.CreateInstance(type) is Expansion exp)
-                        {
-                            if (Expansions.ContainsKey(type.FullName))
-                            {
-                                if (!Expansions.ContainsValue(exp))
-                                {
-                                    Trace.TraceWarning("Cannot load two different expansions with same name: {0}.", type.FullName);
-                                }
-                            }
-                            else
-                            {
-                                LoadExpansion(type.FullName, exp);
-                            }
-                        }
+                        Trace.TraceWarning("Cannot load two different expansions with same name: {0}.", exp.GetType().FullName);
+                    }
+                    else
+                    {
+                        LoadExpansion(exp.GetType().FullName, exp);
                     }
                 }
             }

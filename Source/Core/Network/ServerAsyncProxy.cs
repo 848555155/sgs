@@ -71,8 +71,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
                 switch (state)
                 {
                     case QuestionState.AskForCardUsage:
-                        var response = packet as AskForCardUsageResponse;
-                        if (response == null || response.Id != QuestionId)
+                        if (packet is not AskForCardUsageResponse response || response.Id != QuestionId)
                         {
                             Gamer.ReceiveAsync();
                             break;
@@ -85,8 +84,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
                         AnswerCardUsage(skill, cards, players);
                         break;
                     case QuestionState.AskForCardChoice:
-                        var response2 = packet as AskForCardChoiceResponse;
-                        if (response2 == null || response2.Id != QuestionId)
+                        if (packet is not AskForCardChoiceResponse response2 || response2.Id != QuestionId)
                         {
                             Gamer.ReceiveAsync();
                             break;
@@ -98,8 +96,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
                         AnswerCardChoice(result);
                         break;
                     case QuestionState.AskForMultipleChoice:
-                        var response3 = packet as AskForMultipleChoiceResponse;
-                        if (response3 == null || response3.Id != QuestionId)
+                        if (packet is not AskForMultipleChoiceResponse response3 || response3.Id != QuestionId)
                         {
                             Gamer.ReceiveAsync();
                             break;
@@ -178,7 +175,7 @@ public class ServerAsyncProxy : IAsyncPlayerProxy
     {
         get
         {
-            return (_gamer != null && !_gamer.IsSpectator);
+            return _gamer != null && !_gamer.IsSpectator;
         }
     }
 }

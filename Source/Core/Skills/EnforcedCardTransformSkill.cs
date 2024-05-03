@@ -28,19 +28,13 @@ public abstract class EnforcedCardTransformSkill : TriggerSkill
 
         var notify = new AutoNotifyPassiveSkillTrigger(
             this,
-            (p, e, a) =>
-            {
-                return a.Card is Card card && Decks.Contains(card.HistoryPlace1.DeckType) && CardVerifier(GameEngine.CardSet[card.Id]);
-            },
-            (p, e, a) =>
-            {
-                Game.CurrentGame.NotificationProxy.NotifyLogEvent(
+            (p, e, a) => a.Card is Card card && Decks.Contains(card.HistoryPlace1.DeckType) && CardVerifier(GameEngine.CardSet[card.Id]),
+            (p, e, a) => Game.CurrentGame.NotificationProxy.NotifyLogEvent(
                     new LogEvent("EnforcedCardTransform", Owner, GameEngine.CardSet[(a.Card as Card).Id], a.Card),
                     [Owner],
                     true,
                     false
-                );
-            },
+                ),
             TriggerCondition.OwnerIsSource
         );
         Triggers.Add(GameEvent.PlayerUsedCard, notify);

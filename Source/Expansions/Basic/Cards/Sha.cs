@@ -9,7 +9,6 @@ using System.Diagnostics;
 
 namespace Sanguosha.Expansions.Basic.Cards;
 
-
 public class Sha : CardHandler
 {
     public virtual DamageElement ShaDamageElement => DamageElement.None;
@@ -29,13 +28,15 @@ public class Sha : CardHandler
     {
         if (targets != null && targets.Count > 0)
         {
-            ShaEventArgs args = new ShaEventArgs();
-            args.Source = source;
-            args.Card = card;
-            args.Targets = targets;
-            args.RangeApproval = new List<bool>(targets.Count);
-            args.TargetApproval = new List<bool>(targets.Count);
-            foreach (Player t in targets)
+            var args = new ShaEventArgs
+            {
+                Source = source,
+                Card = card,
+                Targets = targets,
+                RangeApproval = new List<bool>(targets.Count),
+                TargetApproval = new List<bool>(targets.Count)
+            };
+            foreach (var t in targets)
             {
                 if (t == source)
                 {

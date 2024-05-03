@@ -34,7 +34,7 @@ public class JiJiang : CardTransformSkill
         {
             return VerifierResult.Fail;
         }
-        List<Player> toProcess = new List<Player>(Game.CurrentGame.AlivePlayers);
+        List<Player> toProcess = new(Game.CurrentGame.AlivePlayers);
         toProcess.Remove(Owner);
         bool noShuHero = true;
         foreach (var player in toProcess)

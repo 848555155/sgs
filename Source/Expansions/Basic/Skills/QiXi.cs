@@ -7,15 +7,10 @@ namespace Sanguosha.Expansions.Basic.Skills;
 /// <summary>
 /// 奇袭-出牌阶段，你可以将一张黑色牌当【过河拆桥】使用。
 /// </summary>
-public class QiXi : OneToOneCardTransformSkill
+public class QiXi : OneToOneCardTransformSkill<GuoHeChaiQiao>
 {
     public override bool VerifyInput(Card card, object arg)
     {
         return card.SuitColor == SuitColorType.Black;
-    }
-
-    public override CardHandler PossibleResult
-    {
-        get { return new GuoHeChaiQiao(); }
     }
 }

@@ -59,7 +59,7 @@ public abstract class CardHandler : ICloneable
                 e.RegisterTriggers(c.Place.Player);
             }
         }
-        foreach (DeckPlace p in deckBackup.Keys)
+        foreach (var p in deckBackup.Keys)
         {
             Game.CurrentGame.Decks[p].Clear();
             Game.CurrentGame.Decks[p].AddRange(deckBackup[p]);

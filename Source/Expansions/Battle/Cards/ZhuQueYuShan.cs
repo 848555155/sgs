@@ -44,17 +44,12 @@ public class ZhuQueYuShan : Weapon
         }
     }
 
-    public class ZhuQueYuShanTransform : OneToOneCardTransformSkill, IEquipmentSkill
+    public class ZhuQueYuShanTransform : OneToOneCardTransformSkill<HuoSha>, IEquipmentSkill
     {
         public Equipment ParentEquipment { get; set; }
         public override bool VerifyInput(Card card, object arg)
         {
             return card.Type is RegularSha;
-        }
-
-        public override CardHandler PossibleResult
-        {
-            get { return new HuoSha(); }
         }
     }
 

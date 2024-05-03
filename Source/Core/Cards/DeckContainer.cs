@@ -77,11 +77,8 @@ public class DeckContainer
 
     public List<Card> GetPlayerPrivateCards(Player player)
     {
-        var result = new List<Card>();
-        foreach (var deckType in GetPlayerPrivateDecks(player))
-        {
-            result.AddRange(this[player, deckType]);
-        }
-        return result;
+        return GetPlayerPrivateDecks(player)
+                .SelectMany(deckType => this[player, deckType])
+                .ToList();
     }
 }

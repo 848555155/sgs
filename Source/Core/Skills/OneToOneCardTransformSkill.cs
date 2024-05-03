@@ -55,3 +55,8 @@ public abstract class OneToOneCardTransformSkill : CardTransformSkill
 
     public override List<CardHandler> PossibleResults => [PossibleResult];
 }
+
+public abstract class OneToOneCardTransformSkill<T> : OneToOneCardTransformSkill where T : CardHandler
+{
+    public override CardHandler PossibleResult => Activator.CreateInstance<T>();
+}

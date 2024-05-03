@@ -350,10 +350,10 @@ public class AskForCardUsageResponse : GameResponse
             }
             if (cards.Any(c => c == null)) cards = new List<Card>();
         }
-        players = new List<Player>();
+        players = [];
         if (PlayerItems != null)
         {
-            players = new List<Player>();
+            players = [];
             foreach (var player in PlayerItems)
             {
                 players.Add(player.ToPlayer());
@@ -416,7 +416,7 @@ public class AskForCardChoiceResponse : GameResponse
                 }
                 if (cards.Any(c => c == null))
                 {
-                    result = new List<List<Card>>();
+                    result = [];
                     break;
                 }
                 result.Add(cards);

@@ -7,7 +7,7 @@ namespace Sanguosha.Expansions.Basic.Skills;
 /// <summary>
 /// 倾国-你可以将一张黑色手牌当【闪】使用或打出。
 /// </summary>
-public class QingGuo : OneToOneCardTransformSkill
+public class QingGuo : OneToOneCardTransformSkill<Shan>
 {
     public QingGuo()
     {
@@ -18,6 +18,4 @@ public class QingGuo : OneToOneCardTransformSkill
     {
         return card.SuitColor == SuitColorType.Black;
     }
-
-    public override CardHandler PossibleResult => new Shan();
 }

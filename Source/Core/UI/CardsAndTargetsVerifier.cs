@@ -58,7 +58,7 @@ public class CardsAndTargetsVerifier : ICardUsageVerifier
         }
         if (cards != null && cards.Count > 0)
         {
-            foreach (Card c in cards)
+            foreach (var c in cards)
             {
                 if (Discarding && !Game.CurrentGame.PlayerCanDiscardCard(source, c))
                 {
@@ -76,7 +76,7 @@ public class CardsAndTargetsVerifier : ICardUsageVerifier
         }
         if (players != null && players.Count > 0)
         {
-            foreach (Player p in players)
+            foreach (var p in players)
             {
                 if (!VerifyPlayer(source, p))
                 {

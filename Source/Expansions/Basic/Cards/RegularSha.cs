@@ -1,6 +1,3 @@
 ﻿namespace Sanguosha.Expansions.Basic.Cards;
 
-
-public class RegularSha : Sha
-{
-}
+public class RegularSha : Sha;

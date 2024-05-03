@@ -16,27 +16,18 @@ public abstract class AutoVerifiedActiveSkill : ActiveSkill
         return Verify(Owner, arg.Cards, arg.Targets);
     }
 
-    protected int MinPlayers { get; set; }
+    protected int MinPlayers { get; set; } = 0;
 
-    protected int MaxPlayers { get; set; }
+    protected int MaxPlayers { get; set; } = int.MaxValue;
 
-    protected int MinCards { get; set; }
+    protected int MinCards { get; set; } = 0;
 
-    protected int MaxCards { get; set; }
+    protected int MaxCards { get; set; } = int.MaxValue;
 
     /// <summary>
     /// Cards must pass "Game.CanDiscardCard" verification
     /// </summary>
-    protected bool Discarding { get; set; }
-
-    public AutoVerifiedActiveSkill()
-    {
-        MinPlayers = 0;
-        MaxPlayers = int.MaxValue;
-        MinCards = 0;
-        MaxCards = int.MaxValue;
-        Discarding = false;
-    }
+    protected bool Discarding { get; set; } = false;
 
     protected abstract bool VerifyCard(Player source, Card card);
 
@@ -55,7 +46,7 @@ public abstract class AutoVerifiedActiveSkill : ActiveSkill
         }
         if (cards != null && cards.Count > 0)
         {
-            foreach (Card c in cards)
+            foreach (var c in cards)
             {
                 if (Discarding && !Game.CurrentGame.PlayerCanDiscardCard(source, c))
                 {
@@ -73,7 +64,7 @@ public abstract class AutoVerifiedActiveSkill : ActiveSkill
         }
         if (players != null && players.Count > 0)
         {
-            foreach (Player p in players)
+            foreach (var p in players)
             {
                 if (!VerifyPlayer(source, p))
                 {
@@ -90,12 +81,12 @@ public abstract class AutoVerifiedActiveSkill : ActiveSkill
         {
             return VerifierResult.Partial;
         }
-        int count = players == null ? 0 : players.Count;
+        var count = players?.Count ?? 0;
         if (count < MinPlayers)
         {
             return VerifierResult.Partial;
         }
-        count = cards == null ? 0 : cards.Count;
+        count = cards?.Count ?? 0;
         if (count < MinCards)
         {
             return VerifierResult.Partial;
